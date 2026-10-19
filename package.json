@@ -1,0 +1,17 @@
+{
+  "name": "quantum-explorer-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "frontend:dev": "npm run dev --workspace=frontend",
+    "backend:dev": "npm run dev --workspace=backend",
+    "dev": "concurrently \"npm run frontend:dev\" \"npm run backend:dev\""
+  },
+  "dependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
