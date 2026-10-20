@@ -1,12 +1,71 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Quantum Explorer</title>
   </head>
-  <body style="margin: 0; background-color: #030712;">
+  <body style="margin: 0; background-color: #030712">
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+    <style>
+      @keyframes cinematicSlideIn {
+        0% {
+          opacity: 0;
+          transform: translate3d(-25px, 0, 0);
+          filter: blur(6px);
+        }
+        100% {
+          opacity: 1;
+          transform: translate3d(0, 0, 0);
+          filter: blur(0px);
+        }
+      }
+      @keyframes masterButtonFade {
+        0% {
+          opacity: 0;
+          transform: translate3d(0, 15px, 0);
+        }
+        100% {
+          opacity: 1;
+          transform: translate3d(0, 0, 0);
+        }
+      }
+      .cinematic-reveal {
+        animation: cinematicSlideIn 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+      .action-button-reveal {
+        animation: masterButtonFade 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+
+      /* GLOBAL CYBER-MINIMALIST SCROLLBAR SPECIFICATION HUDS */
+      ::-webkit-scrollbar {
+        width: 4px; /* Thin visual profile lane */
+        height: 4px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #070b14; /* Matches leftScrollPanel baseline color perfectly */
+      }
+      ::-webkit-scrollbar-thumb {
+        background: rgba(
+          255,
+          255,
+          255,
+          0.05
+        ); /* Hidden, near-invisible resting color */
+        border-radius: 2px;
+        transition: background 0.3s ease;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #10b981; /* Activates quantum emerald accent feedback on interaction focus */
+        box-shadow: 0 0 8px #10b981;
+      }
+
+      /* Firefox fallback platform styling integration rules */
+      * {
+        scrollbar-width: thin;
+        scrollbar-color: rgba(255, 255, 255, 0.05) #070b14;
+      }
+    </style>
   </body>
 </html>

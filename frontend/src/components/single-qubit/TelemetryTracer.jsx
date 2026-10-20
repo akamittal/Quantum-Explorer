@@ -1,0 +1,140 @@
+import React from "react";
+import MathRenderer from "../../MathRenderer";
+
+export default function TelemetryTracer({
+  theta,
+  phi,
+  x,
+  y,
+  z,
+  alpha,
+  beta,
+  probZero,
+  probOne,
+}) {
+  return (
+    <section style={styles.contentSection}>
+      <h3 style={styles.sectionHeader}>
+        // 5.0 LIVE STEP-BY-STEP BREAKDOWN TELEMETRY
+      </h3>
+
+      {/* STEP 1 Block */}
+      <div style={styles.mathStepCard}>
+        <span style={styles.stepTitle}>
+          [STEP 1] State Vector Parametrization
+        </span>
+        <p style={styles.stepExplanationText}>
+          By factoring out global phase invariance, we project the complex state
+          vector onto a physical spherical shell. The polar angle (θ) defines
+          the vertical tilt from the computational ground axis, while the
+          azimuthal phase angle (φ) maps longitude parameters:
+        </p>
+        <div style={styles.mathOutputArea}>
+          <MathRenderer
+            formula="\(\lvert\Psi\rangle = \cos(\theta/2)\lvert0\rangle + e^{i\phi}\sin(\theta/2)\lvert1\rangle\)"
+            displayMode={true}
+          />
+          <MathRenderer
+            formula={`= \\cos(${theta}^\\circ/2)\\lvert0\\rangle + e^{i\\cdot ${phi}^\\circ}\\sin(${theta}^\\circ/2)\\lvert1\\rangle`}
+            displayMode={true}
+          />
+          <MathRenderer
+            formula={`= ${alpha.re.toFixed(4)}\\lvert0\\rangle + (${beta.re.toFixed(4)} + ${beta.im.toFixed(4)}i)\\lvert1\\rangle`}
+            displayMode={true}
+          />
+        </div>
+      </div>
+
+      {/* STEP 2 Block */}
+      <div style={styles.mathStepCard}>
+        <span style={styles.stepTitle}>
+          [STEP 2] Born's Rule Probability Distribution
+        </span>
+        <p style={styles.stepExplanationText}>
+          Born's rule dictates that computing the squared absolute value of each
+          state coefficient resolves the exact physical percentage likelihood of
+          wave function collapse upon external measurement:
+        </p>
+        <div style={styles.mathOutputArea}>
+          <MathRenderer
+            formula={`\\text{P}(0) = \\lvert\\alpha\\rvert^2 = (${alpha.re.toFixed(4)})^2 = ${probZero.toFixed(1)}\\%`}
+            displayMode={true}
+          />
+          <div style={{ margin: "0.25rem 0" }} />
+          <MathRenderer
+            formula={`\\text{P}(1) = \\lvert\\beta\\rvert^2 = (${beta.re.toFixed(4)})^2 + (${beta.im.toFixed(4)})^2 = ${probOne.toFixed(1)}\\%`}
+            displayMode={true}
+          />
+        </div>
+      </div>
+
+      {/* STEP 3 Block */}
+      <div style={styles.mathStepCard}>
+        <span style={styles.stepTitle}>
+          [STEP 3] Cartesian Position Trigonometry Mapping
+        </span>
+        <p style={styles.stepExplanationText}>
+          To physically plot the mathematical state vector onto our 3D Bloch
+          Canvas viewport space, we translate spherical parameters back into
+          observable 3D coordinates via the expectation values of the Pauli
+          matrices:
+        </p>
+        <div style={styles.mathOutputArea}>
+          <MathRenderer
+            formula={`x = \\sin(\\theta)\\cos(\\phi) = \\sin(${theta}^\\circ)\\cos(${phi}^\\circ) = ${x.toFixed(4)}`}
+            displayMode={true}
+          />
+          <div style={{ margin: "0.35rem 0" }} />
+          <MathRenderer
+            formula={`y = \\sin(\\theta)\\sin(\\phi) = \\sin(${theta}^\\circ)\\sin(${phi}^\\circ) = ${y.toFixed(4)}`}
+            displayMode={true}
+          />
+          <div style={{ margin: "0.35rem 0" }} />
+          <MathRenderer
+            formula={`z = \\cos(\\theta) = \\cos(${theta}^\\circ) = ${z.toFixed(4)}`}
+            displayMode={true}
+          />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+const styles = {
+  contentSection: { display: "flex", flexDirection: "column", gap: "0.85rem" },
+  sectionHeader: {
+    color: "#10b981",
+    fontSize: "0.8rem",
+    fontFamily: "monospace",
+    letterSpacing: "0.12em",
+    margin: 0,
+  },
+  mathStepCard: {
+    backgroundColor: "#0b0f19",
+    padding: "1.5rem",
+    borderRadius: "4px",
+    border: "1px solid rgba(255,255,255,0.02)",
+    display: "flex",
+    flexDirection: "column",
+    gap: "0.75rem",
+  },
+  stepTitle: {
+    color: "#06b6d4",
+    fontSize: "0.75rem",
+    fontFamily: "monospace",
+    fontWeight: "bold",
+  },
+  stepExplanationText: {
+    color: "#9ca3af",
+    fontSize: "0.875rem",
+    lineHeight: "1.5",
+    margin: 0,
+  },
+  mathOutputArea: {
+    borderTop: "1px solid rgba(255,255,255,0.02)",
+    paddingTop: "0.5rem",
+    display: "flex",
+    flexDirection: "column",
+    gap: "0.25rem",
+  },
+};
