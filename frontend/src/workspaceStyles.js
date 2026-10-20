@@ -8,7 +8,7 @@ export const styles = {
     backgroundColor: '#030712',
     width: '100vw',
     height: '100vh',
-    overflow: 'hidden',
+    overflow: 'hidden', // Enforces browser layout containment to eliminate all vertical/horizontal body scrolling
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -202,5 +202,24 @@ export const styles = {
     cursor: 'pointer',
     borderRadius: '4px',
     boxShadow: '0 10px 30px -5px rgba(16, 185, 129, 0.4)'
+  },
+  menuIndexToggleButton: {
+    position: 'fixed', top: '0.85rem', left: '1.5rem', zIndex: 100,
+    backgroundColor: '#10b981', color: '#030712', border: 'none',
+    padding: '0.4rem 1rem', fontFamily: 'monospace', fontSize: '0.75rem',
+    fontWeight: 'bold', cursor: 'pointer', borderRadius: '2px'
+  },
+  navigationSidebarMenu: {
+    position: 'fixed', top: 0, left: 0, width: '22rem', height: '100vh',
+    backgroundColor: '#0b0f19', borderRight: '1px solid rgba(6,182,212,0.2)',
+    zIndex: 90, padding: '5rem 2rem 2rem 2rem', boxSizing: 'border-box',
+    display: 'flex', flexDirection: 'column', gap: '1.5rem'
+  },
+  sidebarSectionHeading: {
+    color: '#6b7280', fontSize: '0.7rem', fontFamily: 'monospace', letterSpacing: '0.1em'
+  },
+  sidebarLinkButton: {
+    textAlign: 'left', background: 'transparent', border: 'none', fontFamily: 'monospace', cursor: 'pointer', fontSize: '0.875rem'
   }
+
 };

@@ -1,24 +1,27 @@
-/**
- * Production-Grade 3D Bloch Sphere Graphics Engine (Three.js/R3F)
- * Path: /frontend/src/BlochSphereView.jsx
- */
-import React, { useRef } from "react";
+import React, { useRef, Suspense } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { OrbitControls, Line } from "@react-three/drei";
+import { OrbitControls, Line, Html } from "@react-three/drei";
 import * as THREE from "three";
 
-// An internal sub-component to calculate and animate vector rotations
-function StateVectorArrow({ x, y, z }) {
+// Explicit variables matching our optimized 1.6 unit sphere scale constraints
+const originPos = new THREE.Vector3(0.0, 0.0, 0.0);
+const lightPos = new THREE.Vector3(4.0, 4.0, 4.0);
+const cameraPositionArray = new Array(3.0, 3.0, 3.0);
+const sphereMeshArgs = new Array(1.6, 32, 32); // Scaled down from 2.0 to 1.6
+
+function AmmeterVectorArrow({ x, y, z }) {
   const arrowRef = useRef();
+  const currentDirectionRef = useRef(new THREE.Vector3(0, 0, 1));
 
   useFrame(() => {
     if (!arrowRef.current) return;
-    // Target state vector geometry mapping
-    const targetVector = new THREE.Vector3(x, y, z).normalize();
+    const targetDirection = new THREE.Vector3(x, y, z).normalize();
 
-    // Asymptotically ease the vector toward target coordinates for smooth transitions
-    arrowRef.current.setDirection(targetVector);
-    arrowRef.current.setLength(2.2);
+    currentDirectionRef.current.lerp(targetDirection, 0.08);
+    currentDirectionRef.current.normalize();
+
+    arrowRef.current.setDirection(currentDirectionRef.current);
+    arrowRef.current.setLength(1.6); // Match the new 1.6 unit radius constraint
   });
 
   return (
@@ -26,81 +29,178 @@ function StateVectorArrow({ x, y, z }) {
       ref={arrowRef}
       object={
         new THREE.ArrowHelper(
-          new THREE.Vector3(0, 1, 0), // Base default direction
-          new THREE.Vector3(0, 0, 0), // Anchored origin
-          2.2,
-          "#06b6d4", // Electric Cyan state line accent
-          0.4,
-          0.2,
+          new THREE.Vector3(0, 0, 1),
+          originPos,
+          1.6,
+          "#06b6d4",
+          0.28,
+          0.12,
         )
       }
     />
   );
 }
 
-export default function BlochSphereView({ coordinates }) {
-  const { x, y, z } = coordinates;
+export default function BlochSphereView({ coordinates, angles }) {
+  // Graceful fallback defaults to protect initial load steps from empty metrics crashes
+  const posX = coordinates?.x ?? 0.0;
+  const posY = coordinates?.y ?? 1.0;
+  const posZ = coordinates?.z ?? 0.0;
+  const angTheta = angles?.theta ?? 90;
+  const angPhi = angles?.phi ?? 90;
 
   return (
-    <div style={{ width: "100%", height: "100%", backgroundColor: "#030712" }}>
-      <Canvas camera={{ position: [4, 3, 4], fov: 50 }}>
-        <ambientLight intensity={0.4} />
-        <pointLight position={[10, 10, 10]} intensity={1.5} />
+    <div
+      style={{
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "#030712",
+        overflow: "hidden",
+      }}
+    >
+      <div style={{ width: "100%", height: "100%", position: "relative" }}>
+        <Suspense
+          fallback={
+            <div
+              style={{
+                color: "#10b981",
+                fontFamily: "monospace",
+                padding: "2rem",
+              }}
+            >
+              CALIBRATING HILBERT WORKSPACE...
+            </div>
+          }
+        >
+          <Canvas camera={{ position: cameraPositionArray, fov: 45 }}>
+            <ambientLight intensity={0.5} />
+            <pointLight position={lightPos} intensity={1.5} />
 
-        {/* 1. Main Wireframe Bloch Sphere Surface */}
-        <mesh>
-          <sphereGeometry args={[2, 32, 32]} />
-          <meshBasicMaterial
-            color="rgba(16, 185, 129, 0.12)" // Translucent Quantum Emerald Tint
-            wireframe
-            transparent
-            opacity={0.15}
-          />
-        </mesh>
+            {/* Scaled-down wireframe unit sphere mesh */}
+            <mesh position={originPos}>
+              <sphereGeometry args={sphereMeshArgs} />
+              <meshBasicMaterial
+                color="#10b981"
+                wireframe
+                transparent
+                opacity={0.05}
+              />
+            </mesh>
 
-        {/* 2. Main Geometric Equatorial and Polar Rings */}
-        <gridHelper args={[4, 20, "#111827", "#1f2937"]} position={[0, 0, 0]} />
+            <gridHelper
+              args={[3.2, 16, "#1f2937", "#111827"]}
+              position={originPos}
+            />
 
-        {/* 3. Coordinate Reference System Axes Lines (X, Y, Z) */}
-        {/* Z-Axis (Vertical Quantum Basis Axis |0> / |1>) */}
-        <Line
-          points={[
-            [0, -2.5, 0],
-            [0, 2.5, 0],
-          ]}
-          color="#ef4444"
-          lineWidth={1.5}
-        />
-        {/* X-Axis */}
-        <Line
-          points={[
-            [-2.5, 0, 0],
-            [2.5, 0, 0],
-          ]}
-          color="#10b981"
-          lineWidth={1}
-        />
-        {/* Y-Axis */}
-        <Line
-          points={[
-            [0, 0, -2.5],
-            [0, 0, 2.5],
-          ]}
-          color="#3b82f6"
-          lineWidth={1}
-        />
+            {/* Basis Reference System Lines */}
+            <Line
+              points={[
+                [0, -1.8, 0],
+                [0, 1.8, 0],
+              ]}
+              color="#ef4444"
+              lineWidth={1.5}
+            />
+            <Line
+              points={[
+                [-1.8, 0, 0],
+                [1.8, 0, 0],
+              ]}
+              color="#10b981"
+              lineWidth={1.5}
+            />
+            <Line
+              points={[
+                [0, 0, -1.8],
+                [0, 0, 1.8],
+              ]}
+              color="#3b82f6"
+              lineWidth={1.5}
+            />
 
-        {/* 4. The Live Quantum State Vector Pointer Arrow */}
-        <StateVectorArrow x={x} y={y} z={z} />
+            {/* Spatial Basis Label Tags */}
+            <Html position={[0, 1.9, 0]} center>
+              <span style={labelStyle}>|0⟩ (Z+)</span>
+            </Html>
+            <Html position={[0, -1.9, 0]} center>
+              <span style={labelStyle}>|1⟩ (Z-)</span>
+            </Html>
+            <Html position={[1.9, 0, 0]} center>
+              <span style={labelStyle}>|+⟩ (X+)</span>
+            </Html>
+            <Html position={[0, 0, 1.9]} center>
+              <span style={labelStyle}>|i+⟩ (Y+)</span>
+            </Html>
 
-        {/* High-end spatial viewport configuration controls */}
-        <OrbitControls
-          enableZoom={true}
-          enablePan={false}
-          maxDistance={8}
-          minDistance={3}
-        />
-      </Canvas>
+            {/* LIVE DYNAMIC TRACKING HUD PINNED DIRECTLY TO VECTOR ARROW TIP COORD */}
+            <Html position={[posX * 1.6, posY * 1.6, posZ * 1.6]} center>
+              <div style={vectorHUDStyle}>
+                <div
+                  style={{
+                    color: "#10b981",
+                    borderBottom: "1px solid rgba(6,182,212,0.2)",
+                    paddingBottom: "2px",
+                    marginBottom: "2px",
+                  }}
+                >
+                  Ψ COMPONENT
+                </div>
+                <div>X: {posX.toFixed(3)}</div>
+                <div>Y: {posY.toFixed(3)}</div>
+                <div>Z: {posZ.toFixed(3)}</div>
+                <div
+                  style={{
+                    color: "#06b6d4",
+                    marginTop: "2px",
+                    paddingTop: "2px",
+                    borderTop: "1px solid rgba(255,255,255,0.05)",
+                  }}
+                >
+                  θ: {angTheta}° | φ: {angPhi}°
+                </div>
+              </div>
+            </Html>
+
+            <AmmeterVectorArrow x={posX} y={posY} z={posZ} />
+
+            <OrbitControls
+              enableZoom={true}
+              enablePan={false}
+              maxDistance={5}
+              minDistance={2}
+            />
+          </Canvas>
+        </Suspense>
+      </div>
     </div>
   );
 }
+
+const labelStyle = {
+  color: "#9ca3af",
+  fontFamily: "monospace",
+  fontSize: "0.65rem",
+  backgroundColor: "#0b0f19",
+  padding: "2px 5px",
+  borderRadius: "2px",
+  border: "1px solid rgba(255,255,255,0.03)",
+  whiteSpace: "nowrap",
+};
+
+const vectorHUDStyle = {
+  backgroundColor: "rgba(11, 15, 25, 0.85)",
+  backdropFilter: "blur(8px)",
+  border: "1px solid #06b6d4",
+  padding: "6px 10px",
+  borderRadius: "4px",
+  fontFamily: "monospace",
+  fontSize: "0.65rem",
+  color: "#f3f4f6",
+  boxShadow: "0 0 15px rgba(6, 182, 212, 0.25)",
+  whiteSpace: "nowrap",
+  pointerEvents: "none",
+  userSelect: "none",
+};
