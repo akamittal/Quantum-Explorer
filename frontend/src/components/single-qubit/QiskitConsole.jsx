@@ -33,8 +33,8 @@ qc.measure_all()`;
       <h3 style={styles.sectionHeader}>// 6.0 IBM QISKIT CODE BLUEPRINT</h3>
       <p style={styles.paragraphText}>
         The exact, production-grade Python code to instantiate, parameterize,
-        and analyze this identical system state vector using the **IBM Qiskit
-        SDK v1.x** architecture:
+        and analyze this identical system state vector using the{" "}
+        <strong>IBM Qiskit SDK v1.x</strong> architecture:
       </p>
 
       <div style={styles.codeConsoleFrame}>
