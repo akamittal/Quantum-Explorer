@@ -17,8 +17,20 @@ function AmmeterVectorArrow({ x, y, z }) {
     if (!arrowRef.current) return;
     const targetDirection = new THREE.Vector3(x, y, z).normalize();
 
-    currentDirectionRef.current.lerp(targetDirection, 0.08);
-    currentDirectionRef.current.normalize();
+    const currentDirection = currentDirectionRef.current;
+    const dot = THREE.MathUtils.clamp(currentDirection.dot(targetDirection), -1, 1);
+
+    // Linear interpolation collapses to a zero vector for exactly antipodal
+    // directions (for example |0> to |1>). Rotate around a stable perpendicular
+    // axis until the directions are no longer opposite, then resume smoothing.
+    if (dot < -0.9995) {
+      const axis = new THREE.Vector3().crossVectors(currentDirection, new THREE.Vector3(1, 0, 0));
+      if (axis.lengthSq() < 1e-8) axis.crossVectors(currentDirection, new THREE.Vector3(0, 1, 0));
+      axis.normalize();
+      currentDirection.applyAxisAngle(axis, 0.08).normalize();
+    } else {
+      currentDirection.lerp(targetDirection, 0.08).normalize();
+    }
 
     arrowRef.current.setDirection(currentDirectionRef.current);
     arrowRef.current.setLength(1.6); // Match the new 1.6 unit radius constraint
