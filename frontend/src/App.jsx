@@ -119,6 +119,7 @@ export default function App() {
               }}
               onAngleSliderAdjustment={quantum.handleSliderAngleChange}
               onAlphaInputChange={quantum.handleAlphaInputChange} // New input route hook mapped cleanly
+              onGateApply={quantum.handleInjectUnitaryGate}
             />
           }
           RightContent={
