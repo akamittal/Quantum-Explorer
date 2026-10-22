@@ -26,7 +26,7 @@ export default function ConceptHero() {
         </p>
         <div style={styles.sectionTitleRow}><h3 style={styles.sectionHeader}>A FIRST LOOK AT THE SYMBOLS</h3><EducationHelp topic="amplitude" /></div>
         <p style={styles.paragraphText}>Scientists write a qubit's state like this:</p>
-        <MathRenderer formula="\\lvert\\psi\\rangle = \\alpha\\lvert0\\rangle + \\beta\\lvert1\\rangle" displayMode={true} />
+        <MathRenderer formula="\lvert\psi\rangle = \alpha\lvert0\rangle + \beta\lvert1\rangle" displayMode={true} />
         <p style={styles.paragraphText}>
           You don't need to memorise this. For now, just know that α and β help describe the chances of seeing 0 or 1. We'll explore those chances using the controls below.
         </p>
