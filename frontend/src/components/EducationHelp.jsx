@@ -31,7 +31,7 @@ const lessons = {
       ["Picture a spinning coin", "A coin resting on a table is clearly heads or tails. A spinning coin is harder to describe with only those two words. This is a useful picture for a qubit, but it is only an analogy. A qubit is not a tiny coin, and it does not literally spin between 0 and 1."],
       ["What does a qubit actually do?", "A qubit is prepared in a quantum state. When we measure it, the experiment gives one ordinary answer, 0 or 1. The state tells us the chances of each answer. For example, some states give 0 every time, while another state can give either result about half the time."],
       ["Why is it different from a hidden bit?", "A qubit is not simply an ordinary switch whose value we have not looked at yet. Quantum states can also affect one another through a wave-like effect called interference. Later gates can make that effect change the chances we measure."],
-      ["Notation", "The symbols [[\lvert0\rangle]] and [[\lvert1\rangle]] name the two measurement outcomes. The state can be written as [[\lvert\psi\rangle = \alpha\lvert0\rangle + \beta\lvert1\rangle]]. Alpha and beta are numbers that describe the state and help us calculate the chances."]
+      ["Notation", "The symbols [[\\lvert0\\rangle]] and [[\\lvert1\\rangle]] name the two measurement outcomes. The state can be written as [[\\lvert\\psi\\rangle = \\alpha\\lvert0\\rangle + \\beta\\lvert1\\rangle]]. Alpha and beta are numbers that describe the state and help us calculate the chances."]
     ],
   },
   gate: {
@@ -40,7 +40,7 @@ const lessons = {
     visual: "circuit",
     sections: [
       ["A recipe, one step at a time", "Imagine making a sandwich. Adding cheese and then toasting it can give a different result from toasting first and adding the cheese later. A quantum circuit also follows a chosen order of steps."],
-      ["Try a flip", "The X gate swaps the two basic states: [[\lvert0\rangle]] becomes [[\lvert1\rangle]], and [[\lvert1\rangle]] becomes [[\lvert0\rangle]]. It is similar to flipping a light switch."],
+      ["Try a flip", "The X gate swaps the two basic states: [[\\lvert0\\rangle]] becomes [[\\lvert1\\rangle]], and [[\\lvert1\\rangle]] becomes [[\\lvert0\\rangle]]. It is similar to flipping a light switch."],
       ["How do we draw gates?", "A circuit is drawn as a line with small boxes placed on it. Each box represents an action. Read the boxes from left to right, then measure the qubit to see the result."]
     ],
   },
@@ -50,8 +50,8 @@ const lessons = {
     visual: "hadamard",
     sections: [
       ["Picture two directions", "Imagine a compass arrow pointing straight up. Now imagine a second direction pointing to the right. The H gate takes the starting state at the top of the Bloch sphere to a point on its equator. That point is halfway around from the top, not halfway down a flat page. In a different picture, the result has equal amounts of the 0 and 1 outcomes. These pictures describe the same quantum state in different ways."],
-      ["Try it yourself", "Start at [[\lvert0\rangle]] and apply H once. Measure many times. You should see roughly half 0s and half 1s. With only ten tries, the count might be six and four, or seven and three. More tries usually give a clearer picture of the 50/50 chance."],
-      ["The short formula", "For this starting state, we write [[H\lvert0\rangle = (\lvert0\rangle + \lvert1\rangle)/\sqrt{2}]]. You do not need to memorise it. The important idea is that H changes the state so both results are equally likely when measured."],
+      ["Try it yourself", "Start at [[\\lvert0\\rangle]] and apply H once. Measure many times. You should see roughly half 0s and half 1s. With only ten tries, the count might be six and four, or seven and three. More tries usually give a clearer picture of the 50/50 chance."],
+      ["The short formula", "For this starting state, we write [[H\\lvert0\\rangle = (\\lvert0\\rangle + \\lvert1\\rangle)/\\sqrt{2}]]. You do not need to memorise it. The important idea is that H changes the state so both results are equally likely when measured."],
       ["Why it matters", "The H gate is often used to create a state where both outcomes are possible. Later gates can change how the possibilities affect one another, which can change the final answer."]
     ],
   },
@@ -60,7 +60,7 @@ const lessons = {
     summary: "The X gate swaps 0 and 1, like flipping a light switch from OFF to ON or ON to OFF.",
     visual: "bit",
     sections: [
-      ["Try it", "Start at [[\lvert0\rangle]] and press X. The state becomes [[\lvert1\rangle]], so measurement gives 1. Press X again and it returns to [[\lvert0\rangle]]. Two flips undo each other."],
+      ["Try it", "Start at [[\\lvert0\\rangle]] and press X. The state becomes [[\\lvert1\\rangle]], so measurement gives 1. Press X again and it returns to [[\\lvert0\\rangle]]. Two flips undo each other."],
       ["What if the state is more interesting?", "X also swaps the roles of the 0 and 1 parts of a more general quantum state. You can test this by applying H and then X, and comparing the state display with H alone."],
       ["Remember", "X is similar to NOT in an ordinary computer, but it is a quantum gate and can act on states that are not just 0 or 1."]
     ],
@@ -141,7 +141,7 @@ const lessons = {
     summary: "An amplitude is a number that describes part of a qubit's state. It is not itself a percentage. We use its size to calculate the chance of getting a measurement result.",
     visual: "amplitude",
     sections: [
-      ["Two labels, two numbers", "A qubit's state is often written as [[\lvert\psi\rangle = \alpha\lvert0\rangle + \beta\lvert1\rangle]]. Alpha (α) goes with the 0 outcome and beta (β) goes with the 1 outcome."],
+      ["Two labels, two numbers", "A qubit's state is often written as [[\\lvert\\psi\\rangle = \\alpha\\lvert0\\rangle + \\beta\\lvert1\\rangle]]. Alpha (α) goes with the 0 outcome and beta (β) goes with the 1 outcome."],
       ["How does a number become a chance?", "For each amplitude, take its absolute size and square it. That gives the chance of the matching measurement result. For example, an amplitude with size 1 gives a 100% chance; an amplitude with size 0 gives a 0% chance."],
       ["Why not call the amplitude a probability?", "Amplitudes can include signs or complex-number parts, so they contain information that a simple percentage does not. Later gates can make those details affect interference. That is why two states with the same immediate chances can behave differently after another gate."],
       ["Explore the sliders", "Move the amplitude slider and watch the two chances change. The simulator keeps the state valid, so the chances of 0 and 1 always add up to 100%."]
@@ -193,7 +193,7 @@ const lessons = {
 const aliases = { h: "gate-h", x: "gate-x", y: "gate-y", z: "gate-z", s: "gate-s", t: "gate-t", reset: "reset" };
 
 function RichText({ text }) {
-  const pieces = text.split(/(\[\[[\s\S]*?\]\])/g);
+  const pieces = text.split(/(\[\[[\\s\\S]*?\\]\\])/g);
   return <>{pieces.map((piece, index) => piece.startsWith("[[") && piece.endsWith("]]")
     ? <MathRenderer key={index} formula={piece.slice(2, -2)} displayMode={false} />
     : <React.Fragment key={index}>{piece}</React.Fragment>)}</>;
