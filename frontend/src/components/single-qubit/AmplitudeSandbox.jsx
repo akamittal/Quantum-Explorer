@@ -10,8 +10,7 @@ export default function AmplitudeSandbox({ alpha, beta, onAlphaInputChange }) {
         <EducationHelp topic="amplitude" />
       </div>
       <p style={styles.paragraphText}>
-        Modify the amplitude coefficient vector below to observe how the system
-        balances state potentials:
+        Move the slider to change the |0⟩ amplitude. The |1⟩ amplitude adjusts so the two probabilities still add up to 100%:
       </p>
 
       <div style={styles.amplitudePlaygroundSliderBox}>
