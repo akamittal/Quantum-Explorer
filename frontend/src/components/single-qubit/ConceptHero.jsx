@@ -15,7 +15,7 @@ export default function ConceptHero() {
           A <strong>qubit</strong> is the basic unit of quantum information. Like a classical bit, a measurement gives 0 or 1—but before measurement, its state can combine both possibilities.
         </p>
         <p style={styles.paragraphText}>
-          We write a qubit's state as <MathRenderer formula="\lvert\psi\rangle = \alpha\lvert0\rangle + \beta\lvert1\rangle" displayMode={false} />. The numbers α and β are called <strong>amplitudes</strong>; their squared magnitudes give the measurement probabilities.
+          We write a qubit's state as <MathRenderer formula="\\lvert\\psi\\rangle = \\alpha\\lvert0\\rangle + \\beta\\lvert1\\rangle" displayMode={false} />. The numbers α and β are called <strong>amplitudes</strong>; their squared magnitudes give the measurement probabilities.
           <EducationHelp topic="amplitude" label="Learn about quantum amplitudes" />
         </p>
         <div style={styles.thematicInsightBox}>
@@ -33,7 +33,7 @@ export default function ConceptHero() {
         <p style={styles.paragraphText}>
           Measurement turns the quantum state into a classical result—0 or 1. For a superposition, the outcome is probabilistic. Repeating the experiment helps us estimate the probabilities.
         </p>
-        <MathRenderer formula="|\alpha|^2 + |\beta|^2 = 1" displayMode={true} />
+        <MathRenderer formula="|\\alpha|^2 + |\\beta|^2 = 1" displayMode={true} />
       </section>
     </div>
   );
