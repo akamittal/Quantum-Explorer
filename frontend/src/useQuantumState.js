@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { getBlochCoordinates } from './quantumMath.js';
 
 /**
  * Custom Computational State Hook for Isolated Single-Qubit Mechanics (v2.0)
@@ -73,9 +74,7 @@ export default function useQuantumState() {
       nextA = { re: 1.0, im: 0.0 }; nextB = { re: 0.0, im: 0.0 };
     }
 
-    const xCoord = 2 * (nextA.re * nextB.re + nextA.im * nextB.im);
-    const yCoord = 2 * (nextA.re * nextB.im - nextA.im * nextB.re);
-    const zCoord = (nextA.re * nextA.re + nextA.im * nextA.im) - (nextB.re * nextB.re + nextB.im * nextB.im);
+    const { x: xCoord, y: yCoord, z: zCoord } = getBlochCoordinates(nextA, nextB);
 
     const nextTheta = Math.round((Math.acos(zCoord) * 180) / Math.PI);
     let nextPhi = Math.round((Math.atan2(yCoord, xCoord) * 180) / Math.PI);

@@ -57,7 +57,7 @@ export default function TelemetryTracer({
         </p>
         <div style={styles.mathOutputArea}>
           <MathRenderer
-            formula={`\\text{P}(0) = \\lvert\\alpha\\rvert^2 = (${alpha.re.toFixed(4)})^2 = ${probZero.toFixed(1)}\\%`}
+            formula={`\\text{P}(0) = \\lvert\\alpha\\rvert^2 = (${alpha.re.toFixed(4)})^2 + (${alpha.im.toFixed(4)})^2 = ${probZero.toFixed(1)}\\%`}
             displayMode={true}
           />
           <div style={{ margin: "0.25rem 0" }} />
