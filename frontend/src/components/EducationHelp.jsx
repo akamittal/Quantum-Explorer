@@ -205,7 +205,7 @@ function LessonVisual({ type }) {
   const green = "#6ee7b7";
   return (
     <div style={styles.visualWrap} aria-label="Illustration for this explanation">
-      <svg viewBox="0 0 320 112" role="img" aria-hidden="true" style={styles.visual}>
+      <svg viewBox="0 0 320 140" role="img" aria-hidden="true" style={styles.visual}>
         {type === "hadamard" && <>
           <text x="62" y="12" fill="#cbd5e1" fontSize="10" textAnchor="middle">BEFORE</text>
           <text x="238" y="12" fill="#cbd5e1" fontSize="10" textAnchor="middle">AFTER H</text>
