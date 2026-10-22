@@ -1,4 +1,5 @@
 import React from "react";
+import EducationHelp from "../EducationHelp";
 
 export default function ParameterSliders({
   theta,
@@ -7,9 +8,11 @@ export default function ParameterSliders({
 }) {
   return (
     <section style={styles.contentSection}>
-      <h3 style={styles.sectionHeader}>
-        // 4.0 REAL-TIME PARAMETER AGENT (PLAYGROUND)
-      </h3>
+      <div style={styles.sectionTitleRow}>
+        <h3 style={styles.sectionHeader}>// EXPLORE THE QUBIT'S ANGLES</h3>
+        <EducationHelp topic="angles" />
+        <EducationHelp topic="bloch" label="Learn about the Bloch sphere" />
+      </div>
       <div style={styles.sliderWorkspace}>
         <div style={styles.sliderRow}>
           <div style={styles.sliderHeaderMeta}>
@@ -54,6 +57,7 @@ export default function ParameterSliders({
 
 const styles = {
   contentSection: { display: "flex", flexDirection: "column", gap: "0.85rem" },
+  sectionTitleRow: { display: "flex", alignItems: "center", flexWrap: "wrap", gap: "0.55rem" },
   sectionHeader: {
     color: "#10b981",
     fontSize: "0.8rem",
