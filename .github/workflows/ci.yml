@@ -22,7 +22,7 @@ jobs:
           node-version: 20
           cache: npm
       - name: Install dependencies
-        run: npm install
+        run: npm ci
       - name: Run quantum engine tests
         run: npm test
       - name: Build frontend
