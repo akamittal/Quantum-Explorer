@@ -1,12 +1,14 @@
 import React from "react";
 import MathRenderer from "../../MathRenderer";
+import EducationHelp from "../EducationHelp";
 
 export default function AmplitudeSandbox({ alpha, beta, onAlphaInputChange }) {
   return (
     <section style={styles.contentSection}>
-      <h3 style={styles.sectionHeader}>
-        // 3.0 INTERACTIVE MATHEMATICAL VALIDATION EXAMPLE
-      </h3>
+      <div style={styles.sectionTitleRow}>
+        <h3 style={styles.sectionHeader}>// 3.0 EXPLORE AMPLITUDES</h3>
+        <EducationHelp topic="amplitude" />
+      </div>
       <p style={styles.paragraphText}>
         Modify the amplitude coefficient vector below to observe how the system
         balances state potentials:
@@ -69,6 +71,7 @@ export default function AmplitudeSandbox({ alpha, beta, onAlphaInputChange }) {
 
 const styles = {
   contentSection: { display: "flex", flexDirection: "column", gap: "0.85rem" },
+  sectionTitleRow: { display: "flex", alignItems: "center", flexWrap: "wrap", gap: "0.55rem" },
   sectionHeader: {
     color: "#10b981",
     fontSize: "0.8rem",
