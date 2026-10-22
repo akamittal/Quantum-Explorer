@@ -1,94 +1,99 @@
-import { useState } from 'react';
-import { getBlochCoordinates } from './quantumMath.js';
+import { useState } from "react";
+import { getBlochCoordinates } from "./quantumMath.js";
+import {
+  runSingleQubitCircuit,
+  sampleMeasurements,
+} from "./quantumCircuit.js";
 
-/**
- * Custom Computational State Hook for Isolated Single-Qubit Mechanics (v2.0)
- * Path: /frontend/src/useQuantumState.js
- */
+const ZERO_STATE = {
+  alpha: { re: 1, im: 0 },
+  beta: { re: 0, im: 0 },
+};
+
+function stateWithBlochCoordinates(state) {
+  const coordinates = getBlochCoordinates(state.alpha, state.beta);
+  const theta = Math.acos(Math.max(-1, Math.min(1, coordinates.z)));
+  let phi = Math.atan2(coordinates.y, coordinates.x);
+  if (phi < 0) phi += 2 * Math.PI;
+
+  return {
+    state: {
+      ...coordinates,
+      alpha: { ...state.alpha },
+      beta: { ...state.beta },
+    },
+    angles: {
+      theta: Math.round((theta * 180) / Math.PI),
+      phi: Math.round((phi * 180) / Math.PI),
+    },
+  };
+}
+
+/** React adapter for the pure, UI-independent single-qubit circuit engine. */
 export default function useQuantumState() {
-  const [quantumAngles, setQuantumAngles] = useState({ theta: 90, phi: 90 });
-  const [calculatedState, setCalculatedState] = useState({
-    x: 0.0, y: 1.0, z: 0.0,
-    alpha: { re: 0.7071, im: 0.0 },
-    beta: { re: 0.0, im: 0.7071 }
+  const initial = stateWithBlochCoordinates({
+    alpha: { re: 1 / Math.sqrt(2), im: 0 },
+    beta: { re: 0, im: 1 / Math.sqrt(2) },
   });
+  const [quantumAngles, setQuantumAngles] = useState(initial.angles);
+  const [calculatedState, setCalculatedState] = useState(initial.state);
+  const [measurementResult, setMeasurementResult] = useState(null);
+
+  const commitState = (state) => {
+    const next = stateWithBlochCoordinates(state);
+    setQuantumAngles(next.angles);
+    setCalculatedState(next.state);
+    setMeasurementResult(null);
+  };
 
   const handleSliderAngleChange = (angleType, value) => {
     const nextAngles = { ...quantumAngles, [angleType]: value };
-    setQuantumAngles(nextAngles);
-
-    const radTheta = (nextAngles.theta * Math.PI) / 180;
-    const radPhi = (nextAngles.phi * Math.PI) / 180;
-
-    const computedX = Math.sin(radTheta) * Math.cos(radPhi);
-    const computedY = Math.sin(radTheta) * Math.sin(radPhi);
-    const computedZ = Math.cos(radTheta);
-
-    const alphaRe = Math.cos(radTheta / 2);
-    const betaRe = Math.cos(radPhi) * Math.sin(radTheta / 2);
-    const betaIm = Math.sin(radPhi) * Math.sin(radTheta / 2);
-
-    setCalculatedState({
-      x: computedX, y: computedY, z: computedZ,
-      alpha: { re: alphaRe, im: 0.0 },
-      beta: { re: betaRe, im: betaIm }
+    const theta = (nextAngles.theta * Math.PI) / 180;
+    const phi = (nextAngles.phi * Math.PI) / 180;
+    commitState({
+      alpha: { re: Math.cos(theta / 2), im: 0 },
+      beta: {
+        re: Math.cos(phi) * Math.sin(theta / 2),
+        im: Math.sin(phi) * Math.sin(theta / 2),
+      },
     });
   };
 
-  // Direct Amplitude Controller: Computes beta and maps vectors backward into angles safely
   const handleAlphaInputChange = (newAlphaRe) => {
-    // Enforce boundary caps between 0.0 and 1.0
-    const aRe = Math.max(0, Math.min(1, newAlphaRe));
-    const bIm = Math.sqrt(1 - aRe * aRe);
-
-    const nextAlpha = { re: aRe, im: 0.0 };
-    const nextBeta = { re: 0.0, im: bIm };
-
-    // Cartesian mapping: x = 2*Re(a_conj * b), y = 2*Im(a_conj * b), z = |a|^2 - |b|^2
-    const computedX = 0.0; // Purely real alpha * purely imaginary beta results in 0 real part
-    const computedY = 2 * aRe * bIm;
-    const computedZ = (aRe * aRe) - (bIm * bIm);
-
-    // Convert spatial vectors back to polar angles to sync the playground sliders
-    const nextTheta = Math.round((Math.acos(computedZ) * 180) / Math.PI);
-    let nextPhi = Math.round((Math.atan2(computedY, computedX) * 180) / Math.PI);
-    if (nextPhi < 0) nextPhi += 360;
-
-    setQuantumAngles({ theta: isNaN(nextTheta) ? 0 : nextTheta, phi: isNaN(nextPhi) ? 0 : nextPhi });
-    setCalculatedState({ x: computedX, y: computedY, z: computedZ, alpha: nextAlpha, beta: nextBeta });
+    const alphaRe = Math.max(0, Math.min(1, newAlphaRe));
+    const betaIm = Math.sqrt(Math.max(0, 1 - alphaRe * alphaRe));
+    commitState({
+      alpha: { re: alphaRe, im: 0 },
+      beta: { re: 0, im: betaIm },
+    });
   };
 
   const handleInjectUnitaryGate = (gateType) => {
-    let a = { ...calculatedState.alpha }, b = { ...calculatedState.beta };
-    let nextA = { re: 1, im: 0 }, nextB = { re: 0, im: 0 };
-
-    if (gateType === 'H') {
-      const root2 = Math.sqrt(2);
-      nextA = { re: (a.re + b.re) / root2, im: (a.im + b.im) / root2 };
-      nextB = { re: (a.re - b.re) / root2, im: (a.im - b.im) / root2 };
-    } else if (gateType === 'X') {
-      nextA = { ...b }; nextB = { ...a };
-    } else if (gateType === 'Z') {
-      nextA = { ...a }; nextB = { re: -b.re, im: -b.im };
-    } else if (gateType === 'RESET') {
-      nextA = { re: 1.0, im: 0.0 }; nextB = { re: 0.0, im: 0.0 };
+    if (gateType === "RESET") {
+      commitState(ZERO_STATE);
+      return;
     }
+    commitState(runSingleQubitCircuit(calculatedState, [{ name: gateType }]));
+  };
 
-    const { x: xCoord, y: yCoord, z: zCoord } = getBlochCoordinates(nextA, nextB);
+  const handleRunCircuit = (operations) => {
+    commitState(runSingleQubitCircuit(ZERO_STATE, operations));
+  };
 
-    const nextTheta = Math.round((Math.acos(zCoord) * 180) / Math.PI);
-    let nextPhi = Math.round((Math.atan2(yCoord, xCoord) * 180) / Math.PI);
-    if (nextPhi < 0) nextPhi += 360;
-
-    setQuantumAngles({ theta: isNaN(nextTheta) ? 0 : nextTheta, phi: isNaN(nextPhi) ? 0 : nextPhi });
-    setCalculatedState({ x: xCoord, y: yCoord, z: zCoord, alpha: nextA, beta: nextB });
+  const handleMeasureShots = (shots = 100) => {
+    const result = sampleMeasurements(calculatedState, shots);
+    setMeasurementResult(result);
+    return result;
   };
 
   return {
     quantumAngles,
     calculatedState,
+    measurementResult,
     handleSliderAngleChange,
     handleInjectUnitaryGate,
-    handleAlphaInputChange
+    handleAlphaInputChange,
+    handleRunCircuit,
+    handleMeasureShots,
   };
 }

@@ -50,7 +50,6 @@ export default function App() {
           backgroundColor: "#030712",
         }}
       >
-        {/* INDEX MENU LIST SLIDE DRAWER OVERLAY */}
         {isSidebarOpen && (
           <div
             style={{
@@ -79,13 +78,7 @@ export default function App() {
             >
               🏛️ CORE MAP REPOSITORY
             </span>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "0.75rem",
-              }}
-            >
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
               <button
                 onClick={() => setIsSidebarOpen(false)}
                 style={{
@@ -118,8 +111,11 @@ export default function App() {
                 beta: quantum.calculatedState.beta,
               }}
               onAngleSliderAdjustment={quantum.handleSliderAngleChange}
-              onAlphaInputChange={quantum.handleAlphaInputChange} // New input route hook mapped cleanly
+              onAlphaInputChange={quantum.handleAlphaInputChange}
               onGateApply={quantum.handleInjectUnitaryGate}
+              onCircuitRun={quantum.handleRunCircuit}
+              onMeasureShots={quantum.handleMeasureShots}
+              measurementResult={quantum.measurementResult}
             />
           }
           RightContent={
@@ -132,7 +128,7 @@ export default function App() {
               angles={{
                 theta: quantum.quantumAngles.theta,
                 phi: quantum.quantumAngles.phi,
-              }} // Angles successfully mapped downstream
+              }}
             />
           }
         />
