@@ -1,4 +1,5 @@
 import React from "react";
+import EducationHelp from "../EducationHelp";
 
 /**
  * Production-Grade Qiskit Code Execution Reference Panel
@@ -30,7 +31,10 @@ qc.measure_all()`;
 
   return (
     <section style={styles.contentSection}>
-      <h3 style={styles.sectionHeader}>// 6.0 IBM QISKIT CODE BLUEPRINT</h3>
+      <div style={styles.sectionTitleRow}>
+        <h3 style={styles.sectionHeader}>// QISKIT CODE EXAMPLE</h3>
+        <EducationHelp topic="qiskit" />
+      </div>
       <p style={styles.paragraphText}>
         The exact, production-grade Python code to instantiate, parameterize,
         and analyze this identical system state vector using the{" "}
@@ -50,6 +54,7 @@ qc.measure_all()`;
 
 const styles = {
   contentSection: { display: "flex", flexDirection: "column", gap: "0.85rem" },
+  sectionTitleRow: { display: "flex", alignItems: "center", flexWrap: "wrap", gap: "0.55rem" },
   sectionHeader: {
     color: "#10b981",
     fontSize: "0.8rem",

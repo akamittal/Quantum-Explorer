@@ -4,6 +4,7 @@ import AmplitudeSandbox from "./components/single-qubit/AmplitudeSandbox";
 import ParameterSliders from "./components/single-qubit/ParameterSliders";
 import TelemetryTracer from "./components/single-qubit/TelemetryTracer";
 import QiskitConsole from "./components/single-qubit/QiskitConsole";
+import EducationHelp from "./components/EducationHelp";
 import { getMeasurementProbabilities } from "./quantumMath";
 
 const COMPOSER_GATES = ["H", "X", "Y", "Z", "S", "T"];
@@ -29,10 +30,12 @@ export default function SingleQubitModule({
       <AmplitudeSandbox alpha={alpha} beta={beta} onAlphaInputChange={onAlphaInputChange} />
 
       <section style={styles.gateSection}>
-        <h3 style={styles.sectionHeader}>// 4.0 APPLY A SINGLE-QUBIT GATE</h3>
+        <div style={styles.sectionTitleRow}>
+          <h3 style={styles.sectionHeader}>// 4.0 APPLY A SINGLE-QUBIT GATE</h3>
+          <EducationHelp topic="gate" />
+        </div>
         <p style={styles.helpText}>
-          Apply a gate to the current state. The amplitudes, probability readout,
-          and Bloch vector update together.
+          Apply an operation to the current qubit. Its state, probabilities and Bloch-sphere position update together.
         </p>
         <div style={styles.gateRow}>
           {[
@@ -41,29 +44,36 @@ export default function SingleQubitModule({
             ["Z", "Pauli-Z"],
             ["RESET", "Reset to |0⟩"],
           ].map(([gate, label]) => (
-            <button key={gate} type="button" onClick={() => onGateApply?.(gate)} disabled={!onGateApply} style={styles.gateButton}>
-              {label}
-            </button>
+            <div key={gate} style={styles.gateControl}>
+              <button type="button" onClick={() => onGateApply?.(gate)} disabled={!onGateApply} style={styles.gateButton}>
+                {label}
+              </button>
+              <EducationHelp topic={gate === "RESET" ? "reset" : `gate-${gate.toLowerCase()}`} label={`Learn about ${label}`} />
+            </div>
           ))}
         </div>
       </section>
 
       <section style={styles.gateSection}>
-        <h3 style={styles.sectionHeader}>// 4.1 COMPOSE A CIRCUIT</h3>
+        <div style={styles.sectionTitleRow}>
+          <h3 style={styles.sectionHeader}>// 4.1 COMPOSE A CIRCUIT</h3>
+          <EducationHelp topic="circuit" />
+        </div>
         <p style={styles.helpText}>
-          Add gates in order, then run the whole circuit from |0⟩. The circuit engine
-          applies each unitary operation to the previous state.
+          Add gates in order, then run the sequence from |0⟩. Each gate acts on the state left by the previous gate.
         </p>
         <div style={styles.gateRow}>
           {COMPOSER_GATES.map((gate) => (
-            <button
-              key={gate}
-              type="button"
-              style={styles.gateButton}
-              onClick={() => setQueuedGates((current) => [...current, gate])}
-            >
-              + {gate}
-            </button>
+            <div key={gate} style={styles.gateControl}>
+              <button
+                type="button"
+                style={styles.gateButton}
+                onClick={() => setQueuedGates((current) => [...current, gate])}
+              >
+                + {gate}
+              </button>
+              <EducationHelp topic={`gate-${gate.toLowerCase()}`} label={`Learn about the ${gate} gate`} />
+            </div>
           ))}
         </div>
         <div style={styles.circuitSequence} aria-live="polite">
@@ -85,10 +95,12 @@ export default function SingleQubitModule({
       </section>
 
       <section style={styles.gateSection}>
-        <h3 style={styles.sectionHeader}>// 4.2 MEASUREMENT SHOTS</h3>
+        <div style={styles.sectionTitleRow}>
+          <h3 style={styles.sectionHeader}>// 4.2 MEASUREMENT SHOTS</h3>
+          <EducationHelp topic="measurement" />
+        </div>
         <p style={styles.helpText}>
-          Sample the current state 100 times in the computational basis. Counts vary
-          between runs, while the underlying probabilities are determined by the state.
+          Repeat a measurement 100 times. The observed counts can vary, even when the underlying probabilities stay the same.
         </p>
         <button type="button" style={styles.primaryButton} onClick={() => onMeasureShots?.(100)} disabled={!onMeasureShots}>
           Measure 100 shots
@@ -114,9 +126,11 @@ export default function SingleQubitModule({
 
 const styles = {
   gateSection: { display: "flex", flexDirection: "column", gap: "0.75rem", padding: "1.25rem", backgroundColor: "#0b0f19", border: "1px solid rgba(6,182,212,0.15)", borderRadius: "4px" },
+  sectionTitleRow: { display: "flex", alignItems: "center", gap: "0.65rem", flexWrap: "wrap" },
   sectionHeader: { color: "#10b981", fontSize: "0.8rem", fontFamily: "monospace", letterSpacing: "0.08em", margin: 0 },
   helpText: { color: "#9ca3af", fontSize: "0.875rem", lineHeight: 1.5, margin: 0 },
-  gateRow: { display: "flex", flexWrap: "wrap", gap: "0.5rem" },
+  gateRow: { display: "flex", flexWrap: "wrap", alignItems: "center", gap: "0.5rem" },
+  gateControl: { display: "inline-flex", alignItems: "center", gap: "0.35rem" },
   gateButton: { background: "#111827", border: "1px solid rgba(6,182,212,0.35)", color: "#e5e7eb", padding: "0.65rem 0.85rem", borderRadius: "4px", fontFamily: "monospace", cursor: "pointer" },
   primaryButton: { background: "rgba(16,185,129,0.12)", border: "1px solid rgba(16,185,129,0.6)", color: "#d1fae5", padding: "0.65rem 0.85rem", borderRadius: "4px", fontFamily: "monospace", cursor: "pointer" },
   circuitSequence: { minHeight: "2.5rem", display: "flex", alignItems: "center", padding: "0.75rem", background: "#030712", border: "1px dashed rgba(6,182,212,0.25)", color: "#67e8f9", fontFamily: "monospace", overflowWrap: "anywhere" },

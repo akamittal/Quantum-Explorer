@@ -1,5 +1,6 @@
 import React from "react";
 import MathRenderer from "../../MathRenderer";
+import EducationHelp from "../EducationHelp";
 
 export default function TelemetryTracer({
   theta,
@@ -23,11 +24,9 @@ export default function TelemetryTracer({
         <span style={styles.stepTitle}>
           [STEP 1] State Vector Parametrization
         </span>
+        <EducationHelp topic="angles" />
         <p style={styles.stepExplanationText}>
-          By factoring out global phase invariance, we project the complex state
-          vector onto a physical spherical shell. The polar angle (θ) defines
-          the vertical tilt from the computational ground axis, while the
-          azimuthal phase angle (φ) maps longitude parameters:
+          A qubit's state can be described by its amplitudes or by two angles. Theta (θ) sets the vertical position; phi (φ) sets the direction around the sphere:
         </p>
         <div style={styles.mathOutputArea}>
           <MathRenderer
@@ -48,12 +47,11 @@ export default function TelemetryTracer({
       {/* STEP 2 Block */}
       <div style={styles.mathStepCard}>
         <span style={styles.stepTitle}>
-          [STEP 2] Born's Rule Probability Distribution
+          [STEP 2] Measurement Probabilities
         </span>
+        <EducationHelp topic="measurement" />
         <p style={styles.stepExplanationText}>
-          Born's rule dictates that computing the squared absolute value of each
-          state coefficient resolves the exact physical percentage likelihood of
-          wave function collapse upon external measurement:
+          Square the size of each amplitude to find the chance of measuring 0 or 1. These probabilities add up to 100% for a valid qubit state:
         </p>
         <div style={styles.mathOutputArea}>
           <MathRenderer
@@ -71,13 +69,11 @@ export default function TelemetryTracer({
       {/* STEP 3 Block */}
       <div style={styles.mathStepCard}>
         <span style={styles.stepTitle}>
-          [STEP 3] Cartesian Position Trigonometry Mapping
+          [STEP 3] Bloch-Sphere Coordinates
         </span>
+        <EducationHelp topic="bloch" />
         <p style={styles.stepExplanationText}>
-          To physically plot the mathematical state vector onto our 3D Bloch
-          Canvas viewport space, we translate spherical parameters back into
-          observable 3D coordinates via the expectation values of the Pauli
-          matrices:
+          These three coordinates locate the qubit on the Bloch sphere. They give us a visual way to see how the state changes when a gate is applied:
         </p>
         <div style={styles.mathOutputArea}>
           <MathRenderer
