@@ -49,7 +49,7 @@ const lessons = {
     summary: "Start with a qubit in state 0. The H gate prepares a state that has a 50% chance of measuring 0 and a 50% chance of measuring 1.",
     visual: "hadamard",
     sections: [
-      ["Picture two directions", "Imagine a compass arrow pointing straight up. Now imagine a second direction pointing to the right. The H gate takes the starting state at the top of the Bloch sphere to a point on its equator. That point is halfway around from the top, not halfway down a flat page. In a different picture, the result has equal amounts of the 0 and 1 outcomes. These pictures describe the same quantum state in different ways."],
+      ["Watch the point move on the sphere", "Imagine a small pointer attached to the surface of a clear globe. At the very top, the pointer marks |0⟩. The H gate moves the marker along the curved surface until it reaches the equator, halfway between the top and bottom in height. On the sphere, this is a quarter-turn (90 degrees) away from the top, not a halfway move across a flat page. The new point is called |+⟩. In the measurement view, that same state gives 0 and 1 equal chances, 50% each. The picture of the moving point and the 50/50 bars are two ways to describe the same state."]
       ["Try it yourself", "Start at [[\\lvert0\\rangle]] and apply H once. Measure many times. You should see roughly half 0s and half 1s. With only ten tries, the count might be six and four, or seven and three. More tries usually give a clearer picture of the 50/50 chance."],
       ["The short formula", "For this starting state, we write [[H\\lvert0\\rangle = (\\lvert0\\rangle + \\lvert1\\rangle)/\\sqrt{2}]]. You do not need to memorise it. The important idea is that H changes the state so both results are equally likely when measured."],
       ["Why it matters", "The H gate is often used to create a state where both outcomes are possible. Later gates can change how the possibilities affect one another, which can change the final answer."]
@@ -193,7 +193,7 @@ const lessons = {
 const aliases = { h: "gate-h", x: "gate-x", y: "gate-y", z: "gate-z", s: "gate-s", t: "gate-t", reset: "reset" };
 
 function RichText({ text }) {
-  const pieces = text.split(/(\[\[[\\s\\S]*?\\]\\])/g);
+  const pieces = text.split(/(\[\[[\s\S]*?\]\])/g);
   return <>{pieces.map((piece, index) => piece.startsWith("[[") && piece.endsWith("]]")
     ? <MathRenderer key={index} formula={piece.slice(2, -2)} displayMode={false} />
     : <React.Fragment key={index}>{piece}</React.Fragment>)}</>;
@@ -206,6 +206,26 @@ function LessonVisual({ type }) {
   return (
     <div style={styles.visualWrap} aria-label="Illustration for this explanation">
       <svg viewBox="0 0 320 112" role="img" aria-hidden="true" style={styles.visual}>
+        {type === "hadamard" && <>
+          <text x="62" y="12" fill="#cbd5e1" fontSize="10" textAnchor="middle">BEFORE</text>
+          <text x="238" y="12" fill="#cbd5e1" fontSize="10" textAnchor="middle">AFTER H</text>
+          <circle cx="62" cy="65" r="39" fill="#0f172a" stroke={cyan} strokeWidth="2" />
+          <ellipse cx="62" cy="65" rx="39" ry="12" fill="none" stroke="#475569" strokeWidth="1.4" />
+          <ellipse cx="62" cy="65" rx="12" ry="39" fill="none" stroke="#475569" strokeWidth="1.2" />
+          <path d="M62 26 V104" stroke="#475569" strokeDasharray="3 3" />
+          <circle cx="62" cy="26" r="5.5" fill={green} stroke="#ecfdf5" />
+          <text x="62" y="116" fill="#e2e8f0" fontSize="10" textAnchor="middle">Top: |0⟩</text>
+          <path d="M111 65 H183 M176 59 L183 65 L176 71" fill="none" stroke={green} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+          <rect x="132" y="43" width="30" height="22" rx="5" fill="#164e63" stroke={cyan} />
+          <text x="147" y="58" fill="#ecfeff" fontSize="12" textAnchor="middle" fontWeight="bold">H</text>
+          <circle cx="238" cy="65" r="39" fill="#0f172a" stroke={cyan} strokeWidth="2" />
+          <ellipse cx="238" cy="65" rx="39" ry="12" fill="none" stroke="#475569" strokeWidth="1.4" />
+          <ellipse cx="238" cy="65" rx="12" ry="39" fill="none" stroke="#475569" strokeWidth="1.2" />
+          <path d="M238 26 V104" stroke="#475569" strokeDasharray="3 3" />
+          <circle cx="277" cy="65" r="5.5" fill={green} stroke="#ecfdf5" />
+          <text x="238" y="116" fill="#e2e8f0" fontSize="10" textAnchor="middle">Equator: |+⟩</text>
+          <text x="160" y="143" fill="#94a3b8" fontSize="10" textAnchor="middle">The state marker moves over the curved sphere</text>
+        </>}
         {type === "bit" && <>
           <path d="M48 56 H272" {...line} />
           <rect x="94" y="25" width="132" height="62" rx="12" fill="#111827" stroke="#475569" />
@@ -216,7 +236,7 @@ function LessonVisual({ type }) {
           <path d="M136 56 H184" {...line} />
           <path d="M178 50 L184 56 L178 62" fill="none" {...line} />
         </>}
-        {(type === "qubit" || type === "hadamard") && <>
+        {type === "qubit" && <>
           <circle cx="68" cy="55" r="27" fill="#0f172a" stroke={cyan} strokeWidth="2" />
           <path d="M68 78 V31 M61 39 L68 31 L75 39" fill="none" stroke={green} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
           <path d="M105 55 H145 M139 49 L145 55 L139 61" fill="none" {...line} />
