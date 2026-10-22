@@ -1,5 +1,6 @@
 import React from "react";
 import MathRenderer from "../../MathRenderer";
+import EducationHelp from "../EducationHelp";
 
 export default function TelemetryTracer({
   theta,
@@ -23,6 +24,7 @@ export default function TelemetryTracer({
         <span style={styles.stepTitle}>
           [STEP 1] State Vector Parametrization
         </span>
+        <EducationHelp topic="angles" />
         <p style={styles.stepExplanationText}>
           By factoring out global phase invariance, we project the complex state
           vector onto a physical spherical shell. The polar angle (θ) defines
@@ -48,8 +50,9 @@ export default function TelemetryTracer({
       {/* STEP 2 Block */}
       <div style={styles.mathStepCard}>
         <span style={styles.stepTitle}>
-          [STEP 2] Born's Rule Probability Distribution
+          [STEP 2] Measurement Probabilities
         </span>
+        <EducationHelp topic="measurement" />
         <p style={styles.stepExplanationText}>
           Born's rule dictates that computing the squared absolute value of each
           state coefficient resolves the exact physical percentage likelihood of
@@ -71,8 +74,9 @@ export default function TelemetryTracer({
       {/* STEP 3 Block */}
       <div style={styles.mathStepCard}>
         <span style={styles.stepTitle}>
-          [STEP 3] Cartesian Position Trigonometry Mapping
+          [STEP 3] Bloch-Sphere Coordinates
         </span>
+        <EducationHelp topic="bloch" />
         <p style={styles.stepExplanationText}>
           To physically plot the mathematical state vector onto our 3D Bloch
           Canvas viewport space, we translate spherical parameters back into
