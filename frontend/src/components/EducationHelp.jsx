@@ -45,7 +45,7 @@ const lessons = {
     title: "H — the Hadamard gate",
     summary: "Let's start with a qubit set to 0. The H gate changes it into a state where a later measurement has an equal chance of giving 0 or 1.",
     sections: [
-      ["Picture it", "Imagine an arrow pointing straight up. For this starting state, H moves the state to a balanced direction on the Bloch-sphere picture—halfway between the top and the side. The picture is a guide to the qubit's state, not a tiny arrow inside the machine."],
+      ["Picture it", "Imagine two directions: one stands for the 0 part and one for the 1 part. Starting from |0⟩, H gives both parts equal weight—like tilting an arrow halfway between those two directions. On the Bloch sphere, the dot moves from the top to the middle edge. These are two different pictures of the same change."],
       ["Try it", "Start at |0⟩ and apply H. Measure many times: you should see roughly half 0s and half 1s. With only a few tries, the counts may not split perfectly."],
       ["Notation", "The gate is labelled H. For this example: H|0⟩ = (|0⟩ + |1⟩)/√2."],
       ["Why it matters", "H is a common way to prepare a qubit so both measurement outcomes are possible. What happens next depends on which other gates we apply."]
