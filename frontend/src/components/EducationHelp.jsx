@@ -151,6 +151,7 @@ const gateAliases = { h: "gate-h", x: "gate-x", y: "gate-y", z: "gate-z", s: "ga
 export default function EducationHelp({ topic = "gate", label = "Learn about this concept" }) {
   const [open, setOpen] = useState(false);
   const closeRef = useRef(null);
+  const triggerRef = useRef(null);
   const lessonKey = lessons[topic] ? topic : (gateAliases[topic.toLowerCase()] || topic);
   const lesson = lessons[lessonKey] || lessons.gate;
 
@@ -166,12 +167,14 @@ export default function EducationHelp({ topic = "gate", label = "Learn about thi
     return () => {
       document.body.style.overflow = previousOverflow;
       window.removeEventListener("keydown", onKeyDown);
+      triggerRef.current?.focus();
     };
   }, [open]);
 
   return (
     <>
       <button
+        ref={triggerRef}
         type="button"
         aria-label={label}
         title={label}
@@ -192,6 +195,22 @@ export default function EducationHelp({ topic = "gate", label = "Learn about thi
             aria-modal="true"
             aria-labelledby={`lesson-title-${lessonKey}`}
             style={styles.dialog}
+            onKeyDown={(event) => {
+              if (event.key !== "Tab") return;
+              const focusable = event.currentTarget.querySelectorAll(
+                'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+              );
+              const first = focusable[0];
+              const last = focusable[focusable.length - 1];
+              if (!first || !last) return;
+              if (event.shiftKey && document.activeElement === first) {
+                event.preventDefault();
+                last.focus();
+              } else if (!event.shiftKey && document.activeElement === last) {
+                event.preventDefault();
+                first.focus();
+              }
+            }}
           >
             <div style={styles.dialogHeader}>
               <div>
