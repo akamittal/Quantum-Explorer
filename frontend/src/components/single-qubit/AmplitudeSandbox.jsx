@@ -45,7 +45,7 @@ export default function AmplitudeSandbox({ alpha, beta, onAlphaInputChange }) {
 
         <div style={styles.dividerLine}>
           <MathRenderer
-            formula="\(\lvert\Psi\rangle = \alpha\lvert0\rangle + \beta\lvert1\rangle\)"
+            formula="\\(\\lvert\\Psi\\rangle = \\alpha\\lvert0\\rangle + \\beta\\lvert1\\rangle\\)"
             displayMode={true}
           />
           <MathRenderer
@@ -56,7 +56,7 @@ export default function AmplitudeSandbox({ alpha, beta, onAlphaInputChange }) {
 
         <div style={styles.dividerLine}>
           <MathRenderer
-            formula="\(\text{Normalization} = \lvert\alpha\rvert^2 + \lvert\beta\rvert^2 = 1\)"
+            formula="\\(\\text{Normalization} = \\lvert\\alpha\\rvert^2 + \\lvert\\beta\\rvert^2 = 1\\)"
             displayMode={true}
           />
           <MathRenderer
