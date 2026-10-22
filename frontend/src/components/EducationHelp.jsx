@@ -184,7 +184,7 @@ const lessons = {
     visual: "circuit",
     sections: [
       ["Visual recipe versus written recipe", "In this playground, you can click gates and watch the state change. With Qiskit, you can write instructions in Python to build a circuit and run a simulation or, where supported, send it to a quantum device."],
-      ["A tiny example", "The line [[qc.h(0)]] means: apply the H gate to qubit number 0 in the circuit. The 0 here is the qubit's index in the program, not the result of measuring it."],
+      ["A tiny example", "The line qc.h(0) means: apply the H gate to qubit number 0 in the circuit. The 0 here is the qubit's index in the program, not the result of measuring it."],
       ["Does this panel run the code?", "No. The code panel is an example for learning. Displaying code does not execute it or send it to a real quantum computer."]
     ],
   },
