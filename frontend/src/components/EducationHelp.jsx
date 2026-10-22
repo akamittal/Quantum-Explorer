@@ -170,11 +170,11 @@ const lessons = {
   angles: {
     title: "What are theta and phi?",
     summary: "Theta and phi are two angles that tell us where the qubit's dot sits on the Bloch sphere. Imagine pointing to a place on a globe.",
-    visual: "sphere",
+    visual: "angles",
     sections: [
-      ["Theta: how far down?", "Imagine a globe with your finger at the North Pole. Theta tells you how far to tilt down from the top. At 0 degrees you are at the top; at 90 degrees you are around the middle; at 180 degrees you are at the bottom."],
-      ["Phi: which direction around?", "Keep your finger at the same height on the globe and walk around it. Phi tells you which direction around the sphere you are pointing. Changing phi moves the dot around a circle of the same height."],
-      ["Why does phi matter if the chances stay the same?", "Picture two ripples meeting in a pond. If their peaks meet, they can make a bigger ripple. If a peak meets a dip, they can partly cancel. A qubit has a part linked to 0 and a part linked to 1. Phi changes their relative phase, which is a bit like shifting one ripple compared with the other. This does not change the immediate chances of 0 and 1 when you measure, but it can change how later gates combine the two parts. That later combining is called interference."],
+      ["Theta: how far down?", "Theta (θ) moves the state point along a line of longitude, like travelling from the North Pole toward the equator and then the South Pole. At θ = 0° the point is at the top; at θ = 90° it is at the equator; at θ = 180° it is at the bottom. The curved arrow on the left globe shows this up-to-down direction."],
+      ["Phi: which direction around?", "Phi (φ) moves the point around a line of latitude, like walking east or west around a globe while staying at the same height. The curved arrow on the right globe shows this around-the-sphere direction. In the special case at the very top or bottom, changing φ does not move the visible point."],
+      ["Why does phi matter if the chances stay the same?", "A common way to write a pure qubit state is [[|\\psi\\rangle=\\cos(\\theta/2)|0\\rangle+e^{i\\phi}\\sin(\\theta/2)|1\\rangle]]. The phase angle φ changes the complex phase of the |1⟩ part, but not its size. The measurement chances are [[P(0)=|\\alpha|^2=\\cos^2(\\theta/2)]] and [[P(1)=|\\beta|^2=|e^{i\\phi}\\sin(\\theta/2)|^2=\\sin^2(\\theta/2)]]. Since [[|e^{i\\phi}|=1]], changing φ leaves both probabilities unchanged when θ stays fixed. It can still affect later gates, because those gates can make the two parts interfere differently."],
       ["Try this", "Keep theta fixed and move phi. You may see the dot travel around the sphere while the probability bars stay the same. Then apply another gate and compare the final measurement chances."]
     ],
   },
@@ -269,6 +269,26 @@ function LessonVisual({ type }) {
           <text x="24" y="24" fill="#cbd5e1" fontSize="12">0 part</text><rect x="24" y="34" width="116" height="16" rx="5" fill="#1e293b"/><rect x="24" y="34" width="74" height="16" rx="5" fill={cyan}/>
           <text x="180" y="24" fill="#cbd5e1" fontSize="12">1 part</text><rect x="180" y="34" width="116" height="16" rx="5" fill="#1e293b"/><rect x="180" y="34" width="42" height="16" rx="5" fill={green}/>
           <text x="160" y="83" fill="#e2e8f0" fontSize="11" textAnchor="middle">Amplitude size helps determine chance</text>
+        </>}
+        {type === "angles" && <>
+          <text x="78" y="12" fill="#cbd5e1" fontSize="10" textAnchor="middle">THETA (θ): UP / DOWN</text>
+          <text x="242" y="12" fill="#cbd5e1" fontSize="10" textAnchor="middle">PHI (φ): AROUND</text>
+          <circle cx="78" cy="76" r="38" fill="#0f172a" stroke={cyan} strokeWidth="2" />
+          <ellipse cx="78" cy="76" rx="38" ry="12" fill="none" stroke="#475569" strokeWidth="1.3" />
+          <ellipse cx="78" cy="76" rx="13" ry="38" fill="none" stroke="#475569" strokeWidth="1.3" />
+          <path d="M78 38 V114" stroke="#475569" strokeDasharray="3 3" />
+          <circle cx="97" cy="56" r="4.5" fill={green} />
+          <path d="M59 48 C38 65 41 87 59 101" fill="none" stroke={green} strokeWidth="2.5" strokeLinecap="round" />
+          <path d="M52 94 L59 101 L61 91" fill="none" stroke={green} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+          <text x="78" y="130" fill="#cbd5e1" fontSize="10" textAnchor="middle">Move down a meridian</text>
+          <circle cx="242" cy="76" r="38" fill="#0f172a" stroke={cyan} strokeWidth="2" />
+          <ellipse cx="242" cy="76" rx="38" ry="12" fill="none" stroke="#475569" strokeWidth="1.3" />
+          <ellipse cx="242" cy="76" rx="13" ry="38" fill="none" stroke="#475569" strokeWidth="1.3" />
+          <path d="M242 38 V114" stroke="#475569" strokeDasharray="3 3" />
+          <circle cx="272" cy="76" r="4.5" fill={green} />
+          <path d="M214 68 C224 51 260 51 270 68" fill="none" stroke={green} strokeWidth="2.5" strokeLinecap="round" />
+          <path d="M262 62 L270 68 L272 59" fill="none" stroke={green} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+          <text x="242" y="130" fill="#cbd5e1" fontSize="10" textAnchor="middle">Move around same height</text>
         </>}
         {type === "sphere" && <>
           <circle cx="86" cy="56" r="43" fill="#0f172a" stroke={cyan} strokeWidth="2" />
