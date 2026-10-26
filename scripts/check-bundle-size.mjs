@@ -7,8 +7,11 @@ const MAX_INITIAL_JS_BYTES = 1024 * 1024;
 const MAX_TOTAL_JS_BYTES = 2.5 * 1024 * 1024;
 
 const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
-const entry = Object.values(manifest).find((item) => item.isEntry && item.src === "src/main.jsx");
-if (!entry) throw new Error("Could not find the src/main.jsx entry in Vite's build manifest.");
+// Vite marks index.html as the HTML entry; its imports point to the initial JS graph.
+const entryKey =
+  Object.keys(manifest).find((key) => key === "index.html" && manifest[key].isEntry) ??
+  Object.keys(manifest).find((key) => manifest[key].isEntry && /main\\.jsx$/.test(manifest[key].src ?? ""));
+if (!entryKey) throw new Error("Could not find the HTML entry in Vite's build manifest.");
 
 const initialFiles = new Set();
 function collect(key) {
@@ -18,7 +21,7 @@ function collect(key) {
   if (!item) return;
   for (const imported of item.imports ?? []) collect(imported);
 }
-collect(Object.keys(manifest).find((key) => manifest[key] === entry));
+collect(entryKey);
 
 async function jsBytes(files) {
   let total = 0;
