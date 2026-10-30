@@ -43,11 +43,12 @@ function Sphere({ vector, name }) {
   </div>;
 }
 
-export default function MultiQubitModule({ onBack }) {
+export default function MultiQubitModule() {
   const [state, setState] = useState(initial);
   const [history, setHistory] = useState([]);
   const [view, setView] = useState("bloch");
   const [shots, setShots] = useState(null);
+  const [menuOpen, setMenuOpen] = useState(false);
   const probabilities = useMemo(() => getRegisterProbabilities(state), [state]);
   const vectors = useMemo(() => [localBloch(state, 0), localBloch(state, 1)], [state]);
   const apply = (label, fn) => { setState((old) => fn(old)); setHistory((old) => [...old, label]); setShots(null); };
@@ -61,9 +62,14 @@ export default function MultiQubitModule({ onBack }) {
     setHistory(["H(q0)", "H(q1)"]); setShots(null);
   };
   const basis = ["00", "01", "10", "11"];
-  return <div style={s.workspace}><div style={s.module}>
+  const qiskitCode = `# Install: pip install qiskit qiskit-aer\nfrom qiskit import QuantumCircuit\nfrom qiskit.quantum_info import Statevector\nfrom qiskit_aer import AerSimulator\n\n# Qiskit uses little-endian qubit indexing:\n# q0 is the rightmost bit in displayed bit strings.\nqc = QuantumCircuit(2)\nqc.h(0)          # Put q0 into superposition\nqc.cx(0, 1)      # q0 controls X on q1\n\n# Inspect the state before measurement\nstate = Statevector.from_instruction(qc)\nprint(state)     # (|00> + |11>) / sqrt(2)\n\n# Add measurement and sample 1,000 shots\nmeasured = qc.copy()\nmeasured.measure_all()\nsimulator = AerSimulator()\nresult = simulator.run(measured, shots=1000).result()\nprint(result.get_counts())  # Only 00 and 11 (up to sampling)\n\nprint(qc.draw())`;
+  const copyQiskit = () => { if (navigator?.clipboard?.writeText) navigator.clipboard.writeText(qiskitCode); };
+  return <div style={s.workspace}>
+    <header style={s.header}><button style={s.menuButton} onClick={() => setMenuOpen(v => !v)}>{menuOpen ? "CLOSE INDEX ✕" : "MENU INDEX ☰"}</button><span style={s.eyebrow}>QUANTUM ENGINE // MULTI-QUBIT WORKSPACE</span><span style={s.headerTag}>M2.1 ACTIVE</span></header>
+    {menuOpen && <aside style={s.sidebar}><span style={s.eyebrow}>CORE MAP REPOSITORY</span><button style={s.navItem} onClick={() => { setMenuOpen(false); }}> [ ] M1.1: Single Qubit State Space</button><button style={{...s.navItem,color:"#10b981"}} onClick={() => setMenuOpen(false)}>[x] M2.1: Multi-Qubit Systems</button></aside>}
+    <div style={s.contentGrid}><div style={s.module}>
     <header style={s.hero}>
-      <div style={s.topbar}><button style={s.secondary} onClick={onBack}>← Module index</button><span style={s.eyebrow}>MODULE 2 // MULTI-QUBIT SYSTEMS</span></div>
+      <div style={s.topbar}><span style={s.eyebrow}>MODULE 2 // MULTI-QUBIT SYSTEMS</span></div>
       <h1 style={s.title}>From one qubit to a quantum register</h1>
       <p style={s.copy}>A register has one joint state vector. Its qubits can be independent, correlated, or entangled. Learn the mathematics, then build states gate by gate.</p>
     </header>
@@ -159,7 +165,13 @@ export default function MultiQubitModule({ onBack }) {
         {shots && <div style={s.shotResult}><b>Observed counts from 1000 shots</b>{Object.entries(shots.counts).map(([k,v]) => <span key={k}>|{k}⟩: {v} ({(v/10).toFixed(1)}%)</span>)}</div>}
       </div>
     </Lesson>
-  </div><MultiQubitInspector state={state} mode={view} onModeChange={setView} /> </div>;
+
+    <Lesson id="2.12" title="THE SAME BELL CIRCUIT IN QISKIT">
+      <p style={s.copy}>The code below creates the same circuit you built above. Qiskit numbers qubits from zero and displays classical bit strings with q0 at the right. The statevector is inspected before measurement, then a separate measured copy is sampled.</p>
+      <div style={s.codeFrame}><div style={s.codeHeader}><b>bell_state.py</b><button style={s.secondary} onClick={copyQiskit}>Copy Qiskit code</button></div><pre style={s.code}>{qiskitCode}</pre></div>
+      <p style={s.copy}>Expected ideal state: amplitudes for |00⟩ and |11⟩ are each 1/√2. A finite 1,000-shot run gives counts near 500/500, not necessarily exactly equal.</p>
+    </Lesson>
+  </div><MultiQubitInspector state={state} mode={view} onModeChange={setView} /></div></div>;
 }
 
 function MultiQubitInspector({ state, mode, onModeChange }) {
@@ -189,9 +201,18 @@ function MultiQubitInspector({ state, mode, onModeChange }) {
 }
 
 const s = {
-  workspace:{display:"grid",gridTemplateColumns:"minmax(0,1fr) minmax(360px,45%)",width:"100vw",height:"100vh",overflow:"hidden",background:"#030712"},
-  module:{display:"flex",flexDirection:"column",gap:"2rem",color:"#e5e7eb",padding:"2rem",overflowY:"auto",minWidth:0},
+  workspace:{display:"flex",flexDirection:"column",width:"100vw",height:"100vh",overflow:"hidden",background:"#030712",fontFamily:"system-ui, sans-serif"},
+  header:{height:"3.5rem",flex:"0 0 3.5rem",display:"flex",alignItems:"center",gap:"1rem",padding:"0 1.5rem",background:"#0b0f19",borderBottom:"1px solid rgba(6,182,212,.15)",zIndex:80},
+  menuButton:{background:"#10b981",color:"#030712",border:0,padding:".4rem .85rem",fontFamily:"monospace",fontSize:".75rem",fontWeight:"bold",cursor:"pointer",borderRadius:"2px"},
+  headerTag:{marginLeft:"auto",color:"#06b6d4",fontFamily:"monospace",fontSize:".7rem"},
+  sidebar:{position:"fixed",top:"3.5rem",left:0,width:"22rem",height:"calc(100vh - 3.5rem)",zIndex:90,display:"flex",flexDirection:"column",gap:"1rem",padding:"2rem",boxSizing:"border-box",background:"#0b0f19",borderRight:"1px solid rgba(6,182,212,.2)"},
+  navItem:{textAlign:"left",background:"transparent",border:0,color:"#9ca3af",fontFamily:"monospace",fontSize:".82rem",padding:".5rem 0",cursor:"pointer"},
+  contentGrid:{display:"grid",gridTemplateColumns:"minmax(0,1fr) minmax(360px,45%)",flex:1,minHeight:0,overflow:"hidden"},
+  module:{display:"flex",flexDirection:"column",gap:"2rem",color:"#e5e7eb",padding:"2rem",overflowY:"auto",minWidth:0,fontFamily:"system-ui, sans-serif"},
   topbar:{display:"flex",alignItems:"center",gap:"1rem",flexWrap:"wrap"},
+  codeFrame:{background:"#050911",border:"1px solid rgba(6,182,212,.2)",borderRadius:"4px",overflow:"hidden"},
+  codeHeader:{display:"flex",alignItems:"center",justifyContent:"space-between",padding:".65rem .85rem",background:"#0b0f19",color:"#9ca3af",fontFamily:"monospace",fontSize:".75rem"},
+  code:{margin:0,padding:"1rem",overflowX:"auto",whiteSpace:"pre",fontFamily:"Consolas, Fira Code, Monaco, monospace",fontSize:".75rem",lineHeight:1.6,color:"#d1fae5"},
   hero:{display:"flex",flexDirection:"column",gap:".8rem",paddingBottom:"1.5rem",borderBottom:"1px solid rgba(6,182,212,.2)"},
   eyebrow:{color:"#10b981",fontSize:".7rem",fontFamily:"monospace",letterSpacing:".12em"},
   title:{color:"#f8fafc",fontSize:"1.8rem",lineHeight:1.2,margin:0},
