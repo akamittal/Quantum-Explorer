@@ -14,7 +14,8 @@ export default function QiskitExecutionPanel({ operations, code, result, loading
       <button type="button" style={styles.button} disabled={!canRun} onClick={onRun}>
         {loading ? "Running Python on Qiskit…" : "Run Python on Qiskit · 1,000 shots"}
       </button>
-      <div style={styles.codeFrame}><div style={styles.codeHeader}><strong>circuit.py</strong><span>Generated live from this circuit</span></div><pre style={styles.code}>{code}</pre></div>\n      {!operations.length && <p style={styles.hint}>Add one or more gates in the circuit composer to populate the Python program and enable execution.</p>}
+      <div style={styles.codeFrame}><div style={styles.codeHeader}><strong>circuit.py</strong><span>Generated live from this circuit</span></div><pre style={styles.code}>{code}</pre></div>
+      {!operations.length && <p style={styles.hint}>Add one or more gates in the circuit composer to populate the Python program and enable execution.</p>}
       {error && <div role="alert" style={styles.error}>{error}</div>}
       {result && (
         <div aria-live="polite" style={styles.results}>
