@@ -25,6 +25,8 @@ jobs:
         run: npm ci
       - name: Run quantum engine tests
         run: npm test
+      - name: Run Node backend tests
+        run: npm run test --workspace=backend
       - name: Build frontend
         run: npm run build
       - name: Check JavaScript bundle budgets
