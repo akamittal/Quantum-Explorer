@@ -1,5 +1,7 @@
 import React, { useMemo, useState } from "react";
 import MathRenderer from "./MathRenderer";
+import { executeWithQiskit } from "./qiskitApi";
+import QiskitExecutionPanel from "./components/single-qubit/QiskitExecutionPanel";
 import { applyCNOT, applyCZ, applyGateToRegister, applySWAP, createZeroRegister, getQubitProbabilities, getRegisterProbabilities, runMultiQubitCircuit, sampleRegisterMeasurements } from "./multiQubitCircuit";
 
 const initial = () => createZeroRegister(2);
@@ -46,22 +48,40 @@ function Sphere({ vector, name }) {
 export default function MultiQubitModule({ onNavigate }) {
   const [state, setState] = useState(initial);
   const [history, setHistory] = useState([]);
+  const [circuitOperations, setCircuitOperations] = useState([]);
   const [view, setView] = useState("bloch");
   const [shots, setShots] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [qiskitLoading, setQiskitLoading] = useState(false);
+  const [qiskitError, setQiskitError] = useState("");
+  const [qiskitResult, setQiskitResult] = useState(null);
   const probabilities = useMemo(() => getRegisterProbabilities(state), [state]);
   const vectors = useMemo(() => [localBloch(state, 0), localBloch(state, 1)], [state]);
-  const apply = (label, fn) => { setState((old) => fn(old)); setHistory((old) => [...old, label]); setShots(null); };
-  const reset = () => { setState(initial()); setHistory([]); setShots(null); };
+  const apply = (label, operation, fn) => { setState((old) => fn(old)); setHistory((old) => [...old, label]); setCircuitOperations((old) => [...old, operation]); setShots(null); setQiskitResult(null); setQiskitError(""); };
+  const reset = () => { setState(initial()); setHistory([]); setCircuitOperations([]); setShots(null); setQiskitResult(null); setQiskitError(""); };
   const bell = () => {
     setState(runMultiQubitCircuit(initial(), [{ name: "H", target: 0 }, { name: "CNOT", control: 0, target: 1 }]));
-    setHistory(["H(q0)", "CNOT(q0 → q1)"]); setShots(null);
+    setHistory(["H(q0)", "CNOT(q0 → q1)"]); setCircuitOperations([{ name: "H", target: 0 }, { name: "CNOT", control: 0, target: 1 }]); setShots(null); setQiskitResult(null); setQiskitError("");
   };
   const product = () => {
     setState(runMultiQubitCircuit(initial(), [{ name: "H", target: 0 }, { name: "H", target: 1 }]));
-    setHistory(["H(q0)", "H(q1)"]); setShots(null);
+    setHistory(["H(q0)", "H(q1)"]); setCircuitOperations([{ name: "H", target: 0 }, { name: "H", target: 1 }]); setShots(null); setQiskitResult(null); setQiskitError("");
   };
   const basis = ["00", "01", "10", "11"];
+  const handleRunOnQiskit = async () => {
+    if (!circuitOperations.length || qiskitLoading) return;
+    setQiskitLoading(true); setQiskitError(""); setQiskitResult(null);
+    try {
+      const operations = circuitOperations.map((operation) => {
+        if (["CNOT", "CX"].includes(operation.name.toUpperCase())) return { name: "CX", control: operation.control, target: operation.target };
+        if (["CZ", "SWAP"].includes(operation.name.toUpperCase())) return { name: operation.name.toUpperCase(), first: operation.first, second: operation.second };
+        return { name: operation.name.toUpperCase(), qubit: operation.target, theta: operation.theta };
+      });
+      const result = await executeWithQiskit({ num_qubits: state.numQubits, operations, shots: 1000 });
+      setQiskitResult(result);
+    } catch (error) { setQiskitError(error.message || "Qiskit execution failed."); }
+    finally { setQiskitLoading(false); }
+  };
   const qiskitCode = `# Install: pip install qiskit qiskit-aer\nfrom qiskit import QuantumCircuit\nfrom qiskit.quantum_info import Statevector\nfrom qiskit_aer import AerSimulator\n\n# Qiskit uses little-endian qubit indexing:\n# q0 is the rightmost bit in displayed bit strings.\nqc = QuantumCircuit(2)\nqc.h(0)          # Put q0 into superposition\nqc.cx(0, 1)      # q0 controls X on q1\n\n# Inspect the state before measurement\nstate = Statevector.from_instruction(qc)\nprint(state)     # (|00> + |11>) / sqrt(2)\n\n# Add measurement and sample 1,000 shots\nmeasured = qc.copy()\nmeasured.measure_all()\nsimulator = AerSimulator()\nresult = simulator.run(measured, shots=1000).result()\nprint(result.get_counts())  # Only 00 and 11 (up to sampling)\n\nprint(qc.draw())`;
   const copyQiskit = () => { if (navigator?.clipboard?.writeText) navigator.clipboard.writeText(qiskitCode); };
   return <div style={s.workspace}>
@@ -146,14 +166,14 @@ export default function MultiQubitModule({ onNavigate }) {
         <div style={s.wireRow}><b>q1</b><div style={s.wire} /><span>control / target</span></div>
         <div style={s.wireRow}><b>q0</b><div style={s.wire} /><span>least-significant wire</span></div>
         <div style={s.buttons}>
-          <button style={s.gate} onClick={() => apply("H(q0)", x => applyGateToRegister(x,0,"H"))}>H q0</button>
-          <button style={s.gate} onClick={() => apply("H(q1)", x => applyGateToRegister(x,1,"H"))}>H q1</button>
-          <button style={s.gate} onClick={() => apply("X(q0)", x => applyGateToRegister(x,0,"X"))}>X q0</button>
-          <button style={s.gate} onClick={() => apply("Z(q0)", x => applyGateToRegister(x,0,"Z"))}>Z q0</button>
-          <button style={s.gate} onClick={() => apply("CNOT(q0→q1)", x => applyCNOT(x,0,1))}>CNOT 0→1</button>
-          <button style={s.gate} onClick={() => apply("CNOT(q1→q0)", x => applyCNOT(x,1,0))}>CNOT 1→0</button>
-          <button style={s.gate} onClick={() => apply("CZ", x => applyCZ(x,0,1))}>CZ</button>
-          <button style={s.gate} onClick={() => apply("SWAP", x => applySWAP(x,0,1))}>SWAP</button>
+          <button style={s.gate} onClick={() => apply("H(q0)", { name: "H", target: 0 }, x => applyGateToRegister(x,0,"H"))}>H q0</button>
+          <button style={s.gate} onClick={() => apply("H(q1)", { name: "H", target: 1 }, x => applyGateToRegister(x,1,"H"))}>H q1</button>
+          <button style={s.gate} onClick={() => apply("X(q0)", { name: "X", target: 0 }, x => applyGateToRegister(x,0,"X"))}>X q0</button>
+          <button style={s.gate} onClick={() => apply("Z(q0)", { name: "Z", target: 0 }, x => applyGateToRegister(x,0,"Z"))}>Z q0</button>
+          <button style={s.gate} onClick={() => apply("CNOT(q0→q1)", { name: "CNOT", control: 0, target: 1 }, x => applyCNOT(x,0,1))}>CNOT 0→1</button>
+          <button style={s.gate} onClick={() => apply("CNOT(q1→q0)", { name: "CNOT", control: 1, target: 0 }, x => applyCNOT(x,1,0))}>CNOT 1→0</button>
+          <button style={s.gate} onClick={() => apply("CZ", { name: "CZ", first: 0, second: 1 }, x => applyCZ(x,0,1))}>CZ</button>
+          <button style={s.gate} onClick={() => apply("SWAP", { name: "SWAP", first: 0, second: 1 }, x => applySWAP(x,0,1))}>SWAP</button>
         </div>
         <div style={s.history}><small>GATE HISTORY</small><br />{history.length ? history.join(" → ") : "Empty circuit: initial state |00⟩"}</div>
         <div style={s.buttons}>
@@ -162,6 +182,7 @@ export default function MultiQubitModule({ onNavigate }) {
           <button style={s.secondary} onClick={reset}>Reset</button>
           <button style={s.primary} onClick={() => setShots(sampleRegisterMeasurements(state,1000))}>Measure 1000 shots</button>
         </div>
+        <QiskitExecutionPanel operations={circuitOperations} result={qiskitResult} loading={qiskitLoading} error={qiskitError} onRun={handleRunOnQiskit} />
         {shots && <div style={s.shotResult}><b>Observed counts from 1000 shots</b>{Object.entries(shots.counts).map(([k,v]) => <span key={k}>|{k}⟩: {v} ({(v/10).toFixed(1)}%)</span>)}</div>}
       </div>
     </Lesson>
