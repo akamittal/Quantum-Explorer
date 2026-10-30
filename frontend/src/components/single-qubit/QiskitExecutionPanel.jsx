@@ -22,7 +22,7 @@ export default function QiskitExecutionPanel({ operations, result, loading, erro
             <strong>Execution result</strong>
             <span>{result.engine || "qiskit-aer"} · {result.shots.toLocaleString()} shots</span>
           </div>
-          <p style={styles.hint}>Basis labels use Qiskit's convention. For this one-qubit circuit, |0⟩ and |1⟩ are the two outcomes.</p>
+          <p style={styles.hint}>Basis labels use Qiskit's convention. Bit strings follow Qiskit ordering: q0 is the rightmost bit.</p>
           <div style={styles.grid}>
             {result.statevector.map((item) => (
               <div key={item.index} style={styles.metric}>
