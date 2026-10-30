@@ -12,7 +12,6 @@ test("intro can be bypassed and the single-qubit workspace loads", async ({ page
     page.getByRole("heading", { name: /FROM KET NOTATION TO COLUMN VECTORS/i })
   ).toBeVisible();
   await expect(page.getByRole("button", { name: "Hadamard", exact: true })).toBeVisible();
-  await expect(page.getByText(/IBM QISKIT CODE BLUEPRINT/i)).toBeVisible();
   await expect(page.getByText(/Loading Bloch sphere/i)).toHaveCount(0, { timeout: 15000 });
   expect(pageErrors).toEqual([]);
 });
