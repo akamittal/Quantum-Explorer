@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { lazy, Suspense, useState, useEffect, useRef } from "react";
 import QuantumParticleBackground from "./QuantumParticleBackground";
 import QuantumWorkspaceLayout from "./QuantumWorkspaceLayout";
 import SingleQubitModule from "./SingleQubitModule";
-import BlochSphereView from "./BlochSphereView";
+const BlochSphereView = lazy(() => import("./BlochSphereView"));
 import IntroHUD from "./IntroHUD";
 import MantraSequence from "./MantraSequence";
 import NarrativeConsole from "./NarrativeConsole";
@@ -119,6 +119,7 @@ export default function App() {
             />
           }
           RightContent={
+            <Suspense fallback={<div role="status" style={{ width: "100%", height: "100%", display: "grid", placeItems: "center", color: "#94a3b8", background: "#030712" }}>Loading Bloch sphere…</div>}>
             <BlochSphereView
               coordinates={{
                 x: quantum.calculatedState.x,
@@ -130,6 +131,7 @@ export default function App() {
                 phi: quantum.quantumAngles.phi,
               }}
             />
+            </Suspense>
           }
         />
       </div>

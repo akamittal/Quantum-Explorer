@@ -1,0 +1,249 @@
+import React from "react";
+import MathRenderer from "../../MathRenderer";
+
+const gateLessons = [
+  {
+    name: "Identity gate (I)",
+    purpose: "Leaves the qubit unchanged.",
+    matrix: String.raw`I = \begin{bmatrix}1&0\\0&1\end{bmatrix}`,
+    action: String.raw`I\lvert\psi\rangle =
+\begin{bmatrix}1&0\\0&1\end{bmatrix}
+\begin{bmatrix}\alpha\\\beta\end{bmatrix}
+=
+\begin{bmatrix}\alpha\\\beta\end{bmatrix}
+=\lvert\psi\rangle`,
+  },
+  {
+    name: "Hadamard gate (H)",
+    purpose: "Creates an equal superposition from either basis state (with a relative sign for |1⟩).",
+    matrix: String.raw`H=\frac{1}{\sqrt2}\begin{bmatrix}1&1\\1&-1\end{bmatrix}`,
+    action: String.raw`H\lvert0\rangle =
+\frac{1}{\sqrt2}\begin{bmatrix}1&1\\1&-1\end{bmatrix}
+\begin{bmatrix}1\\0\end{bmatrix}
+=\frac{1}{\sqrt2}\begin{bmatrix}1\\1\end{bmatrix}
+=\frac{\lvert0\rangle+\lvert1\rangle}{\sqrt2}
+=\lvert+\rangle`,
+    second: String.raw`H\lvert1\rangle =
+\frac{1}{\sqrt2}\begin{bmatrix}1&1\\1&-1\end{bmatrix}
+\begin{bmatrix}0\\1\end{bmatrix}
+=\frac{1}{\sqrt2}\begin{bmatrix}1\\-1\end{bmatrix}
+=\frac{\lvert0\rangle-\lvert1\rangle}{\sqrt2}
+=\lvert-\rangle`,
+  },
+  {
+    name: "Pauli-X gate (X)",
+    purpose: "Flips |0⟩ to |1⟩ and |1⟩ to |0⟩. It is the quantum NOT gate.",
+    matrix: String.raw`X=\begin{bmatrix}0&1\\1&0\end{bmatrix}`,
+    action: String.raw`X\lvert0\rangle =
+\begin{bmatrix}0&1\\1&0\end{bmatrix}
+\begin{bmatrix}1\\0\end{bmatrix}
+=\begin{bmatrix}0\\1\end{bmatrix}=\lvert1\rangle`,
+    second: String.raw`X\lvert1\rangle =
+\begin{bmatrix}0&1\\1&0\end{bmatrix}
+\begin{bmatrix}0\\1\end{bmatrix}
+=\begin{bmatrix}1\\0\end{bmatrix}=\lvert0\rangle`,
+  },
+  {
+    name: "Pauli-Y gate (Y)",
+    purpose: "Flips the basis state and adds a phase factor. The imaginary number i is part of the result.",
+    matrix: String.raw`Y=\begin{bmatrix}0&-i\\i&0\end{bmatrix}`,
+    action: String.raw`Y\lvert0\rangle =
+\begin{bmatrix}0&-i\\i&0\end{bmatrix}
+\begin{bmatrix}1\\0\end{bmatrix}
+=\begin{bmatrix}0\\i\end{bmatrix}=i\lvert1\rangle`,
+    second: String.raw`Y\lvert1\rangle =
+\begin{bmatrix}0&-i\\i&0\end{bmatrix}
+\begin{bmatrix}0\\1\end{bmatrix}
+=\begin{bmatrix}-i\\0\end{bmatrix}=-i\lvert0\rangle`,
+  },
+  {
+    name: "Pauli-Z gate (Z)",
+    purpose: "Keeps |0⟩ unchanged and flips the sign of the |1⟩ amplitude. This is a phase flip, not a bit flip.",
+    matrix: String.raw`Z=\begin{bmatrix}1&0\\0&-1\end{bmatrix}`,
+    action: String.raw`Z\lvert\psi\rangle =
+\begin{bmatrix}1&0\\0&-1\end{bmatrix}
+\begin{bmatrix}\alpha\\\beta\end{bmatrix}
+=\begin{bmatrix}\alpha\\-\beta\end{bmatrix}
+=\alpha\lvert0\rangle-\beta\lvert1\rangle`,
+  },
+  {
+    name: "S gate",
+    purpose: "Adds a 90° (π/2) phase to the |1⟩ component and leaves |0⟩ unchanged.",
+    matrix: String.raw`S=\begin{bmatrix}1&0\\0&i\end{bmatrix}`,
+    action: String.raw`S\lvert\psi\rangle =
+\begin{bmatrix}1&0\\0&i\end{bmatrix}
+\begin{bmatrix}\alpha\\\beta\end{bmatrix}
+=\begin{bmatrix}\alpha\\i\beta\end{bmatrix}
+=\alpha\lvert0\rangle+i\beta\lvert1\rangle`,
+  },
+  {
+    name: "T gate",
+    purpose: "Adds a 45° (π/4) phase to the |1⟩ component.",
+    matrix: String.raw`T=\begin{bmatrix}1&0\\0&e^{i\pi/4}\end{bmatrix}
+=\begin{bmatrix}1&0\\0&\frac{1+i}{\sqrt2}\end{bmatrix}`,
+    action: String.raw`T\lvert\psi\rangle =
+\begin{bmatrix}1&0\\0&e^{i\pi/4}\end{bmatrix}
+\begin{bmatrix}\alpha\\\beta\end{bmatrix}
+=\begin{bmatrix}\alpha\\e^{i\pi/4}\beta\end{bmatrix}`,
+  },
+];
+
+function Equation({ formula }) {
+  return <div style={styles.equation}><MathRenderer formula={formula} displayMode /></div>;
+}
+
+export default function GateMatrixGuide() {
+  return (
+    <section style={styles.container}>
+      <div style={styles.section}>
+        <h3 style={styles.heading}>// 3.0 FROM KET NOTATION TO COLUMN VECTORS</h3>
+        <p style={styles.copy}>
+          A qubit has two computational basis states. We write each ket as a
+          two-entry column vector. The top entry is the amplitude of |0⟩ and the
+          bottom entry is the amplitude of |1⟩.
+        </p>
+        <div style={styles.twoColumns}>
+          <div style={styles.stateCard}>
+            <strong style={styles.stateName}>Zero state</strong>
+            <Equation formula={String.raw`\lvert0\rangle=\begin{bmatrix}1\\0\end{bmatrix}`} />
+            <span style={styles.copy}>100% amplitude for |0⟩, zero for |1⟩.</span>
+          </div>
+          <div style={styles.stateCard}>
+            <strong style={styles.stateName}>One state</strong>
+            <Equation formula={String.raw`\lvert1\rangle=\begin{bmatrix}0\\1\end{bmatrix}`} />
+            <span style={styles.copy}>Zero amplitude for |0⟩, 100% for |1⟩.</span>
+          </div>
+        </div>
+        <p style={styles.copy}>
+          A general qubit is a weighted combination of these two basis states.
+          The weights α and β can be complex numbers and are called amplitudes.
+        </p>
+        <Equation formula={String.raw`\lvert\psi\rangle=\alpha\lvert0\rangle+\beta\lvert1\rangle
+=\begin{bmatrix}\alpha\\\beta\end{bmatrix},\qquad
+|\alpha|^2+|\beta|^2=1`} />
+      </div>
+
+      <div style={styles.section}>
+        <h3 style={styles.heading}>// 3.1 HOW MATRIX MULTIPLICATION APPLIES A GATE</h3>
+        <p style={styles.copy}>
+          A single-qubit gate is a 2 × 2 matrix. Multiply its first row by the
+          state column to get the new top amplitude, then its second row to get
+          the new bottom amplitude. In compact form:
+        </p>
+        <Equation formula={String.raw`\begin{bmatrix}a&b\\c&d\end{bmatrix}
+\begin{bmatrix}\alpha\\\beta\end{bmatrix}
+=
+\begin{bmatrix}a\alpha+b\beta\\c\alpha+d\beta\end{bmatrix}`} />
+        <p style={styles.note}>
+          The order matters: the gate matrix goes on the left, and the state
+          column goes on the right. The output is another state column.
+        </p>
+      </div>
+
+      <div style={styles.section}>
+        <h3 style={styles.heading}>// 3.2 GATE MATRICES AND THEIR DERIVATIONS</h3>
+        <p style={styles.copy}>
+          Work through each example. For a basis input, multiplying by a
+          matrix selects one of its columns. For a general input, both columns
+          contribute, weighted by α and β.
+        </p>
+        {gateLessons.map((gate) => (
+          <article key={gate.name} style={styles.gateCard}>
+            <h4 style={styles.gateName}>{gate.name}</h4>
+            <p style={styles.copy}>{gate.purpose}</p>
+            <span style={styles.label}>GATE MATRIX</span>
+            <Equation formula={gate.matrix} />
+            <span style={styles.label}>APPLY THE GATE</span>
+            <Equation formula={gate.action} />
+            {gate.second && <Equation formula={gate.second} />}
+          </article>
+        ))}
+      </div>
+
+      <div style={styles.section}>
+        <h3 style={styles.heading}>// 3.3 ROTATION GATES</h3>
+        <p style={styles.copy}>
+          Rotation gates turn the state around one of the Bloch-sphere axes.
+          Their angle θ is measured in radians in these matrix formulas.
+        </p>
+        <article style={styles.gateCard}>
+          <h4 style={styles.gateName}>Rotation around X (RX)</h4>
+          <Equation formula={String.raw`R_X(\theta)=
+\begin{bmatrix}
+\cos(\theta/2)&-i\sin(\theta/2)\\
+-i\sin(\theta/2)&\cos(\theta/2)
+\end{bmatrix}`} />
+          <Equation formula={String.raw`R_X(\theta)\begin{bmatrix}\alpha\\\beta\end{bmatrix}
+=
+\begin{bmatrix}
+\cos(\theta/2)\alpha-i\sin(\theta/2)\beta\\
+-i\sin(\theta/2)\alpha+\cos(\theta/2)\beta
+\end{bmatrix}`} />
+        </article>
+        <article style={styles.gateCard}>
+          <h4 style={styles.gateName}>Rotation around Y (RY)</h4>
+          <Equation formula={String.raw`R_Y(\theta)=
+\begin{bmatrix}
+\cos(\theta/2)&-\sin(\theta/2)\\
+\sin(\theta/2)&\cos(\theta/2)
+\end{bmatrix}`} />
+          <Equation formula={String.raw`R_Y(\theta)\begin{bmatrix}\alpha\\\beta\end{bmatrix}
+=
+\begin{bmatrix}
+\cos(\theta/2)\alpha-\sin(\theta/2)\beta\\
+\sin(\theta/2)\alpha+\cos(\theta/2)\beta
+\end{bmatrix}`} />
+        </article>
+        <article style={styles.gateCard}>
+          <h4 style={styles.gateName}>Rotation around Z (RZ)</h4>
+          <Equation formula={String.raw`R_Z(\theta)=
+\begin{bmatrix}
+e^{-i\theta/2}&0\\
+0&e^{i\theta/2}
+\end{bmatrix}`} />
+          <Equation formula={String.raw`R_Z(\theta)\begin{bmatrix}\alpha\\\beta\end{bmatrix}
+=
+\begin{bmatrix}
+e^{-i\theta/2}\alpha\\
+e^{i\theta/2}\beta
+\end{bmatrix}`} />
+        </article>
+        <p style={styles.note}>
+          RX, RY and RZ are parameterized gates. In the playground, enter the
+          angle in degrees; the simulator converts it to radians for the matrix.
+        </p>
+      </div>
+
+      <div style={styles.section}>
+        <h3 style={styles.heading}>// 3.4 FROM AMPLITUDES TO MEASUREMENT</h3>
+        <p style={styles.copy}>
+          A gate changes amplitudes, not by directly choosing a measurement
+          result. The probability of measuring 0 is the squared magnitude of α;
+          the probability of measuring 1 is the squared magnitude of β.
+        </p>
+        <Equation formula={String.raw`P(0)=|\alpha|^2,\qquad P(1)=|\beta|^2,
+\qquad P(0)+P(1)=1`} />
+        <p style={styles.copy}>
+          For example, after H is applied to |0⟩, both amplitudes are
+          1/√2. The probabilities are therefore 1/2 and 1/2. A measurement
+          gives either 0 or 1, with equal chances; it does not return both.
+        </p>
+      </div>
+    </section>
+  );
+}
+
+const styles = {
+  container: { display: "flex", flexDirection: "column", gap: "2rem" },
+  section: { display: "flex", flexDirection: "column", gap: "0.85rem" },
+  heading: { color: "#10b981", fontSize: "0.8rem", fontFamily: "monospace", letterSpacing: "0.08em", margin: 0 },
+  copy: { color: "#9ca3af", fontSize: "0.9rem", lineHeight: 1.65, margin: 0 },
+  note: { color: "#cbd5e1", background: "rgba(6,182,212,0.06)", borderLeft: "2px solid #06b6d4", padding: "0.8rem 1rem", fontSize: "0.85rem", lineHeight: 1.6, margin: 0 },
+  twoColumns: { display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(210px, 1fr))", gap: "0.75rem" },
+  stateCard: { background: "#0b0f19", border: "1px solid rgba(6,182,212,0.18)", padding: "1rem", borderRadius: "4px", display: "flex", flexDirection: "column", gap: "0.5rem" },
+  stateName: { color: "#e5e7eb", fontSize: "0.9rem" },
+  equation: { overflowX: "auto", maxWidth: "100%", color: "#e5e7eb", padding: "0.25rem 0" },
+  gateCard: { display: "flex", flexDirection: "column", gap: "0.65rem", background: "#0b0f19", border: "1px solid rgba(255,255,255,0.07)", padding: "1rem", borderRadius: "4px" },
+  gateName: { color: "#e5e7eb", fontSize: "1rem", margin: 0 },
+  label: { color: "#06b6d4", fontFamily: "monospace", fontSize: "0.68rem", letterSpacing: "0.08em" },
+};

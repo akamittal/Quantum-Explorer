@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   frontend:
-    name: Frontend tests and production build
+    name: Frontend tests, build, bundle budget, and browser smoke tests
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
@@ -27,3 +27,11 @@ jobs:
         run: npm test
       - name: Build frontend
         run: npm run build
+      - name: Check JavaScript bundle budgets
+        run: node scripts/check-bundle-size.mjs
+      - name: Install Playwright and Chromium
+        run: |
+          npm install --no-save --package-lock=false @playwright/test
+          npx playwright install --with-deps chromium
+      - name: Run browser smoke tests
+        run: npx playwright test --config frontend/playwright.config.js
