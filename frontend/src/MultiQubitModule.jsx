@@ -25,11 +25,11 @@ function Lesson({ id, title, children }) {
   return <section style={s.lesson}><h3 style={s.heading}>// {id} {title}</h3>{children}</section>;
 }
 function Sphere({ vector, name }) {
-  const x = 105 + vector.x * 65, y = 105 - vector.z * 65;
+  const x = 105 + (vector.x - vector.y * 0.35) * 65, y = 105 - vector.z * 65 - vector.y * 0.2 * 65;
   const length = Math.sqrt(vector.x ** 2 + vector.y ** 2 + vector.z ** 2);
   return <div style={s.sphereCard}>
     <b style={s.sphereTitle}>{name}</b>
-    <svg viewBox="0 0 210 210" style={{ width: "100%", maxWidth: 210 }} role="img" aria-label={name + " local Bloch vector"}>
+    <svg viewBox="0 0 210 210" style={{ width: "100%", maxWidth: 210 }} role="img" aria-label={name + " local Bloch vector (projected view)"}>
       <circle cx="105" cy="105" r="65" fill="rgba(6,182,212,.035)" stroke="#155e75" />
       <ellipse cx="105" cy="105" rx="65" ry="21" fill="none" stroke="#164e63" strokeDasharray="4 4" />
       <path d="M40 105H170 M105 40V170" stroke="#334155" />
