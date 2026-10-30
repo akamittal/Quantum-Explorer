@@ -8,7 +8,8 @@ import QiskitConsole from "./components/single-qubit/QiskitConsole";
 import EducationHelp from "./components/EducationHelp";
 import { getMeasurementProbabilities } from "./quantumMath";
 import { executeWithQiskit } from "./qiskitApi";
-import QiskitExecutionPanel from "./components/single-qubit/QiskitExecutionPanel";\nimport { generateQiskitPythonCode } from "./qiskitCode";
+import QiskitExecutionPanel from "./components/single-qubit/QiskitExecutionPanel";
+import { generateQiskitPythonCode } from "./qiskitCode";
 
 const COMPOSER_GATES = ["H", "X", "Y", "Z", "S", "T"];
 
