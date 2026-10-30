@@ -18,14 +18,22 @@ function AmmeterVectorArrow({ x, y, z }) {
     const targetDirection = new THREE.Vector3(x, y, z).normalize();
 
     const currentDirection = currentDirectionRef.current;
-    const dot = THREE.MathUtils.clamp(currentDirection.dot(targetDirection), -1, 1);
+    const dot = THREE.MathUtils.clamp(
+      currentDirection.dot(targetDirection),
+      -1,
+      1,
+    );
 
     // Linear interpolation collapses to a zero vector for exactly antipodal
     // directions (for example |0> to |1>). Rotate around a stable perpendicular
     // axis until the directions are no longer opposite, then resume smoothing.
     if (dot < -0.9995) {
-      const axis = new THREE.Vector3().crossVectors(currentDirection, new THREE.Vector3(1, 0, 0));
-      if (axis.lengthSq() < 1e-8) axis.crossVectors(currentDirection, new THREE.Vector3(0, 1, 0));
+      const axis = new THREE.Vector3().crossVectors(
+        currentDirection,
+        new THREE.Vector3(1, 0, 0),
+      );
+      if (axis.lengthSq() < 1e-8)
+        axis.crossVectors(currentDirection, new THREE.Vector3(0, 1, 0));
       axis.normalize();
       currentDirection.applyAxisAngle(axis, 0.08).normalize();
     } else {
@@ -98,7 +106,7 @@ export default function BlochSphereView({ coordinates, angles }) {
                 color="#10b981"
                 wireframe
                 transparent
-                opacity={0.05}
+                opacity={0.2}
               />
             </mesh>
 
