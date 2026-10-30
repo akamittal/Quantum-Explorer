@@ -26,8 +26,9 @@ for (const operations of cases) {
       operations: operations.map((operation) => ({ ...operation, qubit: 0 })),
     }),
   });
-  assert.equal(response.status, 200, await response.text());
-  const qiskit = await response.json();
+  const responseText = await response.text();
+  assert.equal(response.status, 200, responseText);
+  const qiskit = JSON.parse(responseText);
   const jsState = runSingleQubitCircuit(
     { alpha: { re: 1, im: 0 }, beta: { re: 0, im: 0 } },
     operations,
