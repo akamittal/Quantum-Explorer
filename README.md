@@ -87,68 +87,119 @@ The application will launch on your local interface nodes (Frontend: `http://loc
 
 ## Qiskit execution service
 
-Quantum Explorer can execute circuits through a separate Python service using Qiskit and Qiskit Aer. The browser talks only to the existing Express backend; the Express server forwards requests to the private Qiskit service. The Python service is not exposed directly to the browser.
+Quantum Explorer can execute circuits with a separate Python service powered by Qiskit and Qiskit Aer. **Three processes are involved when using the Qiskit button:**
 
-### Start the services locally
+1. React/Vite serves the browser application.
+2. Node.js/Express exposes the `/api/qiskit/*` endpoints and forwards requests.
+3. Python/FastAPI runs the circuit with Qiskit and Aer.
 
-Install the JavaScript workspace dependencies:
+The browser calls Node.js, not Python directly. Keep all three processes running while using **Run on Qiskit · 1,000 shots**.
+
+### 1. Install dependencies
+
+Install Node.js 18 or newer and Python 3.10 or newer. From the repository root:
 
 ```bash
 npm install
+python -m venv .venv
 ```
 
-Start the Qiskit service in a separate terminal:
+Activate the Python virtual environment.
+
+**Windows PowerShell:**
+```powershell
+.venv\Scripts\Activate.ps1
+```
+
+**Windows Command Prompt:**
+```bat
+.venv\Scripts\activate.bat
+```
+
+**macOS/Linux:**
+```bash
+source .venv/bin/activate
+```
+
+Install the Python dependencies (with the virtual environment activated):
 
 ```bash
-python -m venv .venv
-# Windows: .venv\\Scripts\\activate
-# macOS/Linux: source .venv/bin/activate
 pip install -r services/qiskit/requirements.txt
+```
+
+### 2. Start all services
+
+Open three terminals from the repository root.
+
+**Terminal 1 - Python Qiskit service:**
+
+```bash
 uvicorn app:app --app-dir services/qiskit --host 127.0.0.1 --port 8000
 ```
 
-Start the existing Node backend and frontend as usual:
+The service health endpoint is `http://127.0.0.1:8000/health`.
+
+**Terminal 2 - Node.js backend and React frontend:**
 
 ```bash
 npm run dev
 ```
 
-Configure the Express-to-Qiskit connection with `QISKIT_SERVICE_URL=http://127.0.0.1:8000` in the backend environment when using a non-default address. The Node backend exposes:
+This starts the Express API on `http://127.0.0.1:3000` and Vite on `http://localhost:5173`.
 
-- `GET /api/qiskit/health` to check service availability.
-- `POST /api/qiskit/execute` to execute a circuit and return statevector amplitudes, exact probabilities, and sampled measurement counts.
+**Terminal 3 - Your browser:**
+
+Open `http://localhost:5173`. Keep the first two terminals running. The Express backend uses `http://127.0.0.1:8000` as the default Python service address. If your Python service uses another address, set `QISKIT_SERVICE_URL` in the backend environment before starting Node.
+
+If the Node backend is running on a port other than 3000, configure the Vite proxy target with `VITE_BACKEND_URL` (for example, `http://127.0.0.1:3001`) before starting the frontend.
+
+### 3. Run a circuit
+
+In the single-qubit module, add one or more gates using the **+ H**, **+ X**, **+ Y**, **+ Z**, **+ S**, or **+ T** controls in the **Compose a Circuit** section. Then click **Run on Qiskit · 1,000 shots**. The separate single-gate controls update the local demonstration state; they do not add gates to the Qiskit circuit queue.
+
+In the multi-qubit module, add gates to the circuit using its gate controls, or load a preset such as **Load Bell state**. Then use the Qiskit execution panel. The button remains disabled while the circuit is empty or a request is already running.
+
+The Node backend exposes:
+
+- `GET /api/qiskit/health` - checks whether the Python Qiskit service can be reached through Node.
+- `POST /api/qiskit/execute` - executes a circuit and returns statevector amplitudes, exact probabilities, and sampled measurement counts.
+
+You can check the complete connection in a browser by opening `http://localhost:3000/api/qiskit/health`. A healthy response should contain `"status":"ok"` and identify the Qiskit + Aer engine. If this endpoint reports that the service is unavailable, check that the Python terminal is still running and that `QISKIT_SERVICE_URL` points to it.
 
 Example request body:
 
 ```json
 {
-  "num_qubits": 1,
+  "num_qubits": 2,
   "operations": [
     { "name": "H", "qubit": 0 },
-    { "name": "RY", "qubit": 0, "theta": 0.4 }
+    { "name": "CX", "control": 0, "target": 1 }
   ],
-  "shots": 2048
+  "shots": 1000
 }
 ```
 
-Supported gates are I, H, X, Y, Z, S, T, RX, RY, RZ, and CX/CNOT. Rotation angles are in radians. The service currently limits circuits to 8 qubits, 256 operations, and 100,000 shots by default; limits can be lowered with `QISKIT_MAX_QUBITS` and `QISKIT_MAX_SHOTS`.
+Supported gates are I/ID, H, X, Y, Z, S, T, RX, RY, RZ, CX/CNOT, CZ, and SWAP. Rotation angles are in radians. The service currently limits circuits to 8 qubits, 256 operations, and 100,000 shots by default; limits can be lowered with `QISKIT_MAX_QUBITS` and `QISKIT_MAX_SHOTS`.
 
-**Qubit ordering:** Qiskit uses q0 as the least-significant bit. Returned basis labels are displayed as `|q[n-1]...q1q0>`, so q0 is the rightmost bit. The response includes this convention explicitly.
+**Qubit ordering:** Qiskit uses q0 as the least-significant bit. Returned basis labels are displayed as `|q[n-1]...q1q0>`, so q0 is the rightmost bit.
 
-### Validate both engines
+### 4. Validate the Qiskit service
 
-Run the service unit tests and JavaScript-to-Qiskit statevector cross-check:
+With the Python virtual environment activated:
 
 ```bash
 cd services/qiskit
 pytest -q
 cd ../..
-uvicorn app:app --host 127.0.0.1 --port 8000
-# In another terminal, from the repository root:
+```
+
+To cross-check the JavaScript single-qubit simulator against Qiskit, start the Python service in one terminal and run this from the repository root in another:
+
+```bash
 node scripts/qiskit-cross-check.mjs
 ```
 
-The cross-check compares seven representative single-qubit circuits and allows physically irrelevant global phase while requiring matching state probabilities. CI runs these checks independently from the frontend browser tests.
+The cross-check compares representative single-qubit circuits and allows physically irrelevant global phase while requiring matching state probabilities. CI runs these checks independently from the frontend browser tests.
 
 ## 📜 License
 
