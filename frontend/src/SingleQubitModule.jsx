@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import ConceptHero from "./components/single-qubit/ConceptHero";
+import GateMatrixGuide from "./components/single-qubit/GateMatrixGuide";
 import AmplitudeSandbox from "./components/single-qubit/AmplitudeSandbox";
 import ParameterSliders from "./components/single-qubit/ParameterSliders";
 import TelemetryTracer from "./components/single-qubit/TelemetryTracer";
@@ -26,6 +27,7 @@ export default function SingleQubitModule({
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "3rem" }}>
       <ConceptHero />
+      <GateMatrixGuide />
       <AmplitudeSandbox alpha={alpha} beta={beta} onAlphaInputChange={onAlphaInputChange} />
 
       <section style={styles.gateSection}>
