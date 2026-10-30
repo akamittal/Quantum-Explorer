@@ -43,7 +43,7 @@ function Sphere({ vector, name }) {
   </div>;
 }
 
-export default function MultiQubitModule() {
+export default function MultiQubitModule({ onBack }) {
   const [state, setState] = useState(initial);
   const [history, setHistory] = useState([]);
   const [view, setView] = useState("bloch");
@@ -61,9 +61,9 @@ export default function MultiQubitModule() {
     setHistory(["H(q0)", "H(q1)"]); setShots(null);
   };
   const basis = ["00", "01", "10", "11"];
-  return <div style={s.module}>
+  return <div style={s.workspace}><div style={s.module}>
     <header style={s.hero}>
-      <span style={s.eyebrow}>MODULE 2 // MULTI-QUBIT SYSTEMS</span>
+      <div style={s.topbar}><button style={s.secondary} onClick={onBack}>← Module index</button><span style={s.eyebrow}>MODULE 2 // MULTI-QUBIT SYSTEMS</span></div>
       <h1 style={s.title}>From one qubit to a quantum register</h1>
       <p style={s.copy}>A register has one joint state vector. Its qubits can be independent, correlated, or entangled. Learn the mathematics, then build states gate by gate.</p>
     </header>
@@ -159,10 +159,10 @@ export default function MultiQubitModule() {
         {shots && <div style={s.shotResult}><b>Observed counts from 1000 shots</b>{Object.entries(shots.counts).map(([k,v]) => <span key={k}>|{k}⟩: {v} ({(v/10).toFixed(1)}%)</span>)}</div>}
       </div>
     </Lesson>
-  </div>;
+  </div><MultiQubitInspector state={state} mode={view} onModeChange={setView} /> </div>;
 }
 
-export function MultiQubitInspector({ state, mode, onModeChange }) {
+function MultiQubitInspector({ state, mode, onModeChange }) {
   const probabilities = getRegisterProbabilities(state);
   const vectors = [localBloch(state,0), localBloch(state,1)];
   const basis = ["00","01","10","11"];
@@ -189,7 +189,9 @@ export function MultiQubitInspector({ state, mode, onModeChange }) {
 }
 
 const s = {
-  module:{display:"flex",flexDirection:"column",gap:"2rem",color:"#e5e7eb"},
+  workspace:{display:"grid",gridTemplateColumns:"minmax(0,1fr) minmax(360px,45%)",width:"100vw",height:"100vh",overflow:"hidden",background:"#030712"},
+  module:{display:"flex",flexDirection:"column",gap:"2rem",color:"#e5e7eb",padding:"2rem",overflowY:"auto",minWidth:0},
+  topbar:{display:"flex",alignItems:"center",gap:"1rem",flexWrap:"wrap"},
   hero:{display:"flex",flexDirection:"column",gap:".8rem",paddingBottom:"1.5rem",borderBottom:"1px solid rgba(6,182,212,.2)"},
   eyebrow:{color:"#10b981",fontSize:".7rem",fontFamily:"monospace",letterSpacing:".12em"},
   title:{color:"#f8fafc",fontSize:"1.8rem",lineHeight:1.2,margin:0},
