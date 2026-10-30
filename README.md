@@ -84,6 +84,72 @@ The application will launch on your local interface nodes (Frontend: `http://loc
 
 ---
 
+
+## Qiskit execution service
+
+Quantum Explorer can execute circuits through a separate Python service using Qiskit and Qiskit Aer. The browser talks only to the existing Express backend; the Express server forwards requests to the private Qiskit service. The Python service is not exposed directly to the browser.
+
+### Start the services locally
+
+Install the JavaScript workspace dependencies:
+
+```bash
+npm install
+```
+
+Start the Qiskit service in a separate terminal:
+
+```bash
+python -m venv .venv
+# Windows: .venv\\Scripts\\activate
+# macOS/Linux: source .venv/bin/activate
+pip install -r services/qiskit/requirements.txt
+uvicorn app:app --app-dir services/qiskit --host 127.0.0.1 --port 8000
+```
+
+Start the existing Node backend and frontend as usual:
+
+```bash
+npm run dev
+```
+
+Configure the Express-to-Qiskit connection with `QISKIT_SERVICE_URL=http://127.0.0.1:8000` in the backend environment when using a non-default address. The Node backend exposes:
+
+- `GET /api/qiskit/health` to check service availability.
+- `POST /api/qiskit/execute` to execute a circuit and return statevector amplitudes, exact probabilities, and sampled measurement counts.
+
+Example request body:
+
+```json
+{
+  "num_qubits": 1,
+  "operations": [
+    { "name": "H", "qubit": 0 },
+    { "name": "RY", "qubit": 0, "theta": 0.4 }
+  ],
+  "shots": 2048
+}
+```
+
+Supported gates are I, H, X, Y, Z, S, T, RX, RY, RZ, and CX/CNOT. Rotation angles are in radians. The service currently limits circuits to 8 qubits, 256 operations, and 100,000 shots by default; limits can be lowered with `QISKIT_MAX_QUBITS` and `QISKIT_MAX_SHOTS`.
+
+**Qubit ordering:** Qiskit uses q0 as the least-significant bit. Returned basis labels are displayed as `|q[n-1]...q1q0>`, so q0 is the rightmost bit. The response includes this convention explicitly.
+
+### Validate both engines
+
+Run the service unit tests and JavaScript-to-Qiskit statevector cross-check:
+
+```bash
+cd services/qiskit
+pytest -q
+cd ../..
+uvicorn app:app --host 127.0.0.1 --port 8000
+# In another terminal, from the repository root:
+node scripts/qiskit-cross-check.mjs
+```
+
+The cross-check compares seven representative single-qubit circuits and allows physically irrelevant global phase while requiring matching state probabilities. CI runs these checks independently from the frontend browser tests.
+
 ## 📜 License
 
 This project is licensed under the MIT License.
