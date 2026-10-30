@@ -23,7 +23,7 @@ export function generateQiskitPythonCode({ numQubits = 1, operations = [], shots
   ];
   operations.forEach((operation, index) => {
     const name = (typeof operation === "string" ? operation : operation.name || "").toUpperCase();
-    const qubit = operation.qubit ?? operation.target;
+    const qubit = typeof operation === "string" ? 0 : (operation.qubit ?? operation.target);
     if (SINGLE_QUBIT_GATES.has(name)) {
       if (!Number.isInteger(qubit) || qubit < 0 || qubit >= numQubits) throw new RangeError("Operation " + index + ": invalid target qubit.");
       if (["RX", "RY", "RZ"].includes(name)) {
