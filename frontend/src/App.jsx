@@ -42,7 +42,7 @@ export default function App() {
   };
 
   if (narrativePhase === 4 && activeModulePage === "2.1") {
-    return <MultiQubitModule onBack={() => setActiveModulePage("1.1")} />;
+    return <MultiQubitModule onNavigate={(page) => setActiveModulePage(page)} />;
   }
 
   if (narrativePhase === 4) {
