@@ -43,7 +43,7 @@ function Sphere({ vector, name }) {
   </div>;
 }
 
-export default function MultiQubitModule() {
+export default function MultiQubitModule({ onNavigate }) {
   const [state, setState] = useState(initial);
   const [history, setHistory] = useState([]);
   const [view, setView] = useState("bloch");
@@ -66,7 +66,7 @@ export default function MultiQubitModule() {
   const copyQiskit = () => { if (navigator?.clipboard?.writeText) navigator.clipboard.writeText(qiskitCode); };
   return <div style={s.workspace}>
     <header style={s.header}><button style={s.menuButton} onClick={() => setMenuOpen(v => !v)}>{menuOpen ? "CLOSE INDEX ✕" : "MENU INDEX ☰"}</button><span style={s.eyebrow}>QUANTUM ENGINE // MULTI-QUBIT WORKSPACE</span><span style={s.headerTag}>M2.1 ACTIVE</span></header>
-    {menuOpen && <aside style={s.sidebar}><span style={s.eyebrow}>CORE MAP REPOSITORY</span><button style={s.navItem} onClick={() => { setMenuOpen(false); }}> [ ] M1.1: Single Qubit State Space</button><button style={{...s.navItem,color:"#10b981"}} onClick={() => setMenuOpen(false)}>[x] M2.1: Multi-Qubit Systems</button></aside>}
+    {menuOpen && <aside style={s.sidebar}><span style={s.eyebrow}>CORE MAP REPOSITORY</span><button style={s.navItem} onClick={() => { setMenuOpen(false); onNavigate?.("1.1"); }}> [ ] M1.1: Single Qubit State Space</button><button style={{...s.navItem,color:"#10b981"}} onClick={() => setMenuOpen(false)}>[x] M2.1: Multi-Qubit Systems</button></aside>}
     <div style={s.contentGrid}><div style={s.module}>
     <header style={s.hero}>
       <div style={s.topbar}><span style={s.eyebrow}>MODULE 2 // MULTI-QUBIT SYSTEMS</span></div>
