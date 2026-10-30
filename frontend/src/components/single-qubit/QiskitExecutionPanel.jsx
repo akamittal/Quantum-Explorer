@@ -1,20 +1,20 @@
 import React from "react";
 
-export default function QiskitExecutionPanel({ operations, result, loading, error, onRun }) {
+export default function QiskitExecutionPanel({ operations, code, result, loading, error, onRun }) {
   const canRun = operations.length > 0 && !loading;
   return (
     <section style={styles.section}>
       <div style={styles.headingRow}>
-        <h3 style={styles.heading}>// RUN THIS CIRCUIT ON QISKIT</h3>
+        <h3 style={styles.heading}>// LIVE PYTHON / QISKIT PROGRAM</h3>
         <span style={styles.engine}>QISKIT + AER</span>
       </div>
       <p style={styles.copy}>
-        Send the same gate sequence to the Python Qiskit service. This is a real backend execution, separate from the local JavaScript simulator.
+        This Python program is generated from the current playground circuit. Every gate, wire index, parameter, and execution setting updates with your design. Run sends the same structured circuit to the Python Qiskit + Aer service.
       </p>
       <button type="button" style={styles.button} disabled={!canRun} onClick={onRun}>
-        {loading ? "Running on Qiskit…" : "Run on Qiskit · 1,000 shots"}
+        {loading ? "Running Python on Qiskit…" : "Run Python on Qiskit · 1,000 shots"}
       </button>
-      {!operations.length && <p style={styles.hint}>Add one or more gates in the circuit composer to enable execution.</p>}
+      <div style={styles.codeFrame}><div style={styles.codeHeader}><strong>circuit.py</strong><span>Generated live from this circuit</span></div><pre style={styles.code}>{code}</pre></div>\n      {!operations.length && <p style={styles.hint}>Add one or more gates in the circuit composer to populate the Python program and enable execution.</p>}
       {error && <div role="alert" style={styles.error}>{error}</div>}
       {result && (
         <div aria-live="polite" style={styles.results}>
@@ -45,7 +45,7 @@ export default function QiskitExecutionPanel({ operations, result, loading, erro
 }
 
 const styles = {
-  section: { display: "flex", flexDirection: "column", gap: "0.75rem", padding: "1.25rem", background: "#0b0f19", border: "1px solid rgba(16,185,129,0.25)", borderRadius: "4px" },
+  codeFrame: { background: "#050911", border: "1px solid rgba(6,182,212,0.16)", borderRadius: "3px", overflow: "hidden" },\n  codeHeader: { display: "flex", justifyContent: "space-between", gap: "0.5rem", padding: "0.6rem 0.75rem", color: "#67e8f9", background: "#080d18", fontFamily: "monospace", fontSize: "0.7rem" },\n  code: { margin: 0, padding: "0.9rem", maxHeight: "420px", overflow: "auto", whiteSpace: "pre", color: "#d1fae5", fontFamily: "Consolas, Fira Code, Monaco, monospace", fontSize: "0.72rem", lineHeight: 1.6 },\n  section: { display: "flex", flexDirection: "column", gap: "0.75rem", padding: "1.25rem", background: "#0b0f19", border: "1px solid rgba(16,185,129,0.25)", borderRadius: "4px" },
   headingRow: { display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "0.5rem" },
   heading: { color: "#10b981", fontSize: "0.8rem", fontFamily: "monospace", letterSpacing: "0.08em", margin: 0 },
   engine: { color: "#67e8f9", fontSize: "0.68rem", fontFamily: "monospace" },
