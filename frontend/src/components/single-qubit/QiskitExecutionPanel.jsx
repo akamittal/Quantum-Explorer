@@ -1,0 +1,63 @@
+import React from "react";
+
+export default function QiskitExecutionPanel({ operations, result, loading, error, onRun }) {
+  const canRun = operations.length > 0 && !loading;
+  return (
+    <section style={styles.section}>
+      <div style={styles.headingRow}>
+        <h3 style={styles.heading}>// RUN THIS CIRCUIT ON QISKIT</h3>
+        <span style={styles.engine}>QISKIT + AER</span>
+      </div>
+      <p style={styles.copy}>
+        Send the same gate sequence to the Python Qiskit service. This is a real backend execution, separate from the local JavaScript simulator.
+      </p>
+      <button type="button" style={styles.button} disabled={!canRun} onClick={onRun}>
+        {loading ? "Running on Qiskit…" : "Run on Qiskit · 1,000 shots"}
+      </button>
+      {!operations.length && <p style={styles.hint}>Add one or more gates in the circuit composer to enable execution.</p>}
+      {error && <div role="alert" style={styles.error}>{error}</div>}
+      {result && (
+        <div aria-live="polite" style={styles.results}>
+          <div style={styles.resultHeading}>
+            <strong>Execution result</strong>
+            <span>{result.engine || "qiskit-aer"} · {result.shots.toLocaleString()} shots</span>
+          </div>
+          <p style={styles.hint}>Basis labels use Qiskit's convention. For this one-qubit circuit, |0⟩ and |1⟩ are the two outcomes.</p>
+          <div style={styles.grid}>
+            {result.statevector.map((item) => (
+              <div key={item.index} style={styles.metric}>
+                <span style={styles.metricLabel}>Amplitude {item.bitstring}</span>
+                <strong>{item.re.toFixed(5)} {item.im < 0 ? "−" : "+"} {Math.abs(item.im).toFixed(5)}i</strong>
+                <span style={styles.metricValue}>P({item.bitstring}) = {(item.probability * 100).toFixed(2)}%</span>
+              </div>
+            ))}
+          </div>
+          <div style={styles.counts}>
+            <strong>Measured counts</strong>
+            {Object.entries(result.counts).sort(([a], [b]) => a.localeCompare(b)).map(([bits, count]) => (
+              <span key={bits}>|{bits}⟩: {count} ({(count / result.shots * 100).toFixed(1)}%)</span>
+            ))}
+          </div>
+        </div>
+      )}
+    </section>
+  );
+}
+
+const styles = {
+  section: { display: "flex", flexDirection: "column", gap: "0.75rem", padding: "1.25rem", background: "#0b0f19", border: "1px solid rgba(16,185,129,0.25)", borderRadius: "4px" },
+  headingRow: { display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "0.5rem" },
+  heading: { color: "#10b981", fontSize: "0.8rem", fontFamily: "monospace", letterSpacing: "0.08em", margin: 0 },
+  engine: { color: "#67e8f9", fontSize: "0.68rem", fontFamily: "monospace" },
+  copy: { color: "#9ca3af", fontSize: "0.875rem", lineHeight: 1.5, margin: 0 },
+  button: { alignSelf: "flex-start", background: "rgba(16,185,129,0.12)", border: "1px solid rgba(16,185,129,0.6)", color: "#d1fae5", padding: "0.7rem 0.9rem", borderRadius: "4px", fontFamily: "monospace", cursor: "pointer" },
+  hint: { color: "#6b7280", fontSize: "0.75rem", lineHeight: 1.5, margin: 0 },
+  error: { color: "#fecaca", background: "rgba(127,29,29,0.2)", border: "1px solid rgba(248,113,113,0.3)", padding: "0.75rem", fontSize: "0.8rem", lineHeight: 1.5 },
+  results: { display: "flex", flexDirection: "column", gap: "0.75rem", padding: "0.85rem", background: "#030712", border: "1px solid rgba(6,182,212,0.15)" },
+  resultHeading: { display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: "0.5rem", color: "#e5e7eb", fontSize: "0.82rem", fontFamily: "monospace" },
+  grid: { display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: "0.5rem" },
+  metric: { display: "flex", flexDirection: "column", gap: "0.35rem", padding: "0.7rem", background: "#0b0f19", color: "#e5e7eb", fontFamily: "monospace", fontSize: "0.78rem", overflowWrap: "anywhere" },
+  metricLabel: { color: "#67e8f9", fontSize: "0.7rem" },
+  metricValue: { color: "#a7f3d0", fontSize: "0.72rem" },
+  counts: { display: "flex", flexWrap: "wrap", gap: "0.75rem", color: "#d1d5db", fontFamily: "monospace", fontSize: "0.78rem" },
+};
