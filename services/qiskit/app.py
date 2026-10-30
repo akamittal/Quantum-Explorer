@@ -27,6 +27,8 @@ class Operation(BaseModel):
     control: int | None = None
     target: int | None = None
     theta: float | None = None
+    first: int | None = None
+    second: int | None = None
 
 
 class ExecuteRequest(BaseModel):
@@ -59,6 +61,13 @@ def build_circuit(payload: ExecuteRequest) -> QuantumCircuit:
                 if not (0 <= control < payload.num_qubits and 0 <= target < payload.num_qubits):
                     raise ValueError("CX qubit indices are out of range")
                 circuit.cx(control, target)
+            elif name in {"CZ", "SWAP"}:
+                first, second = operation.first, operation.second
+                if first is None or second is None or first == second:
+                    raise ValueError(f"{name} requires two distinct qubit indices")
+                if not (0 <= first < payload.num_qubits and 0 <= second < payload.num_qubits):
+                    raise ValueError(f"{name} qubit indices are out of range")
+                getattr(circuit, name.lower())(first, second)
             else:
                 raise ValueError(f"unsupported gate: {operation.name}")
         except (AttributeError, ValueError) as exc:
