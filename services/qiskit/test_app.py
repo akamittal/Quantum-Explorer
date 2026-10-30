@@ -59,3 +59,36 @@ def test_invalid_gate_and_rotation_are_rejected():
 def test_shot_and_qubit_limits_are_enforced():
     assert client.post("/execute", json={"num_qubits": 0}).status_code == 422
     assert client.post("/execute", json={"num_qubits": 1, "shots": 100001}).status_code == 422
+
+
+def test_controlled_z_and_swap_match_expected_basis_actions():
+    cz = client.post("/execute", json={
+        "num_qubits": 2,
+        "operations": [{"name": "H", "qubit": 0}, {"name": "H", "qubit": 1}, {"name": "CZ", "first": 0, "second": 1}],
+        "shots": 100,
+    })
+    assert cz.status_code == 200
+    cz_state = cz.json()["statevector"]
+    assert cz_state[3]["re"] == pytest.approx(-0.5)
+    assert cz_state[3]["im"] == pytest.approx(0.0)
+
+    swap = client.post("/execute", json={
+        "num_qubits": 2,
+        "operations": [{"name": "X", "qubit": 0}, {"name": "SWAP", "first": 0, "second": 1}],
+        "shots": 100,
+    })
+    assert swap.status_code == 200
+    probabilities = swap.json()["probabilities"]
+    assert probabilities["10"] == pytest.approx(1.0)
+    assert probabilities["01"] == pytest.approx(0.0)
+
+
+def test_controlled_gate_rejects_same_or_out_of_range_wires():
+    same_wire = client.post("/execute", json={
+        "num_qubits": 2, "operations": [{"name": "SWAP", "first": 0, "second": 0}]
+    })
+    out_of_range = client.post("/execute", json={
+        "num_qubits": 2, "operations": [{"name": "CZ", "first": 0, "second": 2}]
+    })
+    assert same_wire.status_code == 422
+    assert out_of_range.status_code == 422
