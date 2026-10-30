@@ -8,7 +8,9 @@ test("intro can be bypassed and the single-qubit workspace loads", async ({ page
   await page.getByRole("button", { name: /BYPASS INTRODUCTION/i }).click();
 
   await expect(page.getByText(/QUANTUM ENGINE \/\/ MAIN CONTAINER WORKSPACE/i)).toBeVisible();
-  await expect(page.getByText(/THE PHYSICAL CONCEPT OF A QUBIT/i)).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: /FROM KET NOTATION TO COLUMN VECTORS/i })
+  ).toBeVisible();
   await expect(page.getByRole("button", { name: "Hadamard", exact: true })).toBeVisible();
   await expect(page.getByText(/IBM QISKIT CODE BLUEPRINT/i)).toBeVisible();
   await expect(page.getByText(/Loading Bloch sphere/i)).toHaveCount(0, { timeout: 15000 });
