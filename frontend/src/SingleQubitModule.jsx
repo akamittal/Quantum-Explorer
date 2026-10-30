@@ -7,6 +7,8 @@ import TelemetryTracer from "./components/single-qubit/TelemetryTracer";
 import QiskitConsole from "./components/single-qubit/QiskitConsole";
 import EducationHelp from "./components/EducationHelp";
 import { getMeasurementProbabilities } from "./quantumMath";
+import { executeWithQiskit } from "./qiskitApi";
+import QiskitExecutionPanel from "./components/single-qubit/QiskitExecutionPanel";
 
 const COMPOSER_GATES = ["H", "X", "Y", "Z", "S", "T"];
 
@@ -21,6 +23,28 @@ export default function SingleQubitModule({
 }) {
   const { theta, phi, x, y, z, alpha, beta } = stateVariables;
   const [queuedGates, setQueuedGates] = useState([]);
+  const [qiskitLoading, setQiskitLoading] = useState(false);
+  const [qiskitError, setQiskitError] = useState("");
+  const [qiskitResult, setQiskitResult] = useState(null);
+
+  async function handleRunOnQiskit() {
+    if (!queuedGates.length || qiskitLoading) return;
+    setQiskitLoading(true);
+    setQiskitError("");
+    setQiskitResult(null);
+    try {
+      const result = await executeWithQiskit({
+        num_qubits: 1,
+        operations: queuedGates.map((name) => ({ name, qubit: 0 })),
+        shots: 1000,
+      });
+      setQiskitResult(result);
+    } catch (error) {
+      setQiskitError(error.message || "Qiskit execution failed.");
+    } finally {
+      setQiskitLoading(false);
+    }
+  }
   const probabilities = getMeasurementProbabilities(alpha, beta);
   const probZero = probabilities.zero * 100;
   const probOne = probabilities.one * 100;
@@ -121,6 +145,13 @@ export default function SingleQubitModule({
 
       <ParameterSliders theta={theta} phi={phi} onAngleSliderAdjustment={onAngleSliderAdjustment} />
       <TelemetryTracer theta={theta} phi={phi} x={x} y={y} z={z} alpha={alpha} beta={beta} probZero={probZero} probOne={probOne} />
+      <QiskitExecutionPanel
+        operations={queuedGates}
+        result={qiskitResult}
+        loading={qiskitLoading}
+        error={qiskitError}
+        onRun={handleRunOnQiskit}
+      />
       <QiskitConsole theta={theta} phi={phi} />
     </div>
   );
