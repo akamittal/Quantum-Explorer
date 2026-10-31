@@ -185,6 +185,55 @@ test("multi-qubit matrix and phase studio visualizes relative phase and verifies
   expect(pageErrors).toEqual([]);
 });
 
+test("entanglement laboratory verifies all Bell-state diagnostics and complementary-basis correlations in Qiskit", async ({ page }, testInfo) => {
+  const pageErrors = await openWorkspace(page, testInfo);
+  await page.getByRole("button", { name: /MENU INDEX/i }).click();
+  await page.getByRole("button", { name: /M1\.4: Quantum Entanglement Space/i }).click();
+  await expect(page.getByRole("heading", { name: /When two qubits become one quantum system/i })).toBeVisible();
+  await expect(page.getByText("MAXIMALLY ENTANGLED PURE STATE")).toBeVisible();
+  await expect(page.getByText("1.0000 bits", { exact: true })).toBeVisible();
+
+  for (const bell of ["Phi+", "Phi-", "Psi+", "Psi-"]) {
+    await page.getByRole("button", { name: "Load Bell state " + bell }).click();
+    await expect(page.getByText("MAXIMALLY ENTANGLED PURE STATE")).toBeVisible();
+    await expect(page.getByText("1.0000 bits", { exact: true })).toBeVisible();
+    await expect(page.getByText("1.0000", { exact: true }).first()).toBeVisible();
+  }
+
+  await page.getByRole("button", { name: "Load Bell state Phi-" }).click();
+  await page.getByRole("button", { name: "X BASIS · HADAMARD THEN Z" }).click();
+  await expect(page.getByText("Opposite outcomes").locator("..")).toContainText("100.0%");
+  await expect(page.getByText("Same outcomes").locator("..")).toContainText("0.0%");
+
+  let requestPayload;
+  await page.route("**/api/qiskit/execute", async (route) => {
+    requestPayload = route.request().postDataJSON();
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({
+        engine: "qiskit-aer",
+        shots: 1000,
+        stdout: "Circuit:\nH(0) -> Z(0) -> CX(0, 1) -> H(0) -> H(1)\nStatevector:",
+        statevector: [
+          { index: 0, bitstring: "00", re: 0, im: 0, probability: 0 },
+          { index: 1, bitstring: "01", re: Math.SQRT1_2, im: 0, probability: 0.5 },
+          { index: 2, bitstring: "10", re: Math.SQRT1_2, im: 0, probability: 0.5 },
+          { index: 3, bitstring: "11", re: 0, im: 0, probability: 0 },
+        ],
+        probabilities: { "00": 0, "01": 0.5, "10": 0.5, "11": 0 },
+        counts: { "01": 500, "10": 500 },
+      }),
+    });
+  });
+  await page.getByRole("button", { name: /Run Python on Qiskit/i }).click();
+  await expect(page.getByText("Execution result")).toBeVisible();
+  expect(requestPayload.num_qubits).toBe(2);
+  expect(requestPayload.operations.map((operation) => operation.name)).toEqual(["H", "Z", "CX", "H", "H"]);
+  expect(requestPayload.operations[2]).toMatchObject({ control: 0, target: 1 });
+  expect(pageErrors).toEqual([]);
+});
+
 test("AI Quantum Tutor opens, receives workspace context, and displays its answer", async ({ page }, testInfo) => {
   const pageErrors = await openWorkspace(page, testInfo);
   let requestPayload;
