@@ -96,7 +96,9 @@ export default function DeutschAlgorithmModule({ onNavigate }) {
           <Equation formula={String.raw`|\psi_0\rangle=|0\rangle_{q0}|1\rangle_{q1}`} />
           <Equation formula={String.raw`H|0\rangle=\frac{|0\rangle+|1\rangle}{\sqrt2},\qquad H|1\rangle=\frac{|0\rangle-|1\rangle}{\sqrt2}`} />
           <Equation formula={String.raw`|\psi_1\rangle=\frac{|0\rangle+|1\rangle}{\sqrt2}\otimes\frac{|0\rangle-|1\rangle}{\sqrt2}`} />
-          <p style={styles.copy}>The target becomes |−⟩. It has equal measurement probabilities for 0 and 1, but the minus sign is important: it lets the oracle's answer become a phase on the input.</p>
+          <p style={styles.copy}>Expand the tensor product by multiplying every term in the first bracket by every term in the second:</p>
+          <Equation formula={"|\\psi_1\\rangle=\\frac12(|00\\rangle-|01\\rangle+|10\\rangle-|11\\rangle)"} />
+          <p style={styles.copy}>Each basis state has probability 1/4. The minus signs are relative phases, not negative probabilities. The target becomes |−⟩. It has equal measurement probabilities for 0 and 1, but the minus sign is important: it lets the oracle's answer become a phase on the input.</p>
         </section>
 
         <section style={styles.lesson}>
