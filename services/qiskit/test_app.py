@@ -307,6 +307,7 @@ def test_non_binary_qpe_phase_has_normalized_distribution():
         "theta": 2 * math.pi * phase * (2 ** qubit),
     } for qubit in range(counting_qubits))
     operations.extend([
+        {"name": "SWAP", "first": 1, "second": 2},
         {"name": "SWAP", "first": 0, "second": 3},
         {"name": "H", "qubit": 0},
         {"name": "CP", "control": 0, "target": 1, "theta": -math.pi / 2},
