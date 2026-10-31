@@ -1,40 +1,69 @@
 import { test, expect } from "@playwright/test";
 
-async function openWorkspace(page) {
+async function openWorkspace(page, testInfo) {
   const pageErrors = [];
-  page.on("pageerror", (error) => pageErrors.push(error.message));
+  const consoleErrors = [];
+  const failedRequests = [];
+  page.on("pageerror", (error) => pageErrors.push(error.stack || error.message));
+  page.on("console", (message) => {
+    if (message.type() === "error") consoleErrors.push(message.text());
+  });
+  page.on("requestfailed", (request) => {
+    failedRequests.push({ url: request.url(), error: request.failure()?.errorText });
+  });
+
   await page.goto("/");
   await page.getByRole("button", { name: /BYPASS INTRODUCTION/i }).click();
-  await expect(page.getByText(/QUANTUM ENGINE \/\/ MAIN CONTAINER WORKSPACE/i)).toBeVisible();
+
+  const workspaceHeading = page.getByText(/QUANTUM ENGINE \/\/ MAIN CONTAINER WORKSPACE/i);
+  try {
+    await expect(workspaceHeading).toBeVisible({ timeout: 10000 });
+  } catch (error) {
+    const diagnostics = {
+      url: page.url(),
+      title: await page.title().catch(() => "<title unavailable>"),
+      bodyText: await page.locator("body").innerText().catch(() => "<body unavailable>"),
+      pageErrors,
+      consoleErrors,
+      failedRequests,
+    };
+    await page.screenshot({
+      path: testInfo.outputPath("workspace-startup-failure.png"),
+      fullPage: true,
+    }).catch(() => {});
+    throw new Error(
+      `Workspace did not render after bypass. Browser diagnostics:\n${JSON.stringify(diagnostics, null, 2)}\nOriginal assertion: ${error.message}`
+    );
+  }
   return pageErrors;
 }
 
-test("intro can be bypassed and the single-qubit workspace loads", async ({ page }) => {
-  const pageErrors = await openWorkspace(page);
+test("intro can be bypassed and the single-qubit workspace loads", async ({ page }, testInfo) => {
+  const pageErrors = await openWorkspace(page, testInfo);
   await expect(page.getByRole("heading", { name: /FROM KET NOTATION TO COLUMN VECTORS/i })).toBeVisible();
   await expect(page.getByRole("button", { name: "Hadamard", exact: true })).toBeVisible();
   await expect(page.getByText(/Loading Bloch sphere/i)).toHaveCount(0, { timeout: 15000 });
   expect(pageErrors).toEqual([]);
 });
 
-test("Hadamard updates the displayed state and expected probabilities", async ({ page }) => {
-  await openWorkspace(page);
+test("Hadamard updates the displayed state and expected probabilities", async ({ page }, testInfo) => {
+  await openWorkspace(page, testInfo);
   await page.getByRole("button", { name: "Hadamard", exact: true }).click();
   await expect(page.getByText("POLAR ANGLE (θ - VERTICAL TILT)", { exact: true })).toBeVisible();
   await expect(page.getByText(/50\.0%/).first()).toBeVisible();
   await expect(page.getByText(/100\.0%/)).toHaveCount(0);
 });
 
-test("Pauli-X flips the measured basis state and reset returns to |0>", async ({ page }) => {
-  await openWorkspace(page);
+test("Pauli-X flips the measured basis state and reset returns to |0>", async ({ page }, testInfo) => {
+  await openWorkspace(page, testInfo);
   await page.getByRole("button", { name: "Pauli-X", exact: true }).click();
   await expect(page.getByText("POLAR ANGLE (θ - VERTICAL TILT)", { exact: true })).toBeVisible();
   await page.getByRole("button", { name: "Reset to |0⟩", exact: true }).click();
   await expect(page.getByText(/100\.0%/).first()).toBeVisible();
 });
 
-test("measurement shots display observed counts that sum to requested shots", async ({ page }) => {
-  await openWorkspace(page);
+test("measurement shots display observed counts that sum to requested shots", async ({ page }, testInfo) => {
+  await openWorkspace(page, testInfo);
   await page.getByRole("button", { name: "Hadamard", exact: true }).click();
   await page.getByRole("button", { name: "Measure 100 shots", exact: true }).click();
   const result = page.locator('[aria-live="polite"]').filter({ hasText: "Observed counts" });
@@ -46,8 +75,8 @@ test("measurement shots display observed counts that sum to requested shots", as
   await expect(result).toContainText("Expected:");
 });
 
-test("Deutsch algorithm classifies all four oracle functions in the new module", async ({ page }) => {
-  const pageErrors = await openWorkspace(page);
+test("Deutsch algorithm classifies all four oracle functions in the new module", async ({ page }, testInfo) => {
+  const pageErrors = await openWorkspace(page, testInfo);
   await page.getByRole("button", { name: /MENU INDEX/i }).click();
   await page.getByRole("button", { name: /M3\.1: Deutsch's Algorithm/i }).click();
   await expect(page.getByRole("heading", { name: "Deutsch's algorithm" })).toBeVisible();
@@ -66,8 +95,8 @@ test("Deutsch algorithm classifies all four oracle functions in the new module",
   expect(pageErrors).toEqual([]);
 });
 
-test("AI Quantum Tutor opens, receives workspace context, and displays its answer", async ({ page }) => {
-  const pageErrors = await openWorkspace(page);
+test("AI Quantum Tutor opens, receives workspace context, and displays its answer", async ({ page }, testInfo) => {
+  const pageErrors = await openWorkspace(page, testInfo);
   let requestPayload;
   await page.route("**/api/ai/chat", async (route) => {
     requestPayload = route.request().postDataJSON();
@@ -85,8 +114,8 @@ test("AI Quantum Tutor opens, receives workspace context, and displays its answe
   expect(pageErrors).toEqual([]);
 });
 
-test("AI Quantum Tutor accepts a screenshot and sends it as multimodal input", async ({ page }) => {
-  await openWorkspace(page);
+test("AI Quantum Tutor accepts a screenshot and sends it as multimodal input", async ({ page }, testInfo) => {
+  await openWorkspace(page, testInfo);
   let requestPayload;
   await page.route("**/api/ai/chat", async (route) => {
     requestPayload = route.request().postDataJSON();
