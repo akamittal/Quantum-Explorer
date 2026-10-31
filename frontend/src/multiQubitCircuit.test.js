@@ -133,3 +133,28 @@ test("invalid qubit counts, wires, gates and operation lists fail clearly", () =
   assert.throws(() => runMultiQubitCircuit(createZeroRegister(2), "H"), /array/);
   assert.throws(() => runMultiQubitCircuit(createZeroRegister(2), [{ name: "NOPE", target: 0 }]), /Unsupported/);
 });
+
+test("T changes relative phase without changing immediate computational probabilities", () => {
+  const state = runMultiQubitCircuit(createZeroRegister(2), [
+    { name: "H", target: 0 },
+    { name: "T", target: 0 },
+  ]);
+  const probabilities = getRegisterProbabilities(state);
+  closeTo(probabilities[0], 0.5);
+  closeTo(probabilities[1], 0.5);
+  closeTo(state.amplitudes[1].re, Math.SQRT1_2 / Math.SQRT2);
+  closeTo(state.amplitudes[1].im, Math.SQRT1_2 / Math.SQRT2);
+});
+
+test("a later Hadamard converts T-gate relative phase into measurable interference", () => {
+  const state = runMultiQubitCircuit(createZeroRegister(2), [
+    { name: "H", target: 0 },
+    { name: "T", target: 0 },
+    { name: "H", target: 0 },
+  ]);
+  const probabilities = getRegisterProbabilities(state);
+  closeTo(probabilities[0], (1 + Math.SQRT1_2) / 2);
+  closeTo(probabilities[1], (1 - Math.SQRT1_2) / 2);
+  closeTo(probabilities[2], 0);
+  closeTo(probabilities[3], 0);
+});
