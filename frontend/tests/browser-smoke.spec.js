@@ -56,7 +56,7 @@ test("Deutsch algorithm classifies all four oracle functions in the new module",
 
   await page.getByRole("button", { name: /MENU INDEX/i }).click();
   await expect(page.getByRole("button", { name: /M2.1: Multi-Qubit Systems/i })).toBeVisible();
-  await page.getByRole("button", { name: /MENU INDEX/i }).click();
+  await page.getByRole("button", { name: /CLOSE INDEX/i }).click();
   await expect(page.getByText(/Apply the final Hadamard to each input term/i)).toBeVisible();
   await expect(page.getByText("BALANCED", { exact: true }).first()).toBeVisible();
   await page.getByRole("button", { name: /^Constant 0 CONSTANT/ }).click();
