@@ -52,7 +52,7 @@ test("generates controlled-phase gates with a finite angle and rejects invalid p
     numQubits: 3,
     operations: [{ name: "CP", control: 0, target: 2, theta: Math.PI / 4 }],
   });
-  assert.match(code, /qc\\.cp\\(0\\.7853981633974483, 0, 2\\)/);
+  assert.match(code, /qc\.cp\(0\.7853981633974483, 0, 2\)/);
   assert.throws(() => generateQiskitPythonCode({
     numQubits: 2, operations: [{ name: "CP", control: 0, target: 1 }],
   }), /finite phase angle/);
