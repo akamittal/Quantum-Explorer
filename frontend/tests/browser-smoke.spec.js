@@ -167,7 +167,7 @@ test("multi-qubit matrix and phase studio visualizes relative phase and verifies
         shots: 1000,
         stdout: "Circuit:\\nH(0) -> T(0) -> H(0)\\nStatevector:",
         statevector: [
-          { index: 0, bitstring: "00", re: 0.9238795, im: 0, probability: 0.8535534 },
+          { index: 0, bitstring: "00", re: 0.8535534, im: 0.3535534, probability: 0.8535534 },
           { index: 1, bitstring: "01", re: 0.1464466, im: -0.3535534, probability: 0.1464466 },
           { index: 2, bitstring: "10", re: 0, im: 0, probability: 0 },
           { index: 3, bitstring: "11", re: 0, im: 0, probability: 0 },
