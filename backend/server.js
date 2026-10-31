@@ -5,6 +5,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { executeWithQiskit } from './qiskitClient.js';
+import { generateTutorReply } from './aiTutor.js';
 
 dotenv.config();
 const app = express();
@@ -33,6 +34,40 @@ app.get('/api/qiskit/health', async (req, res) => {
     res.status(response.ok ? 200 : 502).json(data);
   } catch {
     res.status(503).json({ status: 'unavailable', engine: 'Qiskit + Aer' });
+  }
+});
+
+const aiRequestBuckets = new Map();
+app.use('/api/ai/chat', (req, res, next) => {
+  const now = Date.now();
+  const key = req.ip || req.socket.remoteAddress || 'unknown';
+  const bucket = aiRequestBuckets.get(key) || { startedAt: now, count: 0 };
+  if (now - bucket.startedAt >= 60_000) {
+    bucket.startedAt = now;
+    bucket.count = 0;
+  }
+  bucket.count += 1;
+  aiRequestBuckets.set(key, bucket);
+  if (aiRequestBuckets.size > 2000) {
+    for (const [ip, value] of aiRequestBuckets) {
+      if (now - value.startedAt >= 60_000) aiRequestBuckets.delete(ip);
+    }
+  }
+  if (bucket.count > 20) {
+    return res.status(429).json({ error: 'AI tutor rate limit', message: 'Please wait a minute before asking more questions.' });
+  }
+  next();
+});
+
+app.post('/api/ai/chat', async (req, res) => {
+  try {
+    const result = await generateTutorReply(req.body);
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(error.status || 502).json({
+      error: 'AI tutor request failed',
+      message: error.message || 'The AI tutor could not complete this request.'
+    });
   }
 });
 

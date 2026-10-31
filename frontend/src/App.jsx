@@ -10,6 +10,7 @@ import MantraSequence from "./MantraSequence";
 import NarrativeConsole from "./NarrativeConsole";
 import useQuantumState from "./useQuantumState";
 import { styles } from "./workspaceStyles";
+import AIAssistant from "./AIAssistant";
 
 export default function App() {
   const [narrativePhase, setNarrativePhase] = useState(0);
@@ -147,6 +148,18 @@ export default function App() {
             />
             </Suspense>
           }
+        />
+        <AIAssistant
+          moduleTitle="Single-Qubit Studio"
+          lessonContext="Single-qubit states, complex amplitudes, Bloch sphere angles, unitary gates, circuit composition and measurement."
+          simulatorContext={{
+            theta: quantum.quantumAngles.theta,
+            phi: quantum.quantumAngles.phi,
+            alpha: quantum.calculatedState.alpha,
+            beta: quantum.calculatedState.beta,
+            blochVector: { x: quantum.calculatedState.x, y: quantum.calculatedState.y, z: quantum.calculatedState.z },
+            measurementResult: quantum.measurementResult
+          }}
         />
       </div>
     );

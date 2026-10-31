@@ -28,7 +28,7 @@ Below is the verified master engineering catalog of the platform. Items marked w
 
 ### 🧮 Module 2: Algebraic & Oracle-Based Algorithms
 
-- [ ] **2.1 Deutsch's Algorithm:** 1-bit balance vs. constant classification, black-box mathematical oracle matrix injection, and step-by-step global phase-kickback visual flowcharts.
+- [x] **2.1 Deutsch's Algorithm:** 1-bit balance vs. constant classification, black-box mathematical oracle matrix injection, and step-by-step global phase-kickback visual flowcharts.
 - [ ] **2.2 Deutsch-Jozza Algorithm:** Scaling oracle evaluation up to n-bit input fields, proving exponential quantum query reduction.
 - [ ] **2.3 Bernstein-Vazirani Algorithm:** Hidden parity string bitstring extraction in exactly 1 quantum pass vs. n classical passes.
 
@@ -200,6 +200,42 @@ node scripts/qiskit-cross-check.mjs
 ```
 
 The cross-check compares representative single-qubit circuits and allows physically irrelevant global phase while requiring matching state probabilities. CI runs these checks independently from the frontend browser tests.
+
+## 🤖 AI Quantum Tutor
+
+The AI Quantum Tutor is available from the single-qubit, multi-qubit, and Deutsch algorithm workspaces through the **ASK AI TUTOR** control. It sends the current module and relevant simulator snapshot with the learner's question, so explanations can refer to the selected oracle, gate sequence, amplitudes, probabilities, Bloch coordinates, and other available state.
+
+### Configure the AI provider
+
+The AI provider is called only by the Node backend. The Gemini API key must never be placed in frontend environment variables, exposed in browser code, or committed to source control.
+
+1. Open [Google AI Studio](https://aistudio.google.com/app/apikey) and sign in with your Google account.
+2. Select **Create API key** and follow the prompts to create a key for a Google Cloud project.
+3. Copy the generated key. Treat it like a password; do not paste it into source files, screenshots, issues, or chat conversations.
+4. From the repository root, copy `backend/.env.example` to `backend/.env`.
+   - PowerShell: `Copy-Item backend/.env.example backend/.env`
+   - macOS/Linux: `cp backend/.env.example backend/.env`
+5. Open `backend/.env` and replace the placeholder with your key:
+   `GEMINI_API_KEY=your-actual-api-key`
+6. Keep `GEMINI_MODEL=gemini-2.5-flash` unless you want to use another model available to your API key.
+7. Restart the Node backend so it loads the new environment variables.
+
+The `.env` file is ignored by Git. Do not remove it from `.gitignore`, and never commit the real key. If a key is accidentally exposed, revoke it in Google AI Studio and create a replacement.
+
+Example backend environment:
+
+```dotenv
+GEMINI_API_KEY=your-google-ai-studio-key
+GEMINI_MODEL=gemini-2.5-flash
+```
+
+The chat endpoint is `POST /api/ai/chat`. It accepts a question, bounded conversation history, and lesson/simulator context. Requests are limited to 20 per IP address per minute in this initial implementation. The tutor does not execute code or change the simulator; use the Qiskit execution panel for actual circuit execution.
+
+**Data handling:** Questions, the recent conversation sent with the request, and the supplied lesson/simulator context are sent from the backend to Google's Gemini API to generate a reply. The current implementation keeps chat history in frontend memory only; it is not saved to a Quantum Explorer database. Do not submit passwords, API keys, or other secrets in tutor conversations. Google's API terms and data handling policies apply to provider requests.
+
+The initial AI milestone establishes the provider connection, secure server-side key handling, context-aware chat UI, mathematical rendering for common LaTeX delimiters, bounded input/history, and backend/frontend tests. Screenshot understanding, retrieval from the full encyclopedia, user accounts, saved chat history, voice, and provider selection UI remain future work.
+
+---
 
 ## 📜 License
 
