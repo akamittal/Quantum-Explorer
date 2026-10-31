@@ -209,6 +209,6 @@ test("Bernstein–Vazirani recovers an editable hidden string and runs the same 
   await page.getByRole("button", { name: /Run Python on Qiskit/i }).click();
   await expect(page.getByText("Execution result")).toBeVisible();
   expect(requestPayload.num_qubits).toBe(4);
-  expect(requestPayload.operations.some((operation) => operation.name === "CX" && operation.control === 2 && operation.target === 3)).toBe(true);
+  expect(requestPayload.operations.some((operation) => operation.name === "CX" && operation.control === 0 && operation.target === 3)).toBe(true);
   expect(pageErrors).toEqual([]);
 });
