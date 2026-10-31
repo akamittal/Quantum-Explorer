@@ -220,7 +220,7 @@ export default function EntanglementModule({ onNavigate }) {
           </div>
           <p style={s.copy}>{bellInfo ? bellInfo.description : "The current state is not one of the four Bell basis states."}</p>
           <EntanglementLink bellName={bellName} />
-          <Eq>{"\\langle\\Phi^+|\\Phi^-\\rangle=\\langle\\Phi^+|\\Psi^+\\rangle=\\cdots=0"}</Eq>
+          <Eq>{"\\langle B_i|B_j\\rangle=\\delta_{ij}, \\quad i,j\\in\\{\\Phi^+,\\Phi^-,\\Psi^+,\\Psi^-\\}"}</Eq>
           <p style={s.copy}>Orthogonality means an ideal measurement in the Bell basis can distinguish these four states perfectly. The two local measurement settings below reveal their different correlation patterns without requiring a joint Bell-basis measurement.</p>
         </Section>
 
@@ -230,6 +230,10 @@ export default function EntanglementModule({ onNavigate }) {
           <Eq>{"\\rho_{q0}=\\operatorname{Tr}_{q1}(\\rho)=\\begin{bmatrix}|a|^2+|c|^2 & a b^*+c d^*\\\\a^*b+c^*d & |b|^2+|d|^2\\end{bmatrix}"}</Eq>
           <p style={s.copy}>For q1, trace out q0 instead. The two reduced matrices have the same eigenvalues for every pure bipartite state. Those eigenvalues are the Schmidt probabilities. If both are one half, each individual qubit is maximally mixed even though the pair is in a perfectly known pure state.</p>
           <Eq>{"\\rho_{q1}=\\begin{bmatrix}|a|^2+|b|^2 & a c^*+b d^*\\\\a^*c+b^*d & |c|^2+|d|^2\\end{bmatrix}"}</Eq>
+          <p style={s.copy}>See the partial trace as an actual block-matrix operation. For Φ⁺, the joint density matrix has only four non-zero entries. Tracing out q1 adds the q1 = 0 block and the q1 = 1 block, leaving a diagonal 50/50 state for q0.</p>
+          <Eq>{"\\rho_{\\Phi^+}=\\frac{1}{2}\\begin{bmatrix}1&0&0&1\\\\0&0&0&0\\\\0&0&0&0\\\\1&0&0&1\\end{bmatrix}"}</Eq>
+          <Eq>{"\\rho_{q0}=\\operatorname{Tr}_{q1}(\\rho_{\\Phi^+})=\\begin{bmatrix}1/2&0\\\\0&1/2\\end{bmatrix}"}</Eq>
+          <p style={s.copy}>The joint density matrix is a rank-one projector because the pair is in a pure state. The reduced matrix has rank two. This is the precise mathematical statement that the pair is pure as a whole while either qubit alone is mixed.</p>
         </Section>
 
         <Section number="1.4.5" title="ENTANGLEMENT ENTROPY FROM THE SCHMIDT EIGENVALUES">
