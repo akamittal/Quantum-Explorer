@@ -5,9 +5,9 @@ const gateLessons = [
   {
     name: "Identity gate (I)",
     purpose: "Leaves the qubit unchanged.",
-    matrix: String.raw`I = \begin{bmatrix}1&0\0&1\end{bmatrix}`,
+    matrix: String.raw`I = \begin{bmatrix}1&0\\0&1\\end{bmatrix}`,
     action: String.raw`I\lvert\psi\rangle =
-\begin{bmatrix}1&0\0&1\end{bmatrix}
+\begin{bmatrix}1&0\\0&1\\end{bmatrix}
 \begin{bmatrix}\alpha\\beta\end{bmatrix}
 =
 \begin{bmatrix}\alpha\\beta\end{bmatrix}
@@ -16,15 +16,15 @@ const gateLessons = [
   {
     name: "Hadamard gate (H)",
     purpose: "Creates an equal superposition from either basis state (with a relative sign for |1⟩).",
-    matrix: String.raw`H=\frac{1}{\sqrt2}\begin{bmatrix}1&1\1&-1\end{bmatrix}`,
+    matrix: String.raw`H=\frac{1}{\sqrt2}\begin{bmatrix}1&1\\1&-1\\end{bmatrix}`,
     action: String.raw`H\lvert0\rangle =
-\frac{1}{\sqrt2}\begin{bmatrix}1&1\1&-1\end{bmatrix}
+\frac{1}{\sqrt2}\begin{bmatrix}1&1\\1&-1\\end{bmatrix}
 \begin{bmatrix}1\0\end{bmatrix}
 =\frac{1}{\sqrt2}\begin{bmatrix}1\1\end{bmatrix}
 =\frac{\lvert0\rangle+\lvert1\rangle}{\sqrt2}
 =\lvert+\rangle`,
     second: String.raw`H\lvert1\rangle =
-\frac{1}{\sqrt2}\begin{bmatrix}1&1\1&-1\end{bmatrix}
+\frac{1}{\sqrt2}\begin{bmatrix}1&1\\1&-1\\end{bmatrix}
 \begin{bmatrix}0\1\end{bmatrix}
 =\frac{1}{\sqrt2}\begin{bmatrix}1\-1\end{bmatrix}
 =\frac{\lvert0\rangle-\lvert1\rangle}{\sqrt2}
@@ -33,35 +33,35 @@ const gateLessons = [
   {
     name: "Pauli-X gate (X)",
     purpose: "Flips |0⟩ to |1⟩ and |1⟩ to |0⟩. It is the quantum NOT gate.",
-    matrix: String.raw`X=\begin{bmatrix}0&1\1&0\end{bmatrix}`,
+    matrix: String.raw`X=\begin{bmatrix}0&1\\1&0\\end{bmatrix}`,
     action: String.raw`X\lvert0\rangle =
-\begin{bmatrix}0&1\1&0\end{bmatrix}
+\begin{bmatrix}0&1\\1&0\\end{bmatrix}
 \begin{bmatrix}1\0\end{bmatrix}
 =\begin{bmatrix}0\1\end{bmatrix}=\lvert1\rangle`,
     second: String.raw`X\lvert1\rangle =
-\begin{bmatrix}0&1\1&0\end{bmatrix}
+\begin{bmatrix}0&1\\1&0\\end{bmatrix}
 \begin{bmatrix}0\1\end{bmatrix}
 =\begin{bmatrix}1\0\end{bmatrix}=\lvert0\rangle`,
   },
   {
     name: "Pauli-Y gate (Y)",
     purpose: "Flips the basis state and adds a phase factor. The imaginary number i is part of the result.",
-    matrix: String.raw`Y=\begin{bmatrix}0&-i\i&0\end{bmatrix}`,
+    matrix: String.raw`Y=\begin{bmatrix}0&-i\\i&0\\end{bmatrix}`,
     action: String.raw`Y\lvert0\rangle =
-\begin{bmatrix}0&-i\i&0\end{bmatrix}
+\begin{bmatrix}0&-i\\i&0\\end{bmatrix}
 \begin{bmatrix}1\0\end{bmatrix}
 =\begin{bmatrix}0\i\end{bmatrix}=i\lvert1\rangle`,
     second: String.raw`Y\lvert1\rangle =
-\begin{bmatrix}0&-i\i&0\end{bmatrix}
+\begin{bmatrix}0&-i\\i&0\\end{bmatrix}
 \begin{bmatrix}0\1\end{bmatrix}
 =\begin{bmatrix}-i\0\end{bmatrix}=-i\lvert0\rangle`,
   },
   {
     name: "Pauli-Z gate (Z)",
     purpose: "Keeps |0⟩ unchanged and flips the sign of the |1⟩ amplitude. This is a phase flip, not a bit flip.",
-    matrix: String.raw`Z=\begin{bmatrix}1&0\0&-1\end{bmatrix}`,
+    matrix: String.raw`Z=\begin{bmatrix}1&0\\0&-1\\end{bmatrix}`,
     action: String.raw`Z\lvert\psi\rangle =
-\begin{bmatrix}1&0\0&-1\end{bmatrix}
+\begin{bmatrix}1&0\\0&-1\\end{bmatrix}
 \begin{bmatrix}\alpha\\beta\end{bmatrix}
 =\begin{bmatrix}\alpha\-\beta\end{bmatrix}
 =\alpha\lvert0\rangle-\beta\lvert1\rangle`,
@@ -69,9 +69,9 @@ const gateLessons = [
   {
     name: "S gate",
     purpose: "Adds a 90° (π/2) phase to the |1⟩ component and leaves |0⟩ unchanged.",
-    matrix: String.raw`S=\begin{bmatrix}1&0\0&i\end{bmatrix}`,
+    matrix: String.raw`S=\begin{bmatrix}1&0\\0&i\\end{bmatrix}`,
     action: String.raw`S\lvert\psi\rangle =
-\begin{bmatrix}1&0\0&i\end{bmatrix}
+\begin{bmatrix}1&0\\0&i\\end{bmatrix}
 \begin{bmatrix}\alpha\\beta\end{bmatrix}
 =\begin{bmatrix}\alpha\i\beta\end{bmatrix}
 =\alpha\lvert0\rangle+i\beta\lvert1\rangle`,
@@ -79,10 +79,10 @@ const gateLessons = [
   {
     name: "T gate",
     purpose: "Adds a 45° (π/4) phase to the |1⟩ component.",
-    matrix: String.raw`T=\begin{bmatrix}1&0\0&e^{i\pi/4}\end{bmatrix}
-=\begin{bmatrix}1&0\0&\frac{1+i}{\sqrt2}\end{bmatrix}`,
+    matrix: String.raw`T=\begin{bmatrix}1&0\\0&e^{i\pi/4}\\end{bmatrix}
+=\begin{bmatrix}1&0\\0&\frac{1+i}{\sqrt2}\\end{bmatrix}`,
     action: String.raw`T\lvert\psi\rangle =
-\begin{bmatrix}1&0\0&e^{i\pi/4}\end{bmatrix}
+\begin{bmatrix}1&0\\0&e^{i\pi/4}\\end{bmatrix}
 \begin{bmatrix}\alpha\\beta\end{bmatrix}
 =\begin{bmatrix}\alpha\e^{i\pi/4}\beta\end{bmatrix}`,
   },
@@ -130,7 +130,7 @@ export default function GateMatrixGuide() {
           state column to get the new top amplitude, then its second row to get
           the new bottom amplitude. In compact form:
         </p>
-        <Equation formula={String.raw`\begin{bmatrix}a&b\c&d\end{bmatrix}
+        <Equation formula={String.raw`\begin{bmatrix}a&b\c&d\\end{bmatrix}
 \begin{bmatrix}\alpha\\beta\end{bmatrix}
 =
 \begin{bmatrix}a\alpha+b\beta\c\alpha+d\beta\end{bmatrix}`} />
@@ -174,7 +174,7 @@ export default function GateMatrixGuide() {
             The first output entry comes from the first row of H; the second
             comes from its second row.
           </p>
-          <Equation formula={"H\\lvert\\psi\\rangle=\\frac{1}{\\sqrt{2}}\\begin{bmatrix}1&1\\\\1&-1\\end{bmatrix}\\begin{bmatrix}\\alpha\\\\\\beta\\end{bmatrix}"} />
+          <Equation formula={"H\\lvert\\psi\\rangle=\\frac{1}{\\sqrt{2}}\\begin{bmatrix}1&1\\\\\1&-1\\end{bmatrix}\\begin{bmatrix}\\alpha\\\\\\beta\\\end{bmatrix}"} />
           <Equation formula={"=\\frac{1}{\\sqrt{2}}\\begin{bmatrix}1\\cdot\\alpha+1\\cdot\\beta\\\\1\\cdot\\alpha+(-1)\\cdot\\beta\\end{bmatrix}"} />
           <Equation formula={"=\\begin{bmatrix}(\\alpha+\\beta)/\\sqrt{2}\\\\(\\alpha-\\beta)/\\sqrt{2}\\end{bmatrix}=\\frac{\\alpha+\\beta}{\\sqrt{2}}\\lvert0\\rangle+\\frac{\\alpha-\\beta}{\\sqrt{2}}\\lvert1\\rangle"} />
           <p style={styles.note}>
@@ -221,8 +221,8 @@ export default function GateMatrixGuide() {
             sign of the second. This is the difference between a bit flip and
             a phase flip.
           </p>
-          <Equation formula={"X\\lvert\\psi\\rangle=\\begin{bmatrix}0&1\\\\1&0\\end{bmatrix}\\begin{bmatrix}\\alpha\\\\\\beta\\end{bmatrix}=\\begin{bmatrix}0\\alpha+1\\beta\\\\1\\alpha+0\\beta\\end{bmatrix}=\\begin{bmatrix}\\beta\\\\\\alpha\\end{bmatrix}"} />
-          <Equation formula={"Z\\lvert\\psi\\rangle=\\begin{bmatrix}1&0\\\\0&-1\\end{bmatrix}\\begin{bmatrix}\\alpha\\\\\\beta\\end{bmatrix}=\\begin{bmatrix}1\\alpha+0\\beta\\\\0\\alpha-1\\beta\\end{bmatrix}=\\begin{bmatrix}\\alpha\\\\-\\beta\\end{bmatrix}"} />
+          <Equation formula={"X\\lvert\\psi\\rangle=\\begin{bmatrix}0&1\\\\\1&0\\end{bmatrix}\\begin{bmatrix}\\alpha\\\\\\beta\\end{bmatrix}=\\begin{bmatrix}0\\alpha+1\\beta\\\\1\\alpha+0\\beta\\end{bmatrix}=\\begin{bmatrix}\\beta\\\\\\alpha\\\end{bmatrix}"} />
+          <Equation formula={"Z\\lvert\\psi\\rangle=\\begin{bmatrix}1&0\\\\\0&-1\\end{bmatrix}\\begin{bmatrix}\\alpha\\\\\\beta\\end{bmatrix}=\\begin{bmatrix}1\\alpha+0\\beta\\\\0\\alpha-1\\beta\\end{bmatrix}=\\begin{bmatrix}\\alpha\\\\-\\beta\\\end{bmatrix}"} />
         </article>
       </div>
 
