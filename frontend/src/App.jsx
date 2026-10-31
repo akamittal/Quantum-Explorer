@@ -3,6 +3,7 @@ import QuantumParticleBackground from "./QuantumParticleBackground";
 import QuantumWorkspaceLayout from "./QuantumWorkspaceLayout";
 import SingleQubitModule from "./SingleQubitModule";
 import MultiQubitModule from "./MultiQubitModule";
+import DeutschAlgorithmModule from "./DeutschAlgorithmModule";
 const BlochSphereView = lazy(() => import("./BlochSphereView"));
 import IntroHUD from "./IntroHUD";
 import MantraSequence from "./MantraSequence";
@@ -40,6 +41,10 @@ export default function App() {
         .catch((err) => console.warn("Audio held:", err));
     }
   };
+
+  if (narrativePhase === 4 && activeModulePage === "3.1") {
+    return <DeutschAlgorithmModule onNavigate={(page) => setActiveModulePage(page)} />;
+  }
 
   if (narrativePhase === 4 && activeModulePage === "2.1") {
     return <MultiQubitModule onNavigate={(page) => setActiveModulePage(page)} />;
@@ -95,6 +100,12 @@ export default function App() {
                 style={{ textAlign: "left", background: "transparent", border: "none", color: "#9ca3af", fontFamily: "monospace", cursor: "pointer", fontSize: "0.875rem" }}
               >
                 [ ] M2.1: Multi-Qubit Systems
+              </button>
+              <button
+                onClick={() => { setActiveModulePage("3.1"); setIsSidebarOpen(false); }}
+                style={{ textAlign: "left", background: "transparent", border: "none", color: activeModulePage === "3.1" ? "#10b981" : "#9ca3af", fontFamily: "monospace", cursor: "pointer", fontSize: "0.875rem" }}
+              >
+                {activeModulePage === "3.1" ? "[x]" : "[ ]"} M3.1: Deutsch's Algorithm
               </button>
             </div>
           </div>
