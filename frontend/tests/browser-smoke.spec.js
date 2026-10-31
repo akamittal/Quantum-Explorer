@@ -229,8 +229,8 @@ test("entanglement laboratory verifies all Bell-state diagnostics and complement
   await page.getByRole("button", { name: /Run Python on Qiskit/i }).click();
   await expect(page.getByText("Execution result")).toBeVisible();
   expect(requestPayload.num_qubits).toBe(2);
-  expect(requestPayload.operations.map((operation) => operation.name)).toEqual(["H", "Z", "CX", "H", "H"]);
-  expect(requestPayload.operations[2]).toMatchObject({ control: 0, target: 1 });
+  expect(requestPayload.operations.map((operation) => operation.name)).toEqual(["H", "CX", "Z", "H", "H"]);
+  expect(requestPayload.operations[1]).toMatchObject({ control: 0, target: 1 });
   expect(pageErrors).toEqual([]);
 });
 
