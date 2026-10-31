@@ -181,7 +181,7 @@ Example request body:
 }
 ```
 
-Supported gates are I/ID, H, X, Y, Z, S, T, RX, RY, RZ, CX/CNOT, MCX (multi-controlled X), CZ, and SWAP. Rotation angles are in radians. MCX operations provide a list of control-qubit indices and one distinct target-qubit index. The service currently limits circuits to 8 qubits, 256 operations, and 100,000 shots by default; limits can be lowered with `QISKIT_MAX_QUBITS` and `QISKIT_MAX_SHOTS`.
+Supported gates are I/ID, H, X, Y, Z, S, T, RX, RY, RZ, CX/CNOT, CP (controlled phase), MCX (multi-controlled X), CZ, and SWAP. CP takes a finite phase angle in radians. Rotation angles are in radians. MCX operations provide a list of control-qubit indices and one distinct target-qubit index. The service currently limits circuits to 8 qubits, 256 operations, and 100,000 shots by default; limits can be lowered with `QISKIT_MAX_QUBITS` and `QISKIT_MAX_SHOTS`.
 
 **Qubit ordering:** Qiskit uses q0 as the least-significant bit. Returned basis labels are displayed as `|q[n-1]...q1q0>`, so q0 is the rightmost bit.
 
