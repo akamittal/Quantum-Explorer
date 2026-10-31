@@ -25,7 +25,10 @@ test("recovers every possible three-bit secret with certainty in one oracle quer
 
 test("the oracle contains one CNOT for each set bit and none for zero bits", () => {
   assert.deepEqual(buildBernsteinVaziraniOracleOperations([1, 0, 1]), [
+    { name: "CX", control: 2, target: 3 },
     { name: "CX", control: 0, target: 3 },
+  ]);
+  assert.deepEqual(buildBernsteinVaziraniOracleOperations([1, 0, 0]), [
     { name: "CX", control: 2, target: 3 },
   ]);
   assert.deepEqual(buildBernsteinVaziraniOracleOperations([0, 0, 0]), []);
