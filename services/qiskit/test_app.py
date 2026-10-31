@@ -140,8 +140,8 @@ def test_all_four_bell_states_have_expected_joint_probabilities_and_x_correlatio
         ],
         "Phi-": [
             {"name": "H", "qubit": 0},
-            {"name": "Z", "qubit": 0},
             {"name": "CX", "control": 0, "target": 1},
+            {"name": "Z", "qubit": 1},
         ],
         "Psi+": [
             {"name": "H", "qubit": 0},
@@ -150,9 +150,9 @@ def test_all_four_bell_states_have_expected_joint_probabilities_and_x_correlatio
         ],
         "Psi-": [
             {"name": "H", "qubit": 0},
-            {"name": "Z", "qubit": 0},
             {"name": "CX", "control": 0, "target": 1},
             {"name": "X", "qubit": 1},
+            {"name": "Z", "qubit": 1},
         ],
     }
     expected_z = {
