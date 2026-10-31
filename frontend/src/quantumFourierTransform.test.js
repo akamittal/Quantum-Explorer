@@ -54,7 +54,9 @@ test("QFT preserves norm and returns the expected phase and probability diagnost
   close(diagnostics.reduce((sum, item) => sum + item.probability, 0), 1);
   diagnostics.forEach((item, index) => {
     close(item.probability, 1 / 8);
-    close(item.phase, ((2 * Math.PI * 3 * index / 8 + Math.PI) % (2 * Math.PI)) - Math.PI, 1e-9);
+    const expectedPhase = 2 * Math.PI * 3 * index / 8;
+    close(Math.cos(item.phase), Math.cos(expectedPhase), 1e-9);
+    close(Math.sin(item.phase), Math.sin(expectedPhase), 1e-9);
   });
 });
 
