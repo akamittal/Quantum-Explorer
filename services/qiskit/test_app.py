@@ -87,6 +87,41 @@ def test_controlled_z_and_swap_match_expected_basis_actions():
     assert probabilities["01"] == pytest.approx(0.0)
 
 
+def test_multi_controlled_x_gate_matches_three_control_truth_condition():
+    response = client.post("/execute", json={
+        "num_qubits": 4,
+        "operations": [
+            {"name": "X", "qubit": 0},
+            {"name": "X", "qubit": 1},
+            {"name": "X", "qubit": 2},
+            {"name": "MCX", "controls": [0, 1, 2], "target": 3},
+        ],
+        "shots": 100,
+    })
+    assert response.status_code == 200
+    probabilities = response.json()["probabilities"]
+    assert probabilities["1111"] == pytest.approx(1.0)
+    assert probabilities["0111"] == pytest.approx(0.0)
+
+
+def test_multi_controlled_x_rejects_invalid_control_lists():
+    duplicate = client.post("/execute", json={
+        "num_qubits": 3,
+        "operations": [{"name": "MCX", "controls": [0, 0], "target": 2}],
+    })
+    target_is_control = client.post("/execute", json={
+        "num_qubits": 3,
+        "operations": [{"name": "MCX", "controls": [0, 2], "target": 2}],
+    })
+    out_of_range = client.post("/execute", json={
+        "num_qubits": 3,
+        "operations": [{"name": "MCX", "controls": [0, 3], "target": 2}],
+    })
+    assert duplicate.status_code == 422
+    assert target_is_control.status_code == 422
+    assert out_of_range.status_code == 422
+
+
 def test_controlled_gate_rejects_same_or_out_of_range_wires():
     same_wire = client.post("/execute", json={
         "num_qubits": 2, "operations": [{"name": "SWAP", "first": 0, "second": 0}]
