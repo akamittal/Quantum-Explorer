@@ -212,7 +212,7 @@ export default function DeutschAlgorithmModule({ onNavigate }) {
               <option value={100}>100</option><option value={1000}>1,000</option><option value={10000}>10,000</option>
             </select>
           </label>
-          <QiskitExecutionPanel operations={operations} code={pythonCode} result={qiskitResult} loading={qiskitLoading} error={qiskitError} onRun={runOnQiskit} />
+          <QiskitExecutionPanel operations={operations} code={pythonCode} result={qiskitResult} loading={qiskitLoading} error={qiskitError} onRun={runOnQiskit} shots={shots} />
         </section>
       </div>
       <AIAssistant
