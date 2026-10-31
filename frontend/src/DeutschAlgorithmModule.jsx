@@ -106,6 +106,8 @@ export default function DeutschAlgorithmModule({ onNavigate }) {
           <Equation formula={String.raw`U_f\bigl(|x\rangle|{-}\rangle\bigr)=(-1)^{f(x)}|x\rangle|{-}\rangle`} />
           <p style={styles.copy}>Because X|−⟩ = −|−⟩, flipping the target contributes a minus sign. The target returns to the same |−⟩ state, while the input's amplitude picks up the phase (−1) raised to f(x). This is called phase kickback.</p>
           <Equation formula={String.raw`|\psi_2\rangle=\frac{(-1)^{f(0)}|0\rangle+(-1)^{f(1)}|1\rangle}{\sqrt2}\otimes|{-}\rangle`} />
+          <p style={styles.copy}>Substituting the two function values separately shows exactly how the oracle marks the input amplitudes:</p>
+          <Equation formula={"|\\psi_2\\rangle=\\frac{(-1)^{f(0)}|0\\rangle+(-1)^{f(1)}|1\\rangle}{\\sqrt2}\\otimes\\frac{|0\\rangle-|1\\rangle}{\\sqrt2}"} />
           <p style={styles.copy}>For a constant function, both input terms have the same sign. For a balanced function, their signs are opposite. The final Hadamard converts this relative sign into a definite computational-basis result.</p>
         </section>
 
