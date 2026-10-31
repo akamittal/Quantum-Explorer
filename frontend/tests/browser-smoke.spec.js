@@ -47,3 +47,19 @@ test("measurement shots display observed counts that sum to requested shots", as
   expect(zero + one).toBe(100);
   await expect(result).toContainText("Expected:");
 });
+
+test("Deutsch algorithm classifies all four oracle functions in the new module", async ({ page }) => {
+  const pageErrors = await openWorkspace(page);
+  await page.getByRole("button", { name: /MENU INDEX/i }).click();
+  await page.getByRole("button", { name: /M3\.1: Deutsch's Algorithm/i }).click();
+  await expect(page.getByRole("heading", { name: "Deutsch's algorithm" })).toBeVisible();
+
+  await expect(page.getByText("BALANCED", { exact: true }).first()).toBeVisible();
+  await page.getByRole("button", { name: /Constant 0/i }).click();
+  await expect(page.locator("strong").filter({ hasText: "CONSTANT" }).first()).toBeVisible();
+  await page.getByRole("button", { name: /Constant 1/i }).click();
+  await expect(page.locator("strong").filter({ hasText: "CONSTANT" }).first()).toBeVisible();
+  await page.getByRole("button", { name: /Balanced: f\(x\)=1−x/i }).click();
+  await expect(page.locator("strong").filter({ hasText: "BALANCED" }).first()).toBeVisible();
+  expect(pageErrors).toEqual([]);
+});
