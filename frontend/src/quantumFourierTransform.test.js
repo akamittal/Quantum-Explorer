@@ -38,7 +38,7 @@ test("inverse QFT recovers arbitrary complex input states", () => {
 test("forward and inverse QFT operation lists are exact reverses with negative controlled phases", () => {
   const forward = buildQftOperations(4);
   const inverse = buildQftOperations(4, true);
-  assert.equal(forward.length, 10);
+  assert.equal(forward.length, 12);
   assert.equal(inverse.length, forward.length);
   forward.slice().reverse().forEach((operation, index) => {
     const actual = inverse[index];
