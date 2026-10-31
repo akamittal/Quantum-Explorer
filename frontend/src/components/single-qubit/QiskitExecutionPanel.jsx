@@ -48,7 +48,8 @@ export default function QiskitExecutionPanel({ operations, code, result, loading
 const styles = {
   codeFrame: { background: "#050911", border: "1px solid rgba(6,182,212,0.16)", borderRadius: "3px", overflow: "hidden" },
   codeHeader: { display: "flex", justifyContent: "space-between", gap: "0.5rem", padding: "0.6rem 0.75rem", color: "#67e8f9", background: "#080d18", fontFamily: "monospace", fontSize: "0.7rem" },
-  code: { margin: 0, padding: "0.9rem", maxHeight: "420px", overflow: "auto", whiteSpace: "pre", color: "#d1fae5", fontFamily: "Consolas, Fira Code, Monaco, monospace", fontSize: "0.72rem", lineHeight: 1.6 },\n  section: { display: "flex", flexDirection: "column", gap: "0.75rem", padding: "1.25rem", background: "#0b0f19", border: "1px solid rgba(16,185,129,0.25)", borderRadius: "4px" },
+  code: { margin: 0, padding: "0.9rem", maxHeight: "420px", overflow: "auto", whiteSpace: "pre", color: "#d1fae5", fontFamily: "Consolas, Fira Code, Monaco, monospace", fontSize: "0.72rem", lineHeight: 1.6 },
+  section: { display: "flex", flexDirection: "column", gap: "0.75rem", padding: "1.25rem", background: "#0b0f19", border: "1px solid rgba(16,185,129,0.25)", borderRadius: "4px" },
   headingRow: { display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "0.5rem" },
   heading: { color: "#10b981", fontSize: "0.8rem", fontFamily: "monospace", letterSpacing: "0.08em", margin: 0 },
   engine: { color: "#67e8f9", fontSize: "0.68rem", fontFamily: "monospace" },
