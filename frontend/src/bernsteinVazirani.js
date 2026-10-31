@@ -13,8 +13,8 @@ function validateSecret(secret) {
 
 export function buildBernsteinVaziraniOracleOperations(secret) {
   validateSecret(secret);
-  return secret.flatMap((bit, control) => bit
-    ? [{ name: "CX", control, target: BERNSTEIN_VAZIRANI_TARGET_QUBIT }]
+  return secret.flatMap((bit, displayedIndex) => bit
+    ? [{ name: "CX", control: BERNSTEIN_VAZIRANI_INPUT_QUBITS - 1 - displayedIndex, target: BERNSTEIN_VAZIRANI_TARGET_QUBIT }]
     : []);
 }
 
@@ -35,7 +35,7 @@ function probabilities(state) {
 
 function inputProbabilities(state) {
   const basis = probabilities(state);
-  return Array.from({ length: BERNSTEIN_VAZIRY_INPUT_COUNT }, (_, index) =>
+  return Array.from({ length: BERNSTEIN_VAZIRANI_INPUT_COUNT }, (_, index) =>
     basis[index] + basis[index + (1 << BERNSTEIN_VAZIRANI_TARGET_QUBIT)]);
 }
 
