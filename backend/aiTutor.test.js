@@ -54,3 +54,24 @@ test("maps provider failures to a safe API error", async () => {
     (error) => error.status === 429 && error.message === "quota exceeded"
   );
 });
+
+test("validates screenshot type and size", () => {
+  const valid = validateTutorPayload({ message: "Explain this", image: { mimeType: "image/png", data: "aGVsbG8=" } });
+  assert.equal(valid.image.mimeType, "image/png");
+  assert.throws(() => validateTutorPayload({ message: "Explain this", image: { mimeType: "text/plain", data: "aGVsbG8=" } }), (error) => error.status === 400);
+  assert.throws(() => validateTutorPayload({ message: "Explain this", image: { mimeType: "image/png", data: "x".repeat(9 * 1024 * 1024) } }), (error) => error.status === 413);
+});
+
+test("forwards screenshot bytes to Gemini as inline image data", async () => {
+  let body;
+  await generateTutorReply({ message: "Explain this screenshot", image: { mimeType: "image/png", data: "aGVsbG8=" } }, {
+    apiKey: "test-key",
+    model: "gemini-test",
+    fetchImpl: async (_url, options) => {
+      body = JSON.parse(options.body);
+      return new Response(JSON.stringify({ candidates: [{ content: { parts: [{ text: "I can inspect it." }] } }] }), { status: 200 });
+    }
+  });
+  assert.deepEqual(body.contents.at(-1).parts[1], { inlineData: { mimeType: "image/png", data: "aGVsbG8=" } });
+  assert.equal(body.generationConfig.thinkingConfig.thinkingLevel, "low");
+});

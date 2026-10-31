@@ -77,7 +77,8 @@ test("AI Quantum Tutor opens, receives workspace context, and displays its answe
   });
 
   await page.getByRole("button", { name: "Open AI Quantum Tutor" }).click();
-  await expect(page.getByRole("complementary", { name: "AI Quantum Tutor" })).toBeVisible();
+  await expect(page.getByRole("complementary", { name: "AI Quantum Tutor" } )).toBeVisible();
+  await expect(page.getByRole("complementary", { name: "AI Quantum Tutor" })).toHaveCSS("z-index", "2147483001");
   await page.getByPlaceholder("Ask your quantum question…").fill("What is a qubit?");
   await page.getByRole("button", { name: /SEND QUESTION/i }).click();
   await expect(page.getByText("A qubit is a two-level quantum system.")).toBeVisible();
@@ -85,4 +86,25 @@ test("AI Quantum Tutor opens, receives workspace context, and displays its answe
   expect(requestPayload.context.module).toBe("Single-Qubit Studio");
   expect(requestPayload.context.simulator.blochVector).toBeTruthy();
   expect(pageErrors).toEqual([]);
+});
+
+test("AI Quantum Tutor accepts a screenshot and sends it as multimodal input", async ({ page }) => {
+  await openWorkspace(page);
+  let requestPayload;
+  await page.route("**/api/ai/chat", async (route) => {
+    requestPayload = route.request().postDataJSON();
+    await route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({ reply: "I can read the screenshot.", model: "gemini-test" }) });
+  });
+  await page.getByRole("button", { name: "Open AI Quantum Tutor" }).click();
+  await page.locator('input[aria-label="Choose screenshot"]').setInputFiles({
+    name: "quantum-circuit.png",
+    mimeType: "image/png",
+    buffer: Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/pXcAAAAASUVORK5CYII=", "base64")
+  });
+  await expect(page.getByAltText("Screenshot preview")).toBeVisible();
+  await page.getByPlaceholder("What should I explain in this screenshot?").fill("Explain this circuit.");
+  await page.getByRole("button", { name: /SEND QUESTION/i }).click();
+  await expect(page.getByText("I can read the screenshot.")).toBeVisible();
+  expect(requestPayload.image.mimeType).toBe("image/png");
+  expect(requestPayload.image.data.length).toBeGreaterThan(20);
 });

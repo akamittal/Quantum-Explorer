@@ -217,8 +217,9 @@ The AI provider is called only by the Node backend. The Gemini API key must neve
    - macOS/Linux: `cp backend/.env.example backend/.env`
 5. Open `backend/.env` and replace the placeholder with your key:
    `GEMINI_API_KEY=your-actual-api-key`
-6. Keep `GEMINI_MODEL=gemini-2.5-flash` unless you want to use another model available to your API key.
-7. Restart the Node backend so it loads the new environment variables.
+6. Set `GEMINI_MODEL=gemini-3.8-flash`. If you already created `backend/.env` during the earlier tutor setup, update the existing value there; changing `.env.example` does not change your local `.env`.
+7. Optionally set `GEMINI_TIMEOUT_MS=90000` (the backend allows up to 180 seconds) if you need a longer response window. The tutor uses a low thinking level to reduce unnecessary latency.
+8. Restart the Node backend so it loads the new environment variables.
 
 The `.env` file is ignored by Git. Do not remove it from `.gitignore`, and never commit the real key. If a key is accidentally exposed, revoke it in Google AI Studio and create a replacement.
 
@@ -226,14 +227,14 @@ Example backend environment:
 
 ```dotenv
 GEMINI_API_KEY=your-google-ai-studio-key
-GEMINI_MODEL=gemini-2.5-flash
+GEMINI_MODEL=gemini-3.8-flash
 ```
 
 The chat endpoint is `POST /api/ai/chat`. It accepts a question, bounded conversation history, and lesson/simulator context. Requests are limited to 20 per IP address per minute in this initial implementation. The tutor does not execute code or change the simulator; use the Qiskit execution panel for actual circuit execution.
 
 **Data handling:** Questions, the recent conversation sent with the request, and the supplied lesson/simulator context are sent from the backend to Google's Gemini API to generate a reply. The current implementation keeps chat history in frontend memory only; it is not saved to a Quantum Explorer database. Do not submit passwords, API keys, or other secrets in tutor conversations. Google's API terms and data handling policies apply to provider requests.
 
-The initial AI milestone establishes the provider connection, secure server-side key handling, context-aware chat UI, mathematical rendering for common LaTeX delimiters, bounded input/history, and backend/frontend tests. Screenshot understanding, retrieval from the full encyclopedia, user accounts, saved chat history, voice, and provider selection UI remain future work.
+The AI Tutor supports screenshot input: drag a PNG/JPEG/WebP/GIF into the tutor panel, click the screenshot drop area to browse, or paste an image with Ctrl+V. Add a question or send the default request to have Gemini inspect the image alongside the current lesson/simulator context. Screenshots are limited to 6 MB. The provider request timeout defaults to 90 seconds and can be adjusted with `GEMINI_TIMEOUT_MS` (10–180 seconds).
 
 ---
 
