@@ -50,7 +50,7 @@ export default function ScreenshotSearch() {
   };
 
   const pointerStart = (event) => {
-    if (event.target.closest("button")) return;
+    if (event.target.closest("button, a")) return;
     const rect = event.currentTarget.getBoundingClientRect();
     const x = Math.max(0, Math.min(event.clientX - rect.left, rect.width));
     const y = Math.max(0, Math.min(event.clientY - rect.top, rect.height));
