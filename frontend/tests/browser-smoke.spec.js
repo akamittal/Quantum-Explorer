@@ -234,6 +234,57 @@ test("entanglement laboratory verifies all Bell-state diagnostics and complement
   expect(pageErrors).toEqual([]);
 });
 
+
+test("Quantum Fourier Transform explores phase ramps, inverse recovery, and executes the same circuit in Qiskit", async ({ page }, testInfo) => {
+  const pageErrors = await openWorkspace(page, testInfo);
+  await page.getByRole("button", { name: /MENU INDEX/i }).click();
+  await page.getByRole("button", { name: /M3\.1: Quantum Fourier Transform/i }).click();
+  await expect(page.getByRole("heading", { name: "Quantum Fourier Transform" })).toBeVisible();
+  await expect(page.getByText("COMPLEX PHASE WHEEL")).toBeVisible();
+  await expect(page.getByText("0.00e+0")).toBeVisible();
+  await expect(page.getByText("12.50%", { exact: true }).first()).toBeVisible();
+
+  let requestPayload;
+  await page.route("**/api/qiskit/execute", async (route) => {
+    requestPayload = route.request().postDataJSON();
+    const statevector = Array.from({ length: 8 }, (_, index) => {
+      const angle = 2 * Math.PI * 5 * index / 8;
+      return {
+        index,
+        bitstring: index.toString(2).padStart(3, "0"),
+        re: Math.cos(angle) / Math.sqrt(8),
+        im: Math.sin(angle) / Math.sqrt(8),
+        probability: 0.125,
+      };
+    });
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({
+        engine: "qiskit-aer",
+        shots: 1000,
+        stdout: "Circuit:\\nQFT controlled-phase circuit\\nStatevector:",
+        statevector,
+        probabilities: Object.fromEntries(statevector.map((item) => [item.bitstring, item.probability])),
+        counts: Object.fromEntries(statevector.map((item) => [item.bitstring, 125])),
+      }),
+    });
+  });
+  await page.getByRole("button", { name: /Run Python on Qiskit/i }).click();
+  await expect(page.getByText("Execution result")).toBeVisible();
+  expect(requestPayload.num_qubits).toBe(3);
+  expect(requestPayload.operations.map((operation) => operation.name)).toEqual(["X", "X", "H", "CP", "CP", "H", "CP", "H", "SWAP"]);
+  expect(requestPayload.operations.filter((operation) => operation.name === "CP")).toHaveLength(3);
+  expect(requestPayload.operations[1]).toMatchObject({ qubit: 2 });
+  expect(requestPayload.operations[3]).toMatchObject({ control: 1, target: 2, theta: Math.PI / 2 });
+
+  await page.getByRole("button", { name: /Inverse QFT/i }).click();
+  await expect(page.getByText("0.00e+0")).toBeVisible();
+  await page.getByLabel("INPUT STATE FAMILY").selectOption("uniform");
+  await expect(page.getByText("100.00%", { exact: true })).toBeVisible();
+  expect(pageErrors).toEqual([]);
+});
+
 test("AI Quantum Tutor opens, receives workspace context, and displays its answer", async ({ page }, testInfo) => {
   const pageErrors = await openWorkspace(page, testInfo);
   let requestPayload;
