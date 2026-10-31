@@ -8,7 +8,6 @@ from __future__ import annotations
 import io
 import math
 import os
-from contextlib import redirect_stdout
 from typing import Any
 
 from fastapi import FastAPI, HTTPException
@@ -106,15 +105,16 @@ def execute(payload: ExecuteRequest) -> dict[str, Any]:
         })
     # Capture the print output represented by the generated standalone Python example.
     output = io.StringIO()
-    with redirect_stdout(output):
-        print("Circuit:")
-        print(circuit.draw())
-        print("Statevector:")
-        print(state)
-        print("Exact basis probabilities:")
-        print(state.probabilities_dict())
-        print(f"Measurement counts ({payload.shots} shots):")
-        print(counts)
+    # Write only to this request's buffer. redirect_stdout changes process-global
+    # sys.stdout and can mix output when concurrent requests execute in threads.
+    print("Circuit:", file=output)
+    print(circuit.draw(), file=output)
+    print("Statevector:", file=output)
+    print(state, file=output)
+    print("Exact basis probabilities:", file=output)
+    print(state.probabilities_dict(), file=output)
+    print(f"Measurement counts ({payload.shots} shots):", file=output)
+    print(counts, file=output)
 
     return {
         "engine": "qiskit-aer",
