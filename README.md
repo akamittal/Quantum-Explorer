@@ -207,12 +207,20 @@ The AI Quantum Tutor is available from the single-qubit, multi-qubit, and Deutsc
 
 ### Configure the AI provider
 
-The AI provider is called only by the Node backend. The Gemini API key must never be placed in frontend environment variables or committed to source control.
+The AI provider is called only by the Node backend. The Gemini API key must never be placed in frontend environment variables, exposed in browser code, or committed to source control.
 
-1. Copy `backend/.env.example` to `backend/.env`.
-2. Add a Google AI Studio API key to `GEMINI_API_KEY`.
-3. Optionally change `GEMINI_MODEL` to another model available to your API key.
-4. Restart the Node backend.
+1. Open [Google AI Studio](https://aistudio.google.com/app/apikey) and sign in with your Google account.
+2. Select **Create API key** and follow the prompts to create a key for a Google Cloud project.
+3. Copy the generated key. Treat it like a password; do not paste it into source files, screenshots, issues, or chat conversations.
+4. From the repository root, copy `backend/.env.example` to `backend/.env`.
+   - PowerShell: `Copy-Item backend/.env.example backend/.env`
+   - macOS/Linux: `cp backend/.env.example backend/.env`
+5. Open `backend/.env` and replace the placeholder with your key:
+   `GEMINI_API_KEY=your-actual-api-key`
+6. Keep `GEMINI_MODEL=gemini-2.5-flash` unless you want to use another model available to your API key.
+7. Restart the Node backend so it loads the new environment variables.
+
+The `.env` file is ignored by Git. Do not remove it from `.gitignore`, and never commit the real key. If a key is accidentally exposed, revoke it in Google AI Studio and create a replacement.
 
 Example backend environment:
 
