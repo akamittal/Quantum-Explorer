@@ -102,15 +102,39 @@ export default function DeutschAlgorithmModule({ onNavigate }) {
         </section>
 
         <section style={styles.lesson}>
-          <h2 style={styles.heading}>// 3.1.3 PHASE KICKBACK: THE ORACLE'S EFFECT</h2>
-          <Equation formula={String.raw`U_f\bigl(|x\rangle|{-}\rangle\bigr)=(-1)^{f(x)}|x\rangle|{-}\rangle`} />
-          <p style={styles.copy}>Because X|−⟩ = −|−⟩, flipping the target contributes a minus sign. The target returns to the same |−⟩ state, while the input's amplitude picks up the phase (−1) raised to f(x). This is called phase kickback.</p>
+          <h2 style={styles.heading}>// 3.1.3 PHASE KICKBACK: DERIVE IT STEP BY STEP</h2>
+          <p style={styles.copy}>We have already prepared the target qubit in |−⟩. The oracle leaves input x unchanged and adds f(x) to target y modulo 2. We apply this definition directly, one term at a time.</p>
+          <Equation formula={String.raw`U_f|x,y\rangle=|x,y\oplus f(x)\rangle`} />
+          <p style={styles.copy}>First expand the target state. This is the exact two-qubit state entering the oracle:</p>
+          <Equation formula={String.raw`|{-}\rangle=\frac{|0\rangle-|1\rangle}{\sqrt2}`} />
+          <Equation formula={String.raw`|x\rangle|{-}\rangle=\frac{|x,0\rangle-|x,1\rangle}{\sqrt2}`} />
+          <p style={styles.copy}>Apply the oracle to both terms. The input x stays fixed; only the target bit changes from y to y ⊕ f(x):</p>
+          <Equation formula={String.raw`U_f(|x\rangle|{-}\rangle)=\frac{|x,0\oplus f(x)\rangle-|x,1\oplus f(x)\rangle}{\sqrt2}`} />
+          <p style={styles.copy}>Now evaluate the two possible function values separately.</p>
+          <div style={styles.twoColumns}>
+            <div style={styles.infoCard}><strong>Case A: f(x) = 0</strong>
+              <p style={styles.copy}>The target is not flipped. Substitute 0 into both XOR operations:</p>
+              <Equation formula={String.raw`=\frac{|x,0\oplus0\rangle-|x,1\oplus0\rangle}{\sqrt2}`} />
+              <Equation formula={String.raw`=\frac{|x,0\rangle-|x,1\rangle}{\sqrt2}=|x\rangle|{-}\rangle`} />
+              <p style={styles.note}>No sign change: the factor is +1.</p></div>
+            <div style={styles.infoCard}><strong>Case B: f(x) = 1</strong>
+              <p style={styles.copy}>The target is flipped. Substitute 1 into both XOR operations:</p>
+              <Equation formula={String.raw`=\frac{|x,0\oplus1\rangle-|x,1\oplus1\rangle}{\sqrt2}`} />
+              <Equation formula={String.raw`=\frac{|x,1\rangle-|x,0\rangle}{\sqrt2}`} />
+              <Equation formula={String.raw`=-\frac{|x,0\rangle-|x,1\rangle}{\sqrt2}=-|x\rangle|{-}\rangle`} />
+              <p style={styles.note}>The whole state gains a minus sign: the factor is −1.</p></div>
+          </div>
+          <p style={styles.copy}>These two cases combine into one rule: when f(x)=0 the multiplier is +1; when f(x)=1 it is −1. Both are written compactly as (−1) raised to f(x).</p>
+          <Equation formula={String.raw`U_f(|x\rangle|{-}\rangle)=(-1)^{f(x)}|x\rangle|{-}\rangle`} />
+          <p style={styles.copy}>This is phase kickback. The target returns to |−⟩ in either case. The function value appears as a sign on the input basis state |x⟩. It is not a bit flip of the input; it is a change to its phase.</p>
+          <p style={styles.copy}>Now apply this rule to the input superposition prepared earlier. It contains both possible inputs:</p>
+          <Equation formula={String.raw`|\psi_1\rangle=\frac{|0\rangle+|1\rangle}{\sqrt2}\otimes|{-}\rangle`} />
+          <p style={styles.copy}>Quantum operations are linear, so apply the oracle to each term separately. The |0⟩ term receives the factor (−1) raised to f(0), and the |1⟩ term receives (−1) raised to f(1):</p>
+          <Equation formula={String.raw`U_f|\psi_1\rangle=\frac{(-1)^{f(0)}|0\rangle|{-}\rangle+(-1)^{f(1)}|1\rangle|{-}\rangle}{\sqrt2}`} />
+          <p style={styles.copy}>Both terms contain the same target state, so factor it out. This produces the exact state that enters the final Hadamard:</p>
           <Equation formula={String.raw`|\psi_2\rangle=\frac{(-1)^{f(0)}|0\rangle+(-1)^{f(1)}|1\rangle}{\sqrt2}\otimes|{-}\rangle`} />
-          <p style={styles.copy}>Substituting the two function values separately shows exactly how the oracle marks the input amplitudes:</p>
-          <Equation formula={"|\\psi_2\\rangle=\\frac{(-1)^{f(0)}|0\\rangle+(-1)^{f(1)}|1\\rangle}{\\sqrt2}\\otimes\\frac{|0\\rangle-|1\\rangle}{\\sqrt2}"} />
-          <p style={styles.copy}>For a constant function, both input terms have the same sign. For a balanced function, their signs are opposite. The final Hadamard converts this relative sign into a definite computational-basis result.</p>
+          <p style={styles.copy}>Now the next step is clear: a constant function gives the same sign to both input terms; a balanced function gives opposite signs. The final Hadamard turns that relative sign into a definite measurement result.</p>
         </section>
-
         <section style={styles.lesson}>
           <h2 style={styles.heading}>// 3.1.4 FINAL HADAMARD AND ANSWER</h2>
           <Equation formula={String.raw`H\frac{|0\rangle+|1\rangle}{\sqrt2}=|0\rangle,\qquad H\frac{|0\rangle-|1\rangle}{\sqrt2}=|1\rangle`} />
