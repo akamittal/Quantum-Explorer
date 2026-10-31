@@ -54,6 +54,10 @@ test("Deutsch algorithm classifies all four oracle functions in the new module",
   await page.getByRole("button", { name: /M3\.1: Deutsch's Algorithm/i }).click();
   await expect(page.getByRole("heading", { name: "Deutsch's algorithm" })).toBeVisible();
 
+  await page.getByRole("button", { name: /MENU INDEX/i }).click();
+  await expect(page.getByRole("button", { name: /M2.1: Multi-Qubit Systems/i })).toBeVisible();
+  await page.getByRole("button", { name: /MENU INDEX/i }).click();
+  await expect(page.getByText(/Apply the final Hadamard to each input term/i)).toBeVisible();
   await expect(page.getByText("BALANCED", { exact: true }).first()).toBeVisible();
   await page.getByRole("button", { name: /^Constant 0 CONSTANT/ }).click();
   await expect(page.locator("section").filter({ hasText: "SIMULATOR'S CLASSIFICATION" }).getByText("CONSTANT", { exact: true })).toBeVisible();
