@@ -343,7 +343,7 @@ e^{i\theta/2}\beta
           <h4 style={styles.gateName}>Worked example 3: RZ(90°) acting on |+⟩</h4>
           <p style={styles.copy}>Start with |+⟩ = (|0⟩ + |1⟩)/√2. A Z rotation multiplies the upper and lower amplitudes by opposite phase factors.</p>
           <Equation formula={String.raw`R_Z(\pi/2)|+\rangle=\frac{1}{\sqrt2}\begin{bmatrix}e^{-i\pi/4}\\e^{i\pi/4}\end{bmatrix}=e^{-i\pi/4}\frac{|0\rangle+i|1\rangle}{\sqrt2}`} />
-          <p style={styles.copy}>The common factor e^{−iπ/4} is global phase and has no observable effect. The remaining i on only the |1⟩ component is relative phase and is physically meaningful.</p>
+          <p style={styles.copy}>The common factor, e to the power negative i pi over 4, is global phase and has no observable effect. The remaining i on only the |1⟩ component is relative phase and is physically meaningful.</p>
           <Equation formula={String.raw`P(0)=\left|\frac{e^{-i\pi/4}}{\sqrt2}\right|^2=\frac12,\qquad P(1)=\left|\frac{e^{i\pi/4}}{\sqrt2}\right|^2=\frac12`} />
         </article>
         <article style={styles.gateCard}>
