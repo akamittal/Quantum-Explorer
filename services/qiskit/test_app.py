@@ -131,3 +131,81 @@ def test_controlled_gate_rejects_same_or_out_of_range_wires():
     })
     assert same_wire.status_code == 422
     assert out_of_range.status_code == 422
+
+def test_all_four_bell_states_have_expected_joint_probabilities_and_x_correlations():
+    bell_circuits = {
+        "Phi+": [
+            {"name": "H", "qubit": 0},
+            {"name": "CX", "control": 0, "target": 1},
+        ],
+        "Phi-": [
+            {"name": "H", "qubit": 0},
+            {"name": "Z", "qubit": 0},
+            {"name": "CX", "control": 0, "target": 1},
+        ],
+        "Psi+": [
+            {"name": "H", "qubit": 0},
+            {"name": "CX", "control": 0, "target": 1},
+            {"name": "X", "qubit": 1},
+        ],
+        "Psi-": [
+            {"name": "H", "qubit": 0},
+            {"name": "Z", "qubit": 0},
+            {"name": "CX", "control": 0, "target": 1},
+            {"name": "X", "qubit": 1},
+        ],
+    }
+    expected_z = {
+        "Phi+": ("00", "11"),
+        "Phi-": ("00", "11"),
+        "Psi+": ("01", "10"),
+        "Psi-": ("01", "10"),
+    }
+    expected_x = {
+        "Phi+": ("00", "11"),
+        "Phi-": ("01", "10"),
+        "Psi+": ("00", "11"),
+        "Psi-": ("01", "10"),
+    }
+
+    for name, preparation in bell_circuits.items():
+        z_response = client.post("/execute", json={
+            "num_qubits": 2, "operations": preparation, "shots": 2000
+        })
+        assert z_response.status_code == 200, name
+        z_probabilities = z_response.json()["probabilities"]
+        for bitstring in ("00", "01", "10", "11"):
+            expected = 0.5 if bitstring in expected_z[name] else 0.0
+            assert z_probabilities[bitstring] == pytest.approx(expected), name
+
+        x_response = client.post("/execute", json={
+            "num_qubits": 2,
+            "operations": preparation + [
+                {"name": "H", "qubit": 0},
+                {"name": "H", "qubit": 1},
+            ],
+            "shots": 2000,
+        })
+        assert x_response.status_code == 200, name
+        x_probabilities = x_response.json()["probabilities"]
+        for bitstring in ("00", "01", "10", "11"):
+            expected = 0.5 if bitstring in expected_x[name] else 0.0
+            assert x_probabilities[bitstring] == pytest.approx(expected), name
+
+
+def test_partial_schmidt_state_has_exact_qiskit_probabilities():
+    theta = math.pi / 6
+    response = client.post("/execute", json={
+        "num_qubits": 2,
+        "operations": [
+            {"name": "RY", "qubit": 0, "theta": 2 * theta},
+            {"name": "CX", "control": 0, "target": 1},
+        ],
+        "shots": 1000,
+    })
+    assert response.status_code == 200
+    probabilities = response.json()["probabilities"]
+    assert probabilities["00"] == pytest.approx(math.cos(theta) ** 2)
+    assert probabilities["11"] == pytest.approx(math.sin(theta) ** 2)
+    assert probabilities["01"] == pytest.approx(0.0)
+    assert probabilities["10"] == pytest.approx(0.0)
