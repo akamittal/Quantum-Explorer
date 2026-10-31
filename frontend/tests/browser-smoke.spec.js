@@ -98,7 +98,7 @@ test("Deutsch algorithm classifies all four oracle functions in the new module",
 test("Deutsch-Jozsa builds a truth-table oracle, explains the promise, and runs through Qiskit", async ({ page }, testInfo) => {
   const pageErrors = await openWorkspace(page, testInfo);
   await page.getByRole("button", { name: /MENU INDEX/i }).click();
-  await page.getByRole("button", { name: /M3\.1: Deutsch's Algorithm/i }).click();
+  await page.getByRole("button", { name: /M2\.1: Deutsch's Algorithm/i }).click();
   await expect(page.getByRole("heading", { name: "Deutsch's algorithm" })).toBeVisible();
   await page.getByRole("button", { name: /MENU INDEX/i }).click();
   await page.getByRole("button", { name: /M2\.2: Deutsch–Jozsa Algorithm/i }).click();
