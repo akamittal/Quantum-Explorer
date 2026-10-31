@@ -4,7 +4,7 @@ import QuantumWorkspaceLayout from "./QuantumWorkspaceLayout";
 import SingleQubitModule from "./SingleQubitModule";
 import MultiQubitModule from "./MultiQubitModule";
 import DeutschAlgorithmModule from "./DeutschAlgorithmModule";
-import DeutschJozsaModule from "./DeutschJozsaModule";
+const DeutschJozsaModule = lazy(() => import("./DeutschJozsaModule"));
 const BlochSphereView = lazy(() => import("./BlochSphereView"));
 import IntroHUD from "./IntroHUD";
 import MantraSequence from "./MantraSequence";
@@ -45,7 +45,7 @@ export default function App() {
   };
 
   if (narrativePhase === 4 && activeModulePage === "3.2") {
-    return <DeutschJozsaModule onNavigate={(page) => setActiveModulePage(page)} />;
+    return <Suspense fallback={<div role="status" style={{ minHeight: "100vh", display: "grid", placeItems: "center", color: "#94a3b8", background: "#030712" }}>Loading Deutsch–Jozsa lesson…</div>}><DeutschJozsaModule onNavigate={(page) => setActiveModulePage(page)} /></Suspense>;
   }
 
   if (narrativePhase === 4 && activeModulePage === "3.1") {
