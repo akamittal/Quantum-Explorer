@@ -86,7 +86,7 @@ function PhaseGlyph({ amplitude, label }) {
       <text x="54" y="91" textAnchor="middle" fill="#64748b" fontSize="7">REAL →</text>
       <text x="5" y="10" fill="#64748b" fontSize="7">IM ↑</text>
     </svg>
-    <b>`|${label}⟩`</b>
+    <b>{`|${label}⟩`}</b>
     <span style={styles.phaseValue}>{active ? `${degrees(angle).toFixed(1)}°` : "no phase"}</span>
     <small style={styles.muted}>|a| = {r.toFixed(3)}</small>
   </div>;
@@ -129,7 +129,6 @@ function matrixForGate(name) {
 export default function MultiQubitPhaseModule({ onNavigate }) {
   const [state, setState] = useState(ZERO);
   const [operations, setOperations] = useState([]);
-  const [selectedGate, setSelectedGate] = useState("H");
   const [rotation, setRotation] = useState(Math.PI / 2);
   const [shots, setShots] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -209,7 +208,6 @@ export default function MultiQubitPhaseModule({ onNavigate }) {
 
   const probabilities = getRegisterProbabilities(state);
   const phaseCircuit = operations.map(describeOperation).join(" → ") || "No gates yet. Initial state is |00⟩.";
-  const currentMatrix = matrixForGate(selectedGate);
 
   return <div style={styles.workspace}>
     <header style={styles.header}>
@@ -370,7 +368,7 @@ const styles = {
   phaseCell: { display: "flex", minWidth: 0, flexDirection: "column", alignItems: "center", gap: ".2rem", padding: ".25rem", background: "#07111e", color: "#cffafe", fontSize: ".65rem" },
   phaseValue: { color: "#67e8f9", fontFamily: "monospace", fontSize: ".68rem" },
   muted: { color: "#64748b", fontSize: ".62rem" },
-  amplitudeRow: { display: "grid", gridTemplateColumns: "2.5rem minmax(35px,1fr) 2.8rem", gap: ".4rem", alignItems: "center", color: "#cbd5e1", fontSize: ".68rem" },
+  amplitudeRow: { display: "grid", gridTemplateColumns: "2.5rem minmax(35px,1fr) 2.8rem minmax(90px,1.2fr)", gap: ".4rem", alignItems: "center", color: "#cbd5e1", fontSize: ".68rem" },
   barTrack: { height: ".5rem", background: "#1e293b", overflow: "hidden" },
   probabilityBar: { height: "100%", background: "#10b981" },
   normLine: { color: "#a7f3d0", fontFamily: "monospace", fontSize: ".68rem" },
