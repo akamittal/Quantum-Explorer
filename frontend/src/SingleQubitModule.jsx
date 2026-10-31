@@ -46,7 +46,8 @@ export default function SingleQubitModule({
       setQiskitLoading(false);
     }
   }
-  const pythonCode = useMemo(() => generateQiskitPythonCode({ numQubits: 1, operations: queuedGates, shots: 1000 }), [queuedGates]);\n  const probabilities = getMeasurementProbabilities(alpha, beta);
+  const pythonCode = useMemo(() => generateQiskitPythonCode({ numQubits: 1, operations: queuedGates, shots: 1000 }), [queuedGates]);
+  const probabilities = getMeasurementProbabilities(alpha, beta);
   const probZero = probabilities.zero * 100;
   const probOne = probabilities.one * 100;
 
