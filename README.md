@@ -29,7 +29,7 @@ Below is the verified master engineering catalog of the platform. Items marked w
 ### 🧮 Module 2: Algebraic & Oracle-Based Algorithms
 
 - [x] **2.1 Deutsch's Algorithm:** 1-bit balance vs. constant classification, black-box mathematical oracle matrix injection, and step-by-step global phase-kickback visual flowcharts.
-- [ ] **2.2 Deutsch-Jozza Algorithm:** Scaling oracle evaluation up to n-bit input fields, proving exponential quantum query reduction.
+- [x] **2.2 Deutsch–Jozsa Algorithm (three-input oracle):** Editable constant/balanced truth tables, reversible multi-controlled-X oracle synthesis, full Hadamard/phase-kickback derivation, exact output probabilities, and Qiskit execution.
 - [ ] **2.3 Bernstein-Vazirani Algorithm:** Hidden parity string bitstring extraction in exactly 1 quantum pass vs. n classical passes.
 
 ### 📊 Module 3: Advanced Transform & Number Theory Systems
@@ -179,7 +179,7 @@ Example request body:
 }
 ```
 
-Supported gates are I/ID, H, X, Y, Z, S, T, RX, RY, RZ, CX/CNOT, CZ, and SWAP. Rotation angles are in radians. The service currently limits circuits to 8 qubits, 256 operations, and 100,000 shots by default; limits can be lowered with `QISKIT_MAX_QUBITS` and `QISKIT_MAX_SHOTS`.
+Supported gates are I/ID, H, X, Y, Z, S, T, RX, RY, RZ, CX/CNOT, MCX (multi-controlled X), CZ, and SWAP. Rotation angles are in radians. MCX operations provide a list of control-qubit indices and one distinct target-qubit index. The service currently limits circuits to 8 qubits, 256 operations, and 100,000 shots by default; limits can be lowered with `QISKIT_MAX_QUBITS` and `QISKIT_MAX_SHOTS`.
 
 **Qubit ordering:** Qiskit uses q0 as the least-significant bit. Returned basis labels are displayed as `|q[n-1]...q1q0>`, so q0 is the rightmost bit.
 
