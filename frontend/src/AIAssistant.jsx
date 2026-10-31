@@ -2,6 +2,7 @@ import React, { useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import MathRenderer from "./MathRenderer";
 import { askQuantumTutor } from "./aiTutorApi";
+import ScreenshotSearch from "./ScreenshotSearch";
 
 const MAX_SCREENSHOT_BYTES = 6 * 1024 * 1024;
 const SUPPORTED_IMAGE_TYPES = ["image/png", "image/jpeg", "image/webp", "image/gif"];
@@ -137,6 +138,7 @@ export default function AIAssistant({ moduleTitle, lessonContext = "", simulator
           {error && <div role="alert" style={styles.error}>{error}</div>}
         </div>
         <form onSubmit={send} style={styles.form}>
+          <ScreenshotSearch />
           <div style={styles.dropHint} onClick={() => fileInputRef.current?.click()}>
             <input ref={fileInputRef} type="file" accept="image/png,image/jpeg,image/webp,image/gif" aria-label="Choose screenshot" style={styles.fileInput}
               onChange={(event) => { attachScreenshot(event.target.files?.[0]); event.target.value = ""; }} />
