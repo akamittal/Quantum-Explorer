@@ -99,8 +99,8 @@ export const BELL_STATE_PRESETS = Object.freeze({
   ]),
   "Phi-": Object.freeze([
     Object.freeze({ name: "H", target: 0 }),
-    Object.freeze({ name: "Z", target: 0 }),
     Object.freeze({ name: "CNOT", control: 0, target: 1 }),
+    Object.freeze({ name: "Z", target: 1 }),
   ]),
   "Psi+": Object.freeze([
     Object.freeze({ name: "H", target: 0 }),
@@ -109,9 +109,9 @@ export const BELL_STATE_PRESETS = Object.freeze({
   ]),
   "Psi-": Object.freeze([
     Object.freeze({ name: "H", target: 0 }),
-    Object.freeze({ name: "Z", target: 0 }),
     Object.freeze({ name: "CNOT", control: 0, target: 1 }),
     Object.freeze({ name: "X", target: 1 }),
+    Object.freeze({ name: "Z", target: 1 }),
   ]),
 });
 
