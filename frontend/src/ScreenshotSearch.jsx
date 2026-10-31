@@ -156,7 +156,7 @@ export default function ScreenshotSearch() {
         <div style={styles.instructions}>DRAG TO SELECT AN AREA · SHARE THIS BROWSER TAB FOR ACCURATE CROPPING</div>
         {selection && <div style={{ ...styles.rect, left: selection.x, top: selection.y, width: selection.width, height: selection.height }} />}
         {selection && selection.width > 12 && selection.height > 12 && <div style={{ ...styles.actions, left: Math.min(selection.x, window.innerWidth - 290), top: Math.min(selection.y + selection.height + 10, window.innerHeight - 95) }}>
-          <button type="button" onClick={searchSelection} style={styles.search}>Search this on web ↗</button>
+          <a href={GEMINI_URL} target="_blank" rel="noreferrer" onClick={searchSelection} style={styles.search}>Search this on web ↗</a>
           <button type="button" onClick={downloadSelection} style={styles.download}>Download</button>
           <button type="button" onClick={() => setSelection(null)} style={styles.cancel}>Cancel</button>
         </div>}
@@ -176,7 +176,7 @@ const styles = {
   instructions: { position: "absolute", top: "1rem", left: "50%", transform: "translateX(-50%)", padding: ".6rem .9rem", background: "#07111d", border: "1px solid #0e7490", color: "#cffafe", fontFamily: "monospace", fontSize: ".68rem", whiteSpace: "nowrap", pointerEvents: "none" },
   rect: { position: "absolute", border: "2px solid #34d399", background: "rgba(16,185,129,.08)", boxShadow: "0 0 0 9999px rgba(2,6,23,.24)", pointerEvents: "none" },
   actions: { position: "absolute", display: "flex", gap: ".35rem", padding: ".4rem", background: "#07111d", border: "1px solid #0e7490", cursor: "default" },
-  search: { background: "#059669", border: "1px solid #34d399", color: "white", padding: ".5rem .65rem", fontSize: ".7rem", cursor: "pointer" },
+  search: { display: "inline-block", textDecoration: "none", background: "#059669", border: "1px solid #34d399", color: "white", padding: ".5rem .65rem", fontSize: ".7rem", cursor: "pointer" },
   download: { background: "#0f172a", border: "1px solid #475569", color: "#cbd5e1", padding: ".5rem .55rem", fontSize: ".7rem", cursor: "pointer" },
   cancel: { background: "transparent", border: "1px solid #475569", color: "#cbd5e1", padding: ".5rem .55rem", fontSize: ".7rem", cursor: "pointer" },
   exit: { position: "absolute", top: "1rem", right: "1rem", background: "#7f1d1d", border: "1px solid #f87171", color: "white", padding: ".55rem .7rem", fontFamily: "monospace", fontSize: ".65rem", cursor: "pointer" }
