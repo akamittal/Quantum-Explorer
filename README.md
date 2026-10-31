@@ -218,7 +218,8 @@ The AI provider is called only by the Node backend. The Gemini API key must neve
 5. Open `backend/.env` and replace the placeholder with your key:
    `GEMINI_API_KEY=your-actual-api-key`
 6. Keep `GEMINI_MODEL=gemini-3.8-flash` unless you want to use another model available to your API key.
-7. Optionally set `GEMINI_TIMEOUT_MS=90000` (the backend allows up to 180 seconds) if you need a longer response window. The tutor uses a low thinking level to reduce unnecessary latency.\n8. Restart the Node backend so it loads the new environment variables.
+7. Optionally set `GEMINI_TIMEOUT_MS=90000` (the backend allows up to 180 seconds) if you need a longer response window. The tutor uses a low thinking level to reduce unnecessary latency.
+8. Restart the Node backend so it loads the new environment variables.
 
 The `.env` file is ignored by Git. Do not remove it from `.gitignore`, and never commit the real key. If a key is accidentally exposed, revoke it in Google AI Studio and create a replacement.
 
