@@ -39,8 +39,6 @@ function inputProbabilities(state) {
     basis[index] + basis[index + (1 << BERNSTEIN_VAZIRANI_TARGET_QUBIT)]);
 }
 
-const BERNSTEIN_VAZIRY_INPUT_COUNT = BERNSTEIN_VAZIRANI_INPUT_COUNT;
-
 export function runBernsteinVazirani(secret) {
   validateSecret(secret);
   const circuit = buildBernsteinVaziraniOperations(secret);
