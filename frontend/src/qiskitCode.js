@@ -42,10 +42,14 @@ export function generateQiskitPythonCode({ numQubits = 1, operations = [], shots
       lines.push("qc.mcx([" + controls.join(", ") + "], " + target + ")");
       return;
     }
-    if (name === "CX" || name === "CNOT") {
+    if (name === "CX" || name === "CNOT" || name === "CP") {
       const control = operation.control, target = operation.target;
-      if (!Number.isInteger(control) || !Number.isInteger(target) || control === target || control < 0 || target < 0 || control >= numQubits || target >= numQubits) throw new RangeError("Operation " + index + ": invalid CX control/target.");
-      lines.push("qc.cx(" + control + ", " + target + ")"); return;
+      if (!Number.isInteger(control) || !Number.isInteger(target) || control === target || control < 0 || target < 0 || control >= numQubits || target >= numQubits) throw new RangeError("Operation " + index + ": invalid " + name + " control/target.");
+      if (name === "CP") {
+        if (!Number.isFinite(operation.theta)) throw new TypeError("Operation " + index + ": CP needs a finite phase angle in radians.");
+        lines.push("qc.cp(" + pythonNumber(operation.theta) + ", " + control + ", " + target + ")");
+      } else lines.push("qc.cx(" + control + ", " + target + ")");
+      return;
     }
     if (name === "CZ" || name === "SWAP") {
       const first = operation.first, second = operation.second;

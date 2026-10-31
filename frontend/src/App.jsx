@@ -8,6 +8,7 @@ const DeutschJozsaModule = lazy(() => import("./DeutschJozsaModule"));
 const BernsteinVaziraniModule = lazy(() => import("./BernsteinVaziraniModule"));
 const MultiQubitPhaseModule = lazy(() => import("./MultiQubitPhaseModule"));
 const EntanglementModule = lazy(() => import("./EntanglementModule"));
+const QuantumFourierTransformModule = lazy(() => import("./QuantumFourierTransformModule"));
 const BlochSphereView = lazy(() => import("./BlochSphereView"));
 import IntroHUD from "./IntroHUD";
 import MantraSequence from "./MantraSequence";
@@ -46,6 +47,10 @@ export default function App() {
         .catch((err) => console.warn("Audio held:", err));
     }
   };
+
+  if (narrativePhase === 4 && activeModulePage === "qft") {
+    return <Suspense fallback={<div role="status" style={{ minHeight: "100vh", display: "grid", placeItems: "center", color: "#94a3b8", background: "#030712" }}>Loading Quantum Fourier Transform studio…</div>}><QuantumFourierTransformModule onNavigate={(page) => setActiveModulePage(page)} /></Suspense>;
+  }
 
   if (narrativePhase === 4 && activeModulePage === "1.4") {
     return <Suspense fallback={<div role="status" style={{ minHeight: "100vh", display: "grid", placeItems: "center", color: "#94a3b8", background: "#030712" }}>Loading entanglement laboratory…</div>}><EntanglementModule onNavigate={(page) => setActiveModulePage(page)} /></Suspense>;
@@ -145,6 +150,12 @@ export default function App() {
                 style={{ textAlign: "left", background: "transparent", border: "none", color: activeModulePage === "3.1" ? "#10b981" : "#9ca3af", fontFamily: "monospace", cursor: "pointer", fontSize: "0.875rem" }}
               >
                 {activeModulePage === "3.1" ? "[x]" : "[ ]"} M3.1: Deutsch's Algorithm
+              </button>
+              <button
+                onClick={() => { setActiveModulePage("qft"); setIsSidebarOpen(false); }}
+                style={{ textAlign: "left", background: "transparent", border: "none", color: activeModulePage === "qft" ? "#10b981" : "#9ca3af", fontFamily: "monospace", cursor: "pointer", fontSize: "0.875rem" }}
+              >
+                {activeModulePage === "qft" ? "[x]" : "[ ]"} M3.1: Quantum Fourier Transform
               </button>
               <button
                 onClick={() => { setActiveModulePage("3.2"); setIsSidebarOpen(false); }}

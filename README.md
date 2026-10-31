@@ -34,7 +34,7 @@ Below is the verified master engineering catalog of the platform. Items marked w
 
 ### 📊 Module 3: Advanced Transform & Number Theory Systems
 
-- [ ] **3.1 The Quantum Fourier Transform (QFT):** Mapping from spatial computational matrix amplitudes to phase frequency spectrum grids, optimized to run in O(n²) time blocks.
+- [x] **3.1 The Quantum Fourier Transform (QFT):** Exact discrete Fourier transform derivation, roots-of-unity and unitarity proofs, binary phase factorization, controlled-phase gate decomposition, bit-reversal swaps, inverse QFT, interactive complex phase spectrum, and Qiskit verification across 2–4 qubits. Mapping from spatial computational matrix amplitudes to phase frequency spectrum grids, optimized to run in O(n²) time blocks.
 - [ ] **3.2 Quantum Phase Estimation (QPE):** Unitary matrix eigenvalue digital extractor subsystem layout.
 - [ ] **3.3 Shor's Factoring Cryptanalysis Framework:** High-dimensional mathematical spiral engine visually demonstrating period-finding mechanics to audit RSA architecture safety keys.
 
@@ -161,6 +161,8 @@ In the multi-qubit module, add gates to the circuit using its gate controls, or 
 
 In **Module 1.4: Quantum Entanglement Space**, select any of the four Bell states, switch between Z- and X-basis correlation checks, or move the Schmidt-angle slider to create a partially entangled state. The Qiskit panel executes the same preparation circuit and includes the basis-change gates selected for the measurement. The button remains disabled while the circuit is empty or a request is already running.
 
+In **Module 3.1: Quantum Fourier Transform**, change the register size, select a computational-basis or superposition input, and compare forward and inverse transforms. The complex phase wheel displays the amplitude phases, while the Qiskit panel executes the matching Hadamard, controlled-phase and wire-swap circuit.
+
 The Node backend exposes:
 
 - `GET /api/qiskit/health` - checks whether the Python Qiskit service can be reached through Node.
@@ -181,7 +183,7 @@ Example request body:
 }
 ```
 
-Supported gates are I/ID, H, X, Y, Z, S, T, RX, RY, RZ, CX/CNOT, MCX (multi-controlled X), CZ, and SWAP. Rotation angles are in radians. MCX operations provide a list of control-qubit indices and one distinct target-qubit index. The service currently limits circuits to 8 qubits, 256 operations, and 100,000 shots by default; limits can be lowered with `QISKIT_MAX_QUBITS` and `QISKIT_MAX_SHOTS`.
+Supported gates are I/ID, H, X, Y, Z, S, T, RX, RY, RZ, CX/CNOT, CP (controlled phase), MCX (multi-controlled X), CZ, and SWAP. CP takes a finite phase angle in radians. Rotation angles are in radians. MCX operations provide a list of control-qubit indices and one distinct target-qubit index. The service currently limits circuits to 8 qubits, 256 operations, and 100,000 shots by default; limits can be lowered with `QISKIT_MAX_QUBITS` and `QISKIT_MAX_SHOTS`.
 
 **Qubit ordering:** Qiskit uses q0 as the least-significant bit. Returned basis labels are displayed as `|q[n-1]...q1q0>`, so q0 is the rightmost bit.
 

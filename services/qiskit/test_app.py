@@ -209,3 +209,56 @@ def test_partial_schmidt_state_has_exact_qiskit_probabilities():
     assert probabilities["11"] == pytest.approx(math.sin(theta) ** 2)
     assert probabilities["01"] == pytest.approx(0.0)
     assert probabilities["10"] == pytest.approx(0.0)
+
+
+def test_controlled_phase_applies_exact_complex_phase_and_rejects_invalid_angles():
+    response = client.post("/execute", json={
+        "num_qubits": 2,
+        "operations": [
+            {"name": "X", "qubit": 0},
+            {"name": "X", "qubit": 1},
+            {"name": "CP", "control": 0, "target": 1, "theta": math.pi / 2},
+        ],
+        "shots": 100,
+    })
+    assert response.status_code == 200
+    state = response.json()["statevector"]
+    assert state[3]["re"] == pytest.approx(0.0, abs=1e-10)
+    assert state[3]["im"] == pytest.approx(1.0)
+
+    missing_angle = client.post("/execute", json={
+        "num_qubits": 2,
+        "operations": [{"name": "CP", "control": 0, "target": 1}],
+    })
+    same_wire = client.post("/execute", json={
+        "num_qubits": 2,
+        "operations": [{"name": "CP", "control": 0, "target": 0, "theta": 1.0}],
+    })
+    assert missing_angle.status_code == 422
+    assert same_wire.status_code == 422
+
+
+def test_three_qubit_qft_decomposition_matches_the_discrete_fourier_transform():
+    for basis_index in (0, 1, 3, 5, 7):
+        operations = []
+        for target in range(2, -1, -1):
+            operations.append({"name": "H", "qubit": target})
+            for control in range(target - 1, -1, -1):
+                operations.append({
+                    "name": "CP",
+                    "control": control,
+                    "target": target,
+                    "theta": math.pi / (2 ** (target - control)),
+                })
+        operations.append({"name": "SWAP", "first": 0, "second": 2})
+        response = client.post("/execute", json={
+            "num_qubits": 3,
+            "operations": [{"name": "X", "qubit": q} for q in range(3) if (basis_index >> q) & 1] + operations,
+            "shots": 100,
+        })
+        assert response.status_code == 200
+        state = response.json()["statevector"]
+        for output_index, amplitude in enumerate(state):
+            angle = 2 * math.pi * basis_index * output_index / 8
+            assert amplitude["re"] == pytest.approx(math.cos(angle) / math.sqrt(8), abs=1e-10)
+            assert amplitude["im"] == pytest.approx(math.sin(angle) / math.sqrt(8), abs=1e-10)

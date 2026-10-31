@@ -46,3 +46,17 @@ test("rejects invalid circuit dimensions, shots, and qubit indices", () => {
   assert.throws(() => generateQiskitPythonCode({ shots: 0 }), /1 to 100,000/);
   assert.throws(() => generateQiskitPythonCode({ numQubits: 1, operations: [{ name: "H", target: 1 }] }), /invalid target qubit/);
 });
+
+test("generates controlled-phase gates with a finite angle and rejects invalid phase gates", () => {
+  const code = generateQiskitPythonCode({
+    numQubits: 3,
+    operations: [{ name: "CP", control: 0, target: 2, theta: Math.PI / 4 }],
+  });
+  assert.match(code, /qc\.cp\(0\.7853981633974483, 0, 2\)/);
+  assert.throws(() => generateQiskitPythonCode({
+    numQubits: 2, operations: [{ name: "CP", control: 0, target: 1 }],
+  }), /finite phase angle/);
+  assert.throws(() => generateQiskitPythonCode({
+    numQubits: 2, operations: [{ name: "CP", control: 1, target: 1, theta: 1 }],
+  }), /invalid CP/);
+});
