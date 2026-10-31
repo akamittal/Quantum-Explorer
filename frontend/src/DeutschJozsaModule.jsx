@@ -74,7 +74,6 @@ export default function DeutschJozsaModule({ onNavigate }) {
     }
   };
 
-  const isPromised = result.classification !== "promise-violated";
   const classicalWorstCase = 2 ** (DEUTSCH_JOZSA_INPUT_QUBITS - 1) + 1;
 
   return (
