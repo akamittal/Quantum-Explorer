@@ -92,6 +92,41 @@ export default function DeutschAlgorithmModule({ onNavigate }) {
 
         <section style={styles.lesson}>
           <h2 style={styles.heading}>// 3.1.2 PREPARE THE TWO QUBITS</h2>
+          <div style={styles.stateCircuitCard} role="img" aria-label="Deutsch algorithm circuit. The initial state psi zero passes through Hadamard gates on both qubits to become psi one, through the oracle to become psi two, then through a final Hadamard on q0 to become psi three before measuring q0.">
+            <div style={styles.stateCircuitTitle}>CIRCUIT MAP · FOLLOW THE STATE FROM LEFT TO RIGHT</div>
+            <svg viewBox="0 0 960 220" width="100%" role="presentation" style={{ minWidth: "680px", display: "block" }}>
+              <text x="24" y="72" fill="#67e8f9" fontSize="14" fontFamily="monospace">q0 · input</text>
+              <text x="24" y="132" fill="#67e8f9" fontSize="14" fontFamily="monospace">q1 · target</text>
+              <line x1="145" y1="68" x2="920" y2="68" stroke="#64748b" strokeWidth="2" />
+              <line x1="145" y1="128" x2="920" y2="128" stroke="#64748b" strokeWidth="2" />
+              <g fill="#d1fae5" fontSize="13" fontFamily="monospace" textAnchor="middle">
+                <text x="145" y="28">|ψ₀⟩</text><text x="315" y="28">|ψ₁⟩</text><text x="585" y="28">|ψ₂⟩</text><text x="795" y="28">|ψ₃⟩</text>
+              </g>
+              <g fill="#10b981" stroke="#10b981" strokeWidth="2">
+                <rect x="205" y="48" width="40" height="40" rx="4" fill="#0b1720" /><rect x="205" y="108" width="40" height="40" rx="4" fill="#0b1720" />
+                <rect x="740" y="48" width="40" height="40" rx="4" fill="#0b1720" />
+              </g>
+              <g fill="#d1fae5" fontSize="16" fontWeight="bold" fontFamily="monospace" textAnchor="middle">
+                <text x="225" y="73">H</text><text x="225" y="133">H</text><text x="760" y="73">H</text>
+              </g>
+              <rect x="435" y="43" width="115" height="110" rx="5" fill="#10252b" stroke="#22d3ee" strokeWidth="2" />
+              <g fill="#a5f3fc" fontSize="14" fontFamily="monospace" textAnchor="middle"><text x="492" y="91">U_f</text><text x="492" y="112" fontSize="10">ORACLE</text></g>
+              <line x1="492" y1="68" x2="492" y2="128" stroke="#22d3ee" strokeWidth="2" strokeDasharray="4 4" />
+              <path d="M 492 68 L 492 128" stroke="#22d3ee" strokeWidth="2" fill="none" />
+              <circle cx="492" cy="68" r="5" fill="#22d3ee" /><circle cx="492" cy="128" r="9" fill="none" stroke="#22d3ee" strokeWidth="2" /><path d="M 492 119 L 492 137 M 483 128 L 501 128" stroke="#22d3ee" strokeWidth="2" />
+              <rect x="850" y="49" width="42" height="38" rx="4" fill="#172033" stroke="#a78bfa" strokeWidth="2" />
+              <g fill="#ddd6fe" fontSize="12" fontFamily="monospace" textAnchor="middle"><text x="871" y="73">M</text><text x="871" y="105" fontSize="10">measure</text></g>
+              <g fill="#94a3b8" fontSize="11" fontFamily="monospace"><text x="145" y="178">Start: |0⟩|1⟩</text><text x="280" y="198">H on both qubits</text><text x="430" y="178">Oracle changes phase</text><text x="700" y="198">Final H on q0 only</text></g>
+              <path d="M 145 42 L 145 52 M 315 42 L 315 52 M 585 42 L 585 52 M 795 42 L 795 52" stroke="#34d399" strokeWidth="1.5" />
+            </svg>
+            <div style={styles.stateLegend}>
+              <span><b>|ψ₀⟩</b> Initial bits |0⟩|1⟩</span>
+              <span><b>|ψ₁⟩</b> After both first Hadamards</span>
+              <span><b>|ψ₂⟩</b> After the oracle / phase kickback</span>
+              <span><b>|ψ₃⟩</b> After final Hadamard on q0</span>
+            </div>
+            <p style={styles.note}>The equations below use these same labels. The state changes at each marked point, not at every individual gate symbol.</p>
+          </div>
           <p style={styles.copy}>q0 is the input x. q1 is the target y. Start with |0⟩ on q0 and |1⟩ on q1. Apply a Hadamard gate to both qubits.</p>
           <Equation formula={String.raw`|\psi_0\rangle=|0\rangle_{q0}|1\rangle_{q1}`} />
           <Equation formula={String.raw`H|0\rangle=\frac{|0\rangle+|1\rangle}{\sqrt2},\qquad H|1\rangle=\frac{|0\rangle-|1\rangle}{\sqrt2}`} />
@@ -222,6 +257,9 @@ const styles = {
   track: { height: "7px", background: "#1f2937", borderRadius: "5px", overflow: "hidden" },
   fill: { height: "100%", background: "#10b981", borderRadius: "5px" },
   circuitCard: { padding: "1rem", background: "#050911", border: "1px solid rgba(6,182,212,.14)", display: "flex", flexDirection: "column", gap: "1rem", overflowX: "auto" },
+  stateCircuitCard: { padding: "1rem", background: "#050911", border: "1px solid rgba(6,182,212,.14)", display: "flex", flexDirection: "column", gap: ".8rem", overflowX: "auto" },
+  stateCircuitTitle: { color: "#67e8f9", fontFamily: "monospace", fontSize: ".7rem", letterSpacing: ".08em" },
+  stateLegend: { display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(190px,1fr))", gap: ".55rem", color: "#9ca3af", fontSize: ".75rem", lineHeight: 1.5 },
   wire: { minWidth: "560px", display: "grid", gridTemplateColumns: "120px repeat(3, 100px) 1fr", alignItems: "center", gap: ".5rem", position: "relative", color: "#cbd5e1", fontFamily: "monospace", fontSize: ".75rem" },
   amplitudes: { display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))", gap: ".5rem" },
   shotsLabel: { display: "flex", alignItems: "center", gap: ".75rem", color: "#9ca3af", fontSize: ".8rem" },
