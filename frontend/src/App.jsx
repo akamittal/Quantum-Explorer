@@ -5,6 +5,7 @@ import SingleQubitModule from "./SingleQubitModule";
 import MultiQubitModule from "./MultiQubitModule";
 import DeutschAlgorithmModule from "./DeutschAlgorithmModule";
 const DeutschJozsaModule = lazy(() => import("./DeutschJozsaModule"));
+const BernsteinVaziraniModule = lazy(() => import("./BernsteinVaziraniModule"));
 const BlochSphereView = lazy(() => import("./BlochSphereView"));
 import IntroHUD from "./IntroHUD";
 import MantraSequence from "./MantraSequence";
@@ -43,6 +44,10 @@ export default function App() {
         .catch((err) => console.warn("Audio held:", err));
     }
   };
+
+  if (narrativePhase === 4 && activeModulePage === "2.3") {
+    return <Suspense fallback={<div role="status" style={{ minHeight: "100vh", display: "grid", placeItems: "center", color: "#94a3b8", background: "#030712" }}>Loading Bernstein–Vazirani lesson…</div>}><BernsteinVaziraniModule onNavigate={(page) => setActiveModulePage(page)} /></Suspense>;
+  }
 
   if (narrativePhase === 4 && activeModulePage === "3.2") {
     return <Suspense fallback={<div role="status" style={{ minHeight: "100vh", display: "grid", placeItems: "center", color: "#94a3b8", background: "#030712" }}>Loading Deutsch–Jozsa lesson…</div>}><DeutschJozsaModule onNavigate={(page) => setActiveModulePage(page)} /></Suspense>;
@@ -106,6 +111,12 @@ export default function App() {
                 style={{ textAlign: "left", background: "transparent", border: "none", color: "#9ca3af", fontFamily: "monospace", cursor: "pointer", fontSize: "0.875rem" }}
               >
                 [ ] M2.1: Multi-Qubit Systems
+              </button>
+              <button
+                onClick={() => { setActiveModulePage("2.3"); setIsSidebarOpen(false); }}
+                style={{ textAlign: "left", background: "transparent", border: "none", color: activeModulePage === "2.3" ? "#10b981" : "#9ca3af", fontFamily: "monospace", cursor: "pointer", fontSize: "0.875rem" }}
+              >
+                {activeModulePage === "2.3" ? "[x]" : "[ ]"} M2.3: Bernstein–Vazirani Algorithm
               </button>
               <button
                 onClick={() => { setActiveModulePage("3.1"); setIsSidebarOpen(false); }}
