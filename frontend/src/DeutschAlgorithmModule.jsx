@@ -12,6 +12,7 @@ function Equation({ formula }) {
 
 export default function DeutschAlgorithmModule({ onNavigate }) {
   const [oracle, setOracle] = useState("identity");
+  const [menuOpen, setMenuOpen] = useState(false);
   const [shots, setShots] = useState(1000);
   const [qiskitLoading, setQiskitLoading] = useState(false);
   const [qiskitError, setQiskitError] = useState("");
@@ -48,10 +49,17 @@ export default function DeutschAlgorithmModule({ onNavigate }) {
   return (
     <main style={styles.workspace}>
       <header style={styles.header}>
+        <button type="button" onClick={() => setMenuOpen((value) => !value)} style={styles.menuButton}>{menuOpen ? "CLOSE INDEX ✕" : "MENU INDEX ☰"}</button>
         <button type="button" onClick={() => onNavigate?.("1.1")} style={styles.indexButton}>← MODULE INDEX</button>
         <span style={styles.eyebrow}>QUANTUM ALGORITHMS // MODULE 3.1</span>
         <span style={styles.headerTag}>DEUTSCH'S ALGORITHM</span>
       </header>
+      {menuOpen && <aside style={styles.sidebar} aria-label="Module navigation">
+        <span style={styles.eyebrow}>CORE MAP REPOSITORY</span>
+        <button type="button" style={styles.navItem} onClick={() => { setMenuOpen(false); onNavigate?.("1.1"); }}>M1.1: Single Qubit State Space</button>
+        <button type="button" style={styles.navItem} onClick={() => { setMenuOpen(false); onNavigate?.("2.1"); }}>M2.1: Multi-Qubit Systems</button>
+        <button type="button" style={{ ...styles.navItem, color: "#10b981" }} onClick={() => setMenuOpen(false)}>[x] M3.1: Deutsch Algorithm</button>
+      </aside>}
       <div style={styles.content}>
         <section style={styles.hero}>
           <span style={styles.eyebrow}>ONE QUERY. ONE BIT OF GLOBAL INFORMATION.</span>
@@ -162,6 +170,9 @@ const styles = {
   header: { minHeight: "3.5rem", padding: "0 1.5rem", display: "flex", alignItems: "center", justifyContent: "space-between", gap: "1rem", background: "#0b0f19", borderBottom: "1px solid rgba(6,182,212,.15)", position: "sticky", top: 0, zIndex: 80 },
   eyebrow: { color: "#6b7280", fontFamily: "monospace", fontSize: ".68rem", letterSpacing: ".1em" },
   headerTag: { color: "#10b981", fontFamily: "monospace", fontSize: ".72rem" },
+  menuButton: { background: "#10b981", color: "#030712", border: 0, padding: ".4rem .85rem", fontFamily: "monospace", fontSize: ".7rem", fontWeight: "bold", cursor: "pointer" },
+  sidebar: { position: "fixed", top: "3.5rem", left: 0, width: "22rem", maxWidth: "85vw", height: "calc(100vh - 3.5rem)", zIndex: 100, display: "flex", flexDirection: "column", gap: "1rem", padding: "2rem", boxSizing: "border-box", background: "#0b0f19", borderRight: "1px solid rgba(6,182,212,.2)", boxShadow: "12px 0 35px rgba(0,0,0,.35)" },
+  navItem: { textAlign: "left", background: "transparent", border: 0, color: "#9ca3af", fontFamily: "monospace", fontSize: ".82rem", padding: ".6rem 0", cursor: "pointer" },
   indexButton: { background: "transparent", border: "1px solid #334155", color: "#9ca3af", padding: ".4rem .65rem", fontFamily: "monospace", fontSize: ".68rem", cursor: "pointer" },
   content: { width: "min(100% - 2rem, 980px)", margin: "0 auto", padding: "2rem 0 5rem", display: "flex", flexDirection: "column", gap: "1.5rem" },
   hero: { padding: "2rem 0 1rem", borderBottom: "1px solid rgba(6,182,212,.16)" },
