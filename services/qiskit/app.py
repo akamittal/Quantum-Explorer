@@ -5,8 +5,10 @@ index 0 is |00...0>, and displayed bitstrings are q[n-1]...q[0].
 """
 from __future__ import annotations
 
+import io
 import math
 import os
+from contextlib import redirect_stdout
 from typing import Any
 
 from fastapi import FastAPI, HTTPException
@@ -102,8 +104,21 @@ def execute(payload: ExecuteRequest) -> dict[str, Any]:
             "im": float(amplitude.imag),
             "probability": float(probabilities[index]),
         })
+    # Capture the print output represented by the generated standalone Python example.
+    output = io.StringIO()
+    with redirect_stdout(output):
+        print("Circuit:")
+        print(circuit.draw())
+        print("Statevector:")
+        print(state)
+        print("Exact basis probabilities:")
+        print(state.probabilities_dict())
+        print(f"Measurement counts ({payload.shots} shots):")
+        print(counts)
+
     return {
         "engine": "qiskit-aer",
+        "stdout": output.getvalue(),
         "num_qubits": payload.num_qubits,
         "qubit_order": "q[n-1]...q[1]q[0] (q0 is least-significant/rightmost)",
         "shots": payload.shots,
