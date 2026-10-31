@@ -131,6 +131,36 @@ export function applyCNOT(state, controlQubit, targetQubit) {
   return result;
 }
 
+/** Multi-controlled X: flip target only when every listed control is |1>. */
+export function applyMCX(state, controlQubits, targetQubit) {
+  validateState(state);
+  if (!Array.isArray(controlQubits) || controlQubits.length < 1) {
+    throw new TypeError("MCX needs at least one control qubit.");
+  }
+  const uniqueControls = new Set(controlQubits);
+  if (uniqueControls.size !== controlQubits.length) {
+    throw new RangeError("MCX control qubits must be unique.");
+  }
+  controlQubits.forEach((qubit) => validateQubitIndex(state, qubit));
+  validateQubitIndex(state, targetQubit);
+  if (uniqueControls.has(targetQubit)) {
+    throw new RangeError("MCX target cannot also be a control.");
+  }
+  const controlMask = controlQubits.reduce((mask, qubit) => mask | (1 << qubit), 0);
+  const targetMask = 1 << targetQubit;
+  const result = cloneState(state);
+  for (let index = 0; index < state.amplitudes.length; index += 1) {
+    if ((index & controlMask) === controlMask && (index & targetMask) === 0) {
+      const paired = index | targetMask;
+      [result.amplitudes[index], result.amplitudes[paired]] = [
+        result.amplitudes[paired],
+        result.amplitudes[index],
+      ];
+    }
+  }
+  return result;
+}
+
 /** Controlled-Z: multiply amplitudes by -1 when both selected qubits are |1>. */
 export function applyCZ(state, firstQubit, secondQubit) {
   validateState(state);
@@ -192,6 +222,8 @@ export function runMultiQubitCircuit(initialState, operations) {
       case "CNOT":
       case "CX":
         return applyCNOT(state, operation.control, operation.target);
+      case "MCX":
+        return applyMCX(state, operation.controls, operation.target);
       case "CZ":
         return applyCZ(state, operation.first, operation.second);
       case "SWAP":
