@@ -4,6 +4,7 @@ import QuantumWorkspaceLayout from "./QuantumWorkspaceLayout";
 import SingleQubitModule from "./SingleQubitModule";
 import MultiQubitModule from "./MultiQubitModule";
 import DeutschAlgorithmModule from "./DeutschAlgorithmModule";
+import DeutschJozsaModule from "./DeutschJozsaModule";
 const BlochSphereView = lazy(() => import("./BlochSphereView"));
 import IntroHUD from "./IntroHUD";
 import MantraSequence from "./MantraSequence";
@@ -42,6 +43,10 @@ export default function App() {
         .catch((err) => console.warn("Audio held:", err));
     }
   };
+
+  if (narrativePhase === 4 && activeModulePage === "3.2") {
+    return <DeutschJozsaModule onNavigate={(page) => setActiveModulePage(page)} />;
+  }
 
   if (narrativePhase === 4 && activeModulePage === "3.1") {
     return <DeutschAlgorithmModule onNavigate={(page) => setActiveModulePage(page)} />;
