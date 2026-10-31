@@ -43,7 +43,7 @@ export default function App() {
   };
 
   if (narrativePhase === 4 && activeModulePage === "3.1") {
-    return <DeutschAlgorithmModule />;
+    return <DeutschAlgorithmModule onNavigate={(page) => setActiveModulePage(page)} />;
   }
 
   if (narrativePhase === 4 && activeModulePage === "2.1") {
