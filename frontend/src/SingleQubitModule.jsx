@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import ConceptHero from "./components/single-qubit/ConceptHero";
 import GateMatrixGuide from "./components/single-qubit/GateMatrixGuide";
 import AmplitudeSandbox from "./components/single-qubit/AmplitudeSandbox";
@@ -9,6 +9,7 @@ import EducationHelp from "./components/EducationHelp";
 import { getMeasurementProbabilities } from "./quantumMath";
 import { executeWithQiskit } from "./qiskitApi";
 import QiskitExecutionPanel from "./components/single-qubit/QiskitExecutionPanel";
+import { generateQiskitPythonCode } from "./qiskitCode";
 
 const COMPOSER_GATES = ["H", "X", "Y", "Z", "S", "T"];
 
@@ -45,6 +46,7 @@ export default function SingleQubitModule({
       setQiskitLoading(false);
     }
   }
+  const pythonCode = useMemo(() => generateQiskitPythonCode({ numQubits: 1, operations: queuedGates, shots: 1000 }), [queuedGates]);
   const probabilities = getMeasurementProbabilities(alpha, beta);
   const probZero = probabilities.zero * 100;
   const probOne = probabilities.one * 100;

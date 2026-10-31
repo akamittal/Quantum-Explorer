@@ -2,6 +2,7 @@ import React, { useMemo, useState } from "react";
 import MathRenderer from "./MathRenderer";
 import { executeWithQiskit } from "./qiskitApi";
 import QiskitExecutionPanel from "./components/single-qubit/QiskitExecutionPanel";
+import { generateQiskitPythonCode } from "./qiskitCode";
 import { applyCNOT, applyCZ, applyGateToRegister, applySWAP, createZeroRegister, getQubitProbabilities, getRegisterProbabilities, runMultiQubitCircuit, sampleRegisterMeasurements } from "./multiQubitCircuit";
 
 const initial = () => createZeroRegister(2);
@@ -55,6 +56,7 @@ export default function MultiQubitModule({ onNavigate }) {
   const [qiskitLoading, setQiskitLoading] = useState(false);
   const [qiskitError, setQiskitError] = useState("");
   const [qiskitResult, setQiskitResult] = useState(null);
+  const pythonCode = useMemo(() => generateQiskitPythonCode({ numQubits: state.numQubits, operations: circuitOperations, shots: 1000 }), [state.numQubits, circuitOperations]);
   const probabilities = useMemo(() => getRegisterProbabilities(state), [state]);
   const vectors = useMemo(() => [localBloch(state, 0), localBloch(state, 1)], [state]);
   const apply = (label, operation, fn) => { setState((old) => fn(old)); setHistory((old) => [...old, label]); setCircuitOperations((old) => [...old, operation]); setShots(null); setQiskitResult(null); setQiskitError(""); };
@@ -82,8 +84,6 @@ export default function MultiQubitModule({ onNavigate }) {
     } catch (error) { setQiskitError(error.message || "Qiskit execution failed."); }
     finally { setQiskitLoading(false); }
   };
-  const qiskitCode = `# Install: pip install qiskit qiskit-aer\nfrom qiskit import QuantumCircuit\nfrom qiskit.quantum_info import Statevector\nfrom qiskit_aer import AerSimulator\n\n# Qiskit uses little-endian qubit indexing:\n# q0 is the rightmost bit in displayed bit strings.\nqc = QuantumCircuit(2)\nqc.h(0)          # Put q0 into superposition\nqc.cx(0, 1)      # q0 controls X on q1\n\n# Inspect the state before measurement\nstate = Statevector.from_instruction(qc)\nprint(state)     # (|00> + |11>) / sqrt(2)\n\n# Add measurement and sample 1,000 shots\nmeasured = qc.copy()\nmeasured.measure_all()\nsimulator = AerSimulator()\nresult = simulator.run(measured, shots=1000).result()\nprint(result.get_counts())  # Only 00 and 11 (up to sampling)\n\nprint(qc.draw())`;
-  const copyQiskit = () => { if (navigator?.clipboard?.writeText) navigator.clipboard.writeText(qiskitCode); };
   return <div style={s.workspace}>
     <header style={s.header}><button style={s.menuButton} onClick={() => setMenuOpen(v => !v)}>{menuOpen ? "CLOSE INDEX ✕" : "MENU INDEX ☰"}</button><span style={s.eyebrow}>QUANTUM ENGINE // MULTI-QUBIT WORKSPACE</span><span style={s.headerTag}>M2.1 ACTIVE</span></header>
     {menuOpen && <aside style={s.sidebar}><span style={s.eyebrow}>CORE MAP REPOSITORY</span><button style={s.navItem} onClick={() => { setMenuOpen(false); onNavigate?.("1.1"); }}> [ ] M1.1: Single Qubit State Space</button><button style={{...s.navItem,color:"#10b981"}} onClick={() => setMenuOpen(false)}>[x] M2.1: Multi-Qubit Systems</button></aside>}
@@ -182,15 +182,14 @@ export default function MultiQubitModule({ onNavigate }) {
           <button style={s.secondary} onClick={reset}>Reset</button>
           <button style={s.primary} onClick={() => setShots(sampleRegisterMeasurements(state,1000))}>Measure 1000 shots</button>
         </div>
-        <QiskitExecutionPanel operations={circuitOperations} result={qiskitResult} loading={qiskitLoading} error={qiskitError} onRun={handleRunOnQiskit} />
         {shots && <div style={s.shotResult}><b>Observed counts from 1000 shots</b>{Object.entries(shots.counts).map(([k,v]) => <span key={k}>|{k}⟩: {v} ({(v/10).toFixed(1)}%)</span>)}</div>}
       </div>
     </Lesson>
 
     <Lesson id="2.12" title="THE SAME BELL CIRCUIT IN QISKIT">
       <p style={s.copy}>The code below creates the same circuit you built above. Qiskit numbers qubits from zero and displays classical bit strings with q0 at the right. The statevector is inspected before measurement, then a separate measured copy is sampled.</p>
-      <div style={s.codeFrame}><div style={s.codeHeader}><b>bell_state.py</b><button style={s.secondary} onClick={copyQiskit}>Copy Qiskit code</button></div><pre style={s.code}>{qiskitCode}</pre></div>
-      <p style={s.copy}>Expected ideal state: amplitudes for |00⟩ and |11⟩ are each 1/√2. A finite 1,000-shot run gives counts near 500/500, not necessarily exactly equal.</p>
+      <QiskitExecutionPanel operations={circuitOperations} code={pythonCode} result={qiskitResult} loading={qiskitLoading} error={qiskitError} onRun={handleRunOnQiskit} />
+      <p style={s.copy}>This program is regenerated from the current circuit above. Load the Bell preset, add gates, change their order, or reset the register and the Python source will follow. The Run button executes the matching circuit in the Python Qiskit + Aer service.</p>
     </Lesson>
   </div><MultiQubitInspector state={state} mode={view} onModeChange={setView} /></div></div>;
 }
