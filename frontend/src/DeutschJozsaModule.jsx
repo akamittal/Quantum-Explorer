@@ -91,7 +91,7 @@ export default function DeutschJozsaModule({ onNavigate }) {
         <span style={styles.eyebrow}>ALGORITHM INDEX</span>
         <button type="button" style={styles.navItem} onClick={() => { setMenuOpen(false); onNavigate?.("1.1"); }}>M1.1: Single-Qubit Foundations</button>
         <button type="button" style={styles.navItem} onClick={() => { setMenuOpen(false); onNavigate?.("2.1"); }}>M2.1: Multi-Qubit Systems</button>
-        <button type="button" style={styles.navItem} onClick={() => { setMenuOpen(false); onNavigate?.("3.1"); }}>M3.1: Deutsch's Algorithm</button>
+        <button type="button" style={styles.navItem} onClick={() => { setMenuOpen(false); onNavigate?.("3.1"); }}>M2.1: Deutsch's Algorithm</button>
         <button type="button" style={{ ...styles.navItem, color: "#10b981" }} onClick={() => setMenuOpen(false)}>[x] M3.2: Deutsch–Jozsa Algorithm</button>
         <button type="button" style={styles.navItem} onClick={() => { setMenuOpen(false); onNavigate?.("2.3"); }}>M2.3: Bernstein–Vazirani Algorithm</button>
       </aside>}

@@ -35,7 +35,7 @@ Below is the verified master engineering catalog of the platform. Items marked w
 ### 📊 Module 3: Advanced Transform & Number Theory Systems
 
 - [x] **3.1 The Quantum Fourier Transform (QFT):** Exact discrete Fourier transform derivation, roots-of-unity and unitarity proofs, binary phase factorization, controlled-phase gate decomposition, bit-reversal swaps, inverse QFT, interactive complex phase spectrum, and Qiskit verification across 2–4 qubits. Mapping from spatial computational matrix amplitudes to phase frequency spectrum grids, optimized to run in O(n²) time blocks.
-- [ ] **3.2 Quantum Phase Estimation (QPE):** Unitary matrix eigenvalue digital extractor subsystem layout.
+- [x] **3.2 Quantum Phase Estimation (QPE):** Eigenvalue/eigenphase derivation, phase kickback, controlled powers of a unitary, inverse-QFT extraction, exact and non-exact phase distributions, precision analysis, interactive eigenphase laboratory, and Qiskit/Aer statevector verification.
 - [ ] **3.3 Shor's Factoring Cryptanalysis Framework:** High-dimensional mathematical spiral engine visually demonstrating period-finding mechanics to audit RSA architecture safety keys.
 
 ### 🎯 Module 4: Geometric Search & Amplitude Amplification
@@ -162,6 +162,8 @@ In the multi-qubit module, add gates to the circuit using its gate controls, or 
 In **Module 1.4: Quantum Entanglement Space**, select any of the four Bell states, switch between Z- and X-basis correlation checks, or move the Schmidt-angle slider to create a partially entangled state. The Qiskit panel executes the same preparation circuit and includes the basis-change gates selected for the measurement. The button remains disabled while the circuit is empty or a request is already running.
 
 In **Module 3.1: Quantum Fourier Transform**, change the register size, select a computational-basis or superposition input, and compare forward and inverse transforms. The complex phase wheel displays the amplitude phases, while the Qiskit panel executes the matching Hadamard, controlled-phase and wire-swap circuit.
+
+In **Module 3.2: Quantum Phase Estimation**, prepare the target eigenstate of a phase gate, vary the eigenphase and counting-register precision, and inspect phase kickback, the full controlled-power/inverse-QFT circuit, the ideal probability distribution and the measured binary estimate. The Qiskit panel executes the complete circuit and reports finite-shot phase-register counts.
 
 The Node backend exposes:
 

@@ -262,3 +262,68 @@ def test_three_qubit_qft_decomposition_matches_the_discrete_fourier_transform():
             angle = 2 * math.pi * basis_index * output_index / 8
             assert amplitude["re"] == pytest.approx(math.cos(angle) / math.sqrt(8), abs=1e-10)
             assert amplitude["im"] == pytest.approx(math.sin(angle) / math.sqrt(8), abs=1e-10)
+
+
+
+def test_three_counting_qubit_qpe_recovers_exact_eigenphase():
+    phase = 3 / 8
+    operations = [
+        {"name": "X", "qubit": 3},
+        {"name": "H", "qubit": 0},
+        {"name": "H", "qubit": 1},
+        {"name": "H", "qubit": 2},
+        {"name": "CP", "control": 0, "target": 3, "theta": 2 * math.pi * phase},
+        {"name": "CP", "control": 1, "target": 3, "theta": 2 * math.pi * phase * 2},
+        {"name": "CP", "control": 2, "target": 3, "theta": 2 * math.pi * phase * 4},
+        {"name": "SWAP", "first": 0, "second": 2},
+        {"name": "H", "qubit": 0},
+        {"name": "CP", "control": 0, "target": 1, "theta": -math.pi / 2},
+        {"name": "H", "qubit": 1},
+        {"name": "CP", "control": 0, "target": 2, "theta": -math.pi / 4},
+        {"name": "CP", "control": 1, "target": 2, "theta": -math.pi / 2},
+        {"name": "H", "qubit": 2},
+    ]
+    response = client.post("/execute", json={
+        "num_qubits": 4, "operations": operations, "shots": 2048
+    })
+    assert response.status_code == 200
+    data = response.json()
+    state = data["statevector"]
+    for index, amplitude in enumerate(state):
+        expected = 1.0 if index == 11 else 0.0
+        assert amplitude["re"] == pytest.approx(expected, abs=1e-10)
+        assert amplitude["im"] == pytest.approx(0.0, abs=1e-10)
+    assert data["probabilities"]["1011"] == pytest.approx(1.0)
+    assert sum(data["counts"].values()) == 2048
+
+
+def test_non_binary_qpe_phase_has_normalized_distribution():
+    phase = 0.3
+    counting_qubits = 4
+    operations = [{"name": "X", "qubit": 4}]
+    operations.extend({"name": "H", "qubit": qubit} for qubit in range(counting_qubits))
+    operations.extend({
+        "name": "CP", "control": qubit, "target": 4,
+        "theta": 2 * math.pi * phase * (2 ** qubit),
+    } for qubit in range(counting_qubits))
+    operations.extend([
+        {"name": "SWAP", "first": 1, "second": 2},
+        {"name": "SWAP", "first": 0, "second": 3},
+        {"name": "H", "qubit": 0},
+        {"name": "CP", "control": 0, "target": 1, "theta": -math.pi / 2},
+        {"name": "CP", "control": 0, "target": 2, "theta": -math.pi / 4},
+        {"name": "CP", "control": 0, "target": 3, "theta": -math.pi / 8},
+        {"name": "H", "qubit": 1},
+        {"name": "CP", "control": 1, "target": 2, "theta": -math.pi / 2},
+        {"name": "CP", "control": 1, "target": 3, "theta": -math.pi / 4},
+        {"name": "H", "qubit": 2},
+        {"name": "CP", "control": 2, "target": 3, "theta": -math.pi / 2},
+        {"name": "H", "qubit": 3},
+    ])
+    response = client.post("/execute", json={
+        "num_qubits": 5, "operations": operations, "shots": 256
+    })
+    assert response.status_code == 200
+    probabilities = response.json()["probabilities"]
+    assert sum(probabilities.values()) == pytest.approx(1.0)
+    assert probabilities["10101"] == max(probabilities.values())

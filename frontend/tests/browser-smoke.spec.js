@@ -78,7 +78,7 @@ test("measurement shots display observed counts that sum to requested shots", as
 test("Deutsch algorithm classifies all four oracle functions in the new module", async ({ page }, testInfo) => {
   const pageErrors = await openWorkspace(page, testInfo);
   await page.getByRole("button", { name: /MENU INDEX/i }).click();
-  await page.getByRole("button", { name: /M3\.1: Deutsch's Algorithm/i }).click();
+  await page.getByRole("button", { name: /M2\.1: Deutsch's Algorithm/i }).click();
   await expect(page.getByRole("heading", { name: "Deutsch's algorithm" })).toBeVisible();
 
   await page.getByRole("button", { name: /MENU INDEX/i }).click();
@@ -98,10 +98,10 @@ test("Deutsch algorithm classifies all four oracle functions in the new module",
 test("Deutsch-Jozsa builds a truth-table oracle, explains the promise, and runs through Qiskit", async ({ page }, testInfo) => {
   const pageErrors = await openWorkspace(page, testInfo);
   await page.getByRole("button", { name: /MENU INDEX/i }).click();
-  await page.getByRole("button", { name: /M3\.1: Deutsch's Algorithm/i }).click();
+  await page.getByRole("button", { name: /M2\.1: Deutsch's Algorithm/i }).click();
   await expect(page.getByRole("heading", { name: "Deutsch's algorithm" })).toBeVisible();
   await page.getByRole("button", { name: /MENU INDEX/i }).click();
-  await page.getByRole("button", { name: /M3\.2: Deutsch–Jozsa Algorithm/i }).click();
+  await page.getByRole("button", { name: /M2\.2: Deutsch–Jozsa Algorithm/i }).click();
 
   await expect(page.getByRole("heading", { name: "Deutsch–Jozsa algorithm" })).toBeVisible();
   await expect(page.getByText("BALANCED PROMISE SATISFIED")).toBeVisible();
@@ -282,6 +282,57 @@ test("Quantum Fourier Transform explores phase ramps, inverse recovery, and exec
   await expect(page.getByText("0.00e+0")).toBeVisible();
   await page.getByLabel("INPUT STATE FAMILY").selectOption("uniform");
   await expect(page.getByText("100.00%", { exact: true })).toBeVisible();
+  expect(pageErrors).toEqual([]);
+});
+
+test("Quantum Phase Estimation extracts an eigenphase and verifies the controlled-power circuit in Qiskit", async ({ page }, testInfo) => {
+  const pageErrors = await openWorkspace(page, testInfo);
+  await page.getByRole("button", { name: /MENU INDEX/i }).click();
+  await page.getByRole("button", { name: /M3\.2: Quantum Phase Estimation/i }).click();
+  await expect(page.getByRole("heading", { name: "Quantum Phase Estimation" })).toBeVisible();
+  await expect(page.getByText("PHASE-KICKBACK AMPLITUDES")).toBeVisible();
+  await expect(page.getByText("0101", { exact: true }).first()).toBeVisible();
+  await expect(page.getByText("100.00%", { exact: true }).first()).toBeVisible();
+
+  let requestPayload;
+  await page.route("**/api/qiskit/execute", async (route) => {
+    requestPayload = route.request().postDataJSON();
+    const statevector = Array.from({ length: 32 }, (_, index) => ({
+      index,
+      bitstring: index.toString(2).padStart(5, "0"),
+      re: index === 21 ? 1 : 0,
+      im: 0,
+      probability: index === 21 ? 1 : 0,
+    }));
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({
+        engine: "qiskit-aer",
+        shots: 4096,
+        stdout: "Circuit:\\nQPE controlled powers and inverse QFT\\nStatevector:",
+        statevector,
+        probabilities: Object.fromEntries(statevector.map((item) => [item.bitstring, item.probability])),
+        counts: { "10101": 4096 },
+      }),
+    });
+  });
+  await page.getByRole("button", { name: /Run Python on Qiskit/i }).click();
+  await expect(page.getByText("Execution result")).toBeVisible();
+  expect(requestPayload.num_qubits).toBe(5);
+  expect(requestPayload.operations[0]).toMatchObject({ name: "X", qubit: 4 });
+  expect(requestPayload.operations.slice(1, 5)).toEqual([0, 1, 2, 3].map((qubit) => ({ name: "H", qubit })));
+  const controlledPowers = requestPayload.operations.filter((operation) => operation.name === "CP" && operation.target === 4);
+  expect(controlledPowers).toHaveLength(4);
+  controlledPowers.forEach((operation, qubit) => {
+    expect(operation.control).toBe(qubit);
+    expect(operation.theta).toBeCloseTo(2 * Math.PI * 0.3125 * 2 ** qubit, 12);
+  });
+  expect(requestPayload.operations.filter((operation) => operation.name === "SWAP")).toHaveLength(2);
+  await expect(page.getByText("4096 shots")).toBeVisible();
+
+  await page.getByRole("button", { name: /Non-exact · 0.3/i }).click();
+  await expect(page.getByText("0101", { exact: true }).first()).toBeVisible();
   expect(pageErrors).toEqual([]);
 });
 
