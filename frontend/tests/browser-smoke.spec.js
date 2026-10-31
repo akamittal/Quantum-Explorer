@@ -56,10 +56,10 @@ test("Deutsch algorithm classifies all four oracle functions in the new module",
 
   await expect(page.getByText("BALANCED", { exact: true }).first()).toBeVisible();
   await page.getByRole("button", { name: /Constant 0/i }).click();
-  await expect(page.locator("strong").filter({ hasText: "CONSTANT" }).first()).toBeVisible();
+  await expect(page.locator("section").filter({ hasText: "SIMULATOR'S CLASSIFICATION" }).getByText("CONSTANT", { exact: true })).toBeVisible();
   await page.getByRole("button", { name: /Constant 1/i }).click();
   await expect(page.locator("strong").filter({ hasText: "CONSTANT" }).first()).toBeVisible();
   await page.getByRole("button", { name: /Balanced: f\(x\)=1−x/i }).click();
-  await expect(page.locator("strong").filter({ hasText: "BALANCED" }).first()).toBeVisible();
+  await expect(page.locator("section").filter({ hasText: "SIMULATOR'S CLASSIFICATION" }).getByText("BALANCED", { exact: true })).toBeVisible();
   expect(pageErrors).toEqual([]);
 });
