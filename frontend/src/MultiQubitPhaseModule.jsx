@@ -16,8 +16,6 @@ import {
 } from "./multiQubitCircuit";
 
 const ZERO = () => createZeroRegister(2);
-const COMPLEX_ZERO = { re: 0, im: 0 };
-const clamp = (value) => Math.max(-1, Math.min(1, value));
 const magnitude = (a) => Math.hypot(a.re, a.im);
 const phase = (a) => Math.atan2(a.im, a.re);
 const degrees = (radians) => radians * 180 / Math.PI;
@@ -112,18 +110,6 @@ function AmplitudeInspector({ state }) {
     })}
     <div style={styles.normLine}>Σ |aᵢ|² = {probabilities.reduce((sum, p) => sum + p, 0).toFixed(6)}</div>
   </div>;
-}
-
-function matrixForGate(name) {
-  const matrices = {
-    H: String.raw`\frac{1}{\sqrt2}\begin{bmatrix}1&1\\1&-1\end{bmatrix}`,
-    X: String.raw`\begin{bmatrix}0&1\\1&0\end{bmatrix}`,
-    Y: String.raw`\begin{bmatrix}0&-i\\i&0\end{bmatrix}`,
-    Z: String.raw`\begin{bmatrix}1&0\\0&-1\end{bmatrix}`,
-    S: String.raw`\begin{bmatrix}1&0\\0&i\end{bmatrix}`,
-    T: String.raw`\begin{bmatrix}1&0\\0&e^{i\pi/4}\end{bmatrix}`,
-  };
-  return matrices[name];
 }
 
 export default function MultiQubitPhaseModule({ onNavigate }) {
