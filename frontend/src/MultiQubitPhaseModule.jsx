@@ -209,6 +209,7 @@ export default function MultiQubitPhaseModule({ onNavigate }) {
       <button style={styles.navItem} onClick={() => onNavigate?.("3.2")}>M3.2: Deutsch–Jozsa</button>
       <button style={styles.navItem} onClick={() => onNavigate?.("2.3")}>M2.3: Bernstein–Vazirani</button>
       <button style={styles.navItem} onClick={() => setMenuOpen(false)}>M1.3: Matrix & Phase Studio</button>
+      <button style={styles.navItem} onClick={() => onNavigate?.("1.4")}>M1.4: Quantum Entanglement Space</button>
     </aside>}
 
     <main style={styles.mainGrid}>
