@@ -60,16 +60,16 @@ function CircuitDiagram({ bellName }) {
       <text x="18" y="50" fill="#67e8f9" fontSize="14" fontFamily="monospace">q1</text>
       <text x="18" y="116" fill="#67e8f9" fontSize="14" fontFamily="monospace">q0</text>
       <path d="M48 46H594 M48 112H594" stroke="#64748b" strokeWidth="1.5" />
-      <rect x="106" y="91" width="42" height="42" rx="6" fill="#123b43" stroke="#34d399" />
-      <text x="127" y="117" textAnchor="middle" fill="#d1fae5" fontSize="18" fontWeight="700">H</text>
-      <path d="M170 112H222V46H266" stroke="#34d399" strokeWidth="2" fill="none" />
-      <circle cx="222" cy="112" r="5" fill="#34d399" />
-      <circle cx="266" cy="46" r="14" fill="none" stroke="#34d399" strokeWidth="2" />
-      <path d="M266 32V60 M252 46H280" stroke="#34d399" strokeWidth="2" />
-      {bellName === "Phi-" || bellName === "Psi-" ? <g><rect x="165" y="91" width="42" height="42" rx="6" fill="#3b2c19" stroke="#fbbf24" /><text x="186" y="117" textAnchor="middle" fill="#fef3c7" fontSize="18" fontWeight="700">Z</text></g> : null}
-      {bellName === "Psi+" || bellName === "Psi-" ? <g><rect x="320" y="25" width="42" height="42" rx="6" fill="#123b43" stroke="#34d399" /><text x="341" y="51" textAnchor="middle" fill="#d1fae5" fontSize="18" fontWeight="700">X</text></g> : null}
-      <text x="410" y="43" fill="#94a3b8" fontSize="11">target</text>
-      <text x="410" y="109" fill="#94a3b8" fontSize="11">control</text>
+      <rect x="90" y="91" width="42" height="42" rx="6" fill="#123b43" stroke="#34d399" />
+      <text x="111" y="117" textAnchor="middle" fill="#d1fae5" fontSize="18" fontWeight="700">H</text>
+      {bellName === "Phi-" || bellName === "Psi-" ? <g><rect x="160" y="91" width="42" height="42" rx="6" fill="#3b2c19" stroke="#fbbf24" /><text x="181" y="117" textAnchor="middle" fill="#fef3c7" fontSize="18" fontWeight="700">Z</text></g> : null}
+      <path d="M275 46V112" stroke="#34d399" strokeWidth="2" />
+      <circle cx="275" cy="112" r="5" fill="#34d399" />
+      <circle cx="275" cy="46" r="14" fill="none" stroke="#34d399" strokeWidth="2" />
+      <path d="M275 32V60 M261 46H289" stroke="#34d399" strokeWidth="2" />
+      {bellName === "Psi+" || bellName === "Psi-" ? <g><rect x="350" y="25" width="42" height="42" rx="6" fill="#123b43" stroke="#34d399" /><text x="371" y="51" textAnchor="middle" fill="#d1fae5" fontSize="18" fontWeight="700">X</text></g> : null}
+      <text x="420" y="43" fill="#94a3b8" fontSize="11">target</text>
+      <text x="420" y="109" fill="#94a3b8" fontSize="11">control</text>
       <text x="48" y="151" fill="#64748b" fontSize="10">q0 is the rightmost bit in |q1q0⟩ and controls the CNOT</text>
     </svg>
   </div>;
@@ -97,12 +97,12 @@ export default function EntanglementModule({ onNavigate }) {
   const oppositeParity = measurementProbabilities[1] + measurementProbabilities[2];
   const isBellPreset = Boolean(BELL_STATE_PRESETS[bellName]);
   const bellInfo = BELL_INFO[bellName] || null;
-  const qiskitOperations = measurementOperations.map((operation) => {
+  const qiskitOperations = useMemo(() => measurementOperations.map((operation) => {
     if (["CNOT", "CX"].includes(operation.name.toUpperCase())) return { name: "CX", control: operation.control, target: operation.target };
     if (["CZ", "SWAP"].includes(operation.name.toUpperCase())) return { name: operation.name.toUpperCase(), first: operation.first, second: operation.second };
     return { name: operation.name.toUpperCase(), qubit: operation.target, theta: operation.theta };
-  });
-  const pythonCode = useMemo(() => generateQiskitPythonCode({ numQubits: 2, operations: qiskitOperations, shots: 1000 }), [JSON.stringify(qiskitOperations)]);
+  }), [measurementOperations]);
+  const pythonCode = useMemo(() => generateQiskitPythonCode({ numQubits: 2, operations: qiskitOperations, shots: 1000 }), [qiskitOperations]);
 
   const clearExecution = () => { setQiskitResult(null); setQiskitError(""); };
   const loadBell = (name) => {
@@ -186,7 +186,7 @@ export default function EntanglementModule({ onNavigate }) {
         <Section number="1.4.3" title="THE FOUR BELL STATES ARE FOUR DISTINCT ENTANGLED STATES">
           <p style={s.copy}>The four Bell states form an orthonormal basis for the two-qubit state space. Local X and Z operations change which Bell state is prepared. The sign between the two terms is a relative phase, so it cannot be read from computational-basis probabilities alone.</p>
           <div style={s.bellGrid}>
-            {Object.entries(BELL_INFO).map(([name, info]) => <button key={name} type="button" onClick={() => loadBell(name)} aria-pressed={bellName === name} style={{ ...s.bellCard, borderColor: bellName === name ? "#34d399" : "#1e3a4a", background: bellName === name ? "rgba(16,185,129,.1)" : "rgba(15,23,42,.72)" }}>
+            {Object.entries(BELL_INFO).map(([name, info]) => <button key={name} type="button" onClick={() => loadBell(name)} aria-label={"Load Bell state " + name} aria-pressed={bellName === name} style={{ ...s.bellCard, borderColor: bellName === name ? "#34d399" : "#1e3a4a", background: bellName === name ? "rgba(16,185,129,.1)" : "rgba(15,23,42,.72)" }}>
               <strong>{info.symbol}</strong><code>{info.ket}</code><small>{name === "Phi+" ? "same Z · same X" : name === "Phi-" ? "same Z · opposite X" : name === "Psi+" ? "opposite Z · same X" : "opposite Z · opposite X"}</small>
             </button>)}
           </div>
