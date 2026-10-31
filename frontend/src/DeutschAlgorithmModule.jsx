@@ -110,6 +110,7 @@ export default function DeutschAlgorithmModule({ onNavigate }) {
         <section style={styles.lesson}>
           <h2 style={styles.heading}>// 3.1.4 FINAL HADAMARD AND ANSWER</h2>
           <Equation formula={String.raw`H\frac{|0\rangle+|1\rangle}{\sqrt2}=|0\rangle,\qquad H\frac{|0\rangle-|1\rangle}{\sqrt2}=|1\rangle`} />
+          <p style={styles.copy}>Apply the final Hadamard to each input term and collect the coefficients:</p><Equation formula={"|\\psi_3\\rangle=\\frac12[((-1)^{f(0)}+(-1)^{f(1)})|0\\rangle+((-1)^{f(0)}-(-1)^{f(1)})|1\\rangle]\\otimes|{-}\\rangle"} /><p style={styles.copy}>For a constant function, the |0⟩ coefficient is ±1 and the |1⟩ coefficient is 0. For a balanced function, the |0⟩ coefficient is 0 and the |1⟩ coefficient is ±1. Therefore q0 is measured as 0 for constant functions and 1 for balanced functions.</p>
           <div style={styles.answerCard}>
             <span style={styles.eyebrow}>SIMULATOR'S CLASSIFICATION</span>
             <strong style={styles.answer}>{result.classification.toUpperCase()}</strong>
