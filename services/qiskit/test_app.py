@@ -23,6 +23,10 @@ def test_hadamard_statevector_and_measurement_distribution():
     assert data["probabilities"]["0"] == pytest.approx(0.5)
     assert data["probabilities"]["1"] == pytest.approx(0.5)
     assert sum(data["counts"].values()) == 4000
+    assert "Circuit:" in data["stdout"]
+    assert "Statevector:" in data["stdout"]
+    assert "Exact basis probabilities:" in data["stdout"]
+    assert "Measurement counts (4000 shots):" in data["stdout"]
     assert abs(data["counts"].get("0", 0) / 4000 - 0.5) < 0.05
 
 

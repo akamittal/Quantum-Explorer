@@ -23,7 +23,12 @@ export default function QiskitExecutionPanel({ operations, code, result, loading
             <strong>Execution result</strong>
             <span>{result.engine || "qiskit-aer"} · {result.shots.toLocaleString()} shots</span>
           </div>
-          <p style={styles.hint}>Basis labels use Qiskit's convention. Bit strings follow Qiskit ordering: q0 is the rightmost bit.</p>
+          <p style={styles.hint}>This is the captured output from the Python Qiskit execution, including the values printed by the generated program.</p>
+          <div style={styles.stdoutFrame}>
+            <div style={styles.stdoutHeader}><strong>PYTHON OUTPUT / STDOUT</strong><span>Actual backend output</span></div>
+            <pre style={styles.stdout}>{result.stdout || "The service returned no console output."}</pre>
+          </div>
+          <p style={styles.hint}>Structured results are also shown below for easier inspection. Bit strings follow Qiskit ordering: q0 is the rightmost bit.</p>
           <div style={styles.grid}>
             {result.statevector.map((item) => (
               <div key={item.index} style={styles.metric}>
@@ -46,6 +51,9 @@ export default function QiskitExecutionPanel({ operations, code, result, loading
 }
 
 const styles = {
+  stdoutFrame: { background: "#050911", border: "1px solid rgba(16,185,129,0.22)", borderRadius: "3px", overflow: "hidden" },
+  stdoutHeader: { display: "flex", justifyContent: "space-between", gap: "0.5rem", padding: "0.6rem 0.75rem", color: "#a7f3d0", background: "#080d18", fontFamily: "monospace", fontSize: "0.7rem" },
+  stdout: { margin: 0, padding: "0.9rem", maxHeight: "360px", overflow: "auto", whiteSpace: "pre", color: "#d1fae5", fontFamily: "Consolas, Fira Code, Monaco, monospace", fontSize: "0.72rem", lineHeight: 1.6 },
   codeFrame: { background: "#050911", border: "1px solid rgba(6,182,212,0.16)", borderRadius: "3px", overflow: "hidden" },
   codeHeader: { display: "flex", justifyContent: "space-between", gap: "0.5rem", padding: "0.6rem 0.75rem", color: "#67e8f9", background: "#080d18", fontFamily: "monospace", fontSize: "0.7rem" },
   code: { margin: 0, padding: "0.9rem", maxHeight: "420px", overflow: "auto", whiteSpace: "pre", color: "#d1fae5", fontFamily: "Consolas, Fira Code, Monaco, monospace", fontSize: "0.72rem", lineHeight: 1.6 },
