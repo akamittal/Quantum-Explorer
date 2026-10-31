@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import {
   applyCNOT,
+  applyMCX,
   applyCZ,
   applyGateToRegister,
   applySWAP,
@@ -63,6 +64,23 @@ test("independent Hadamards create four equally likely outcomes, not a Bell pair
     { name: "H", target: 1 },
   ]);
   getRegisterProbabilities(state).forEach((probability) => closeTo(probability, 0.25));
+});
+
+test("MCX flips the target only when all controls are one", () => {
+  const input = createBasisRegister(4, "0111");
+  const state = applyMCX(input, [0, 1, 2], 3);
+  closeTo(state.amplitudes[15].re, 1);
+  closeTo(state.amplitudes[7].re, 0);
+  const unchanged = applyMCX(createBasisRegister(4, "0101"), [0, 1, 2], 3);
+  closeTo(unchanged.amplitudes[5].re, 1);
+});
+
+test("MCX validates controls and target", () => {
+  const state = createZeroRegister(3);
+  assert.throws(() => applyMCX(state, [], 2), /at least one control/);
+  assert.throws(() => applyMCX(state, [0, 0], 2), /unique/);
+  assert.throws(() => applyMCX(state, [0, 2], 2), /cannot also be a control/);
+  assert.throws(() => applyMCX(state, [0, 3], 2), /qubitIndex/);
 });
 
 test("CZ adds a phase only to the |11> amplitude", () => {
