@@ -316,7 +316,7 @@ e^{i\theta/2}\beta
           <Equation formula={String.raw`R_Y(\theta)=cI-isY=\begin{bmatrix}c&0\\0&c\end{bmatrix}+\begin{bmatrix}0&-s\\s&0\end{bmatrix}=\boxed{\begin{bmatrix}c&-s\\s&c\end{bmatrix}}`} />
           <span style={styles.label}>Z-AXIS</span>
           <Equation formula={String.raw`R_Z(\theta)=cI-isZ=\begin{bmatrix}c-is&0\\0&c+is\end{bmatrix}=\boxed{\begin{bmatrix}e^{-i\theta/2}&0\\0&e^{i\theta/2}\end{bmatrix}}`} />
-          <p style={styles.copy}>For Z, Euler’s formula e^{ix} = cos(x) + i sin(x) gives c − is = e^{−iθ/2} and c + is = e^{iθ/2}.</p>
+          <p style={styles.copy}>For Z, Euler’s formula says e to the power ix equals cos(x) plus i sin(x). Therefore c minus is equals e to the power −iθ/2, and c plus is equals e to the power iθ/2.</p>
         </article>
         <article style={styles.gateCard}>
           <h4 style={styles.gateName}>Step 4: Apply each rotation to a general state</h4>
