@@ -348,7 +348,17 @@ e^{i\theta/2}\beta
         </article>
         <article style={styles.gateCard}>
           <h4 style={styles.gateName}>Step 5: Why a half-angle in amplitudes gives a full Bloch-sphere rotation</h4>
-          <p style={styles.copy}>A pure state can be parameterized as cos(ϑ/2)|0⟩ + e^{iφ}sin(ϑ/2)|1⟩. The Bloch-sphere coordinates use ϑ and φ, while the state amplitudes use their half-angles. Therefore the operator parameter θ rotates the Bloch vector through θ, even though its matrix contains θ/2.</p>
+          <p style={styles.copy}>
+            A pure state can be parameterized by its polar angle ϑ and
+            azimuthal angle φ:
+          </p>
+          <Equation formula={String.raw`|\\psi\\rangle=\\cos(\\vartheta/2)|0\\rangle+e^{i\\varphi}\\sin(\\vartheta/2)|1\\rangle`} />
+          <p style={styles.copy}>
+            The Bloch-sphere coordinates use the full angles ϑ and φ, while
+            the amplitudes contain their half-angles. Therefore a rotation
+            operator with parameter θ rotates the Bloch vector through θ,
+            even though its matrix contains θ/2.
+          </p>
           <div style={styles.rotationDiagram} role="img" aria-label="Schematic Bloch sphere showing a state vector turning through angle theta around an axis">
             <svg viewBox="0 0 340 190" width="100%" height="190" xmlns="http://www.w3.org/2000/svg">
               <ellipse cx="170" cy="94" rx="78" ry="78" fill="none" stroke="#475569" strokeWidth="1.5" />
