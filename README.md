@@ -28,7 +28,7 @@ Below is the verified master engineering catalog of the platform. Items marked w
 
 ### 🧮 Module 2: Algebraic & Oracle-Based Algorithms
 
-- [ ] **2.1 Deutsch's Algorithm:** 1-bit balance vs. constant classification, black-box mathematical oracle matrix injection, and step-by-step global phase-kickback visual flowcharts.
+- [x] **2.1 Deutsch's Algorithm:** 1-bit balance vs. constant classification, black-box mathematical oracle matrix injection, and step-by-step global phase-kickback visual flowcharts.
 - [ ] **2.2 Deutsch-Jozza Algorithm:** Scaling oracle evaluation up to n-bit input fields, proving exponential quantum query reduction.
 - [ ] **2.3 Bernstein-Vazirani Algorithm:** Hidden parity string bitstring extraction in exactly 1 quantum pass vs. n classical passes.
 
@@ -200,6 +200,34 @@ node scripts/qiskit-cross-check.mjs
 ```
 
 The cross-check compares representative single-qubit circuits and allows physically irrelevant global phase while requiring matching state probabilities. CI runs these checks independently from the frontend browser tests.
+
+## 🤖 AI Quantum Tutor
+
+The AI Quantum Tutor is available from the single-qubit, multi-qubit, and Deutsch algorithm workspaces through the **ASK AI TUTOR** control. It sends the current module and relevant simulator snapshot with the learner's question, so explanations can refer to the selected oracle, gate sequence, amplitudes, probabilities, Bloch coordinates, and other available state.
+
+### Configure the AI provider
+
+The AI provider is called only by the Node backend. The Gemini API key must never be placed in frontend environment variables or committed to source control.
+
+1. Copy `backend/.env.example` to `backend/.env`.
+2. Add a Google AI Studio API key to `GEMINI_API_KEY`.
+3. Optionally change `GEMINI_MODEL` to another model available to your API key.
+4. Restart the Node backend.
+
+Example backend environment:
+
+```dotenv
+GEMINI_API_KEY=your-google-ai-studio-key
+GEMINI_MODEL=gemini-2.5-flash
+```
+
+The chat endpoint is `POST /api/ai/chat`. It accepts a question, bounded conversation history, and lesson/simulator context. Requests are limited to 20 per IP address per minute in this initial implementation. The tutor does not execute code or change the simulator; use the Qiskit execution panel for actual circuit execution.
+
+**Data handling:** Questions, the recent conversation sent with the request, and the supplied lesson/simulator context are sent from the backend to Google's Gemini API to generate a reply. The current implementation keeps chat history in frontend memory only; it is not saved to a Quantum Explorer database. Do not submit passwords, API keys, or other secrets in tutor conversations. Google's API terms and data handling policies apply to provider requests.
+
+The initial AI milestone establishes the provider connection, secure server-side key handling, context-aware chat UI, mathematical rendering for common LaTeX delimiters, bounded input/history, and backend/frontend tests. Screenshot understanding, retrieval from the full encyclopedia, user accounts, saved chat history, voice, and provider selection UI remain future work.
+
+---
 
 ## 📜 License
 
