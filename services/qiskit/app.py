@@ -30,6 +30,7 @@ class Operation(BaseModel):
     theta: float | None = None
     first: int | None = None
     second: int | None = None
+    controls: list[int] | None = None
 
 
 class ExecuteRequest(BaseModel):
@@ -62,6 +63,19 @@ def build_circuit(payload: ExecuteRequest) -> QuantumCircuit:
                 if not (0 <= control < payload.num_qubits and 0 <= target < payload.num_qubits):
                     raise ValueError("CX qubit indices are out of range")
                 circuit.cx(control, target)
+            elif name == "MCX":
+                controls, target = operation.controls, operation.target
+                if controls is None or len(controls) < 1:
+                    raise ValueError("MCX requires at least one control qubit")
+                if len(set(controls)) != len(controls):
+                    raise ValueError("MCX control qubits must be unique")
+                if target is None or target in controls:
+                    raise ValueError("MCX requires a target distinct from every control")
+                if any(not 0 <= control < payload.num_qubits for control in controls):
+                    raise ValueError("MCX control qubit indices are out of range")
+                if not 0 <= target < payload.num_qubits:
+                    raise ValueError("MCX target qubit index is out of range")
+                circuit.mcx(controls, target)
             elif name in {"CZ", "SWAP"}:
                 first, second = operation.first, operation.second
                 if first is None or second is None or first == second:
