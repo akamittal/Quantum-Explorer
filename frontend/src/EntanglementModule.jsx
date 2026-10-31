@@ -90,12 +90,12 @@ function CircuitDiagram({ bellName }) {
       <path d="M48 46H594 M48 112H594" stroke="#64748b" strokeWidth="1.5" />
       <rect x="90" y="91" width="42" height="42" rx="6" fill="#123b43" stroke="#34d399" />
       <text x="111" y="117" textAnchor="middle" fill="#d1fae5" fontSize="18" fontWeight="700">H</text>
-      {bellName === "Phi-" || bellName === "Psi-" ? <g><rect x="160" y="91" width="42" height="42" rx="6" fill="#3b2c19" stroke="#fbbf24" /><text x="181" y="117" textAnchor="middle" fill="#fef3c7" fontSize="18" fontWeight="700">Z</text></g> : null}
       <path d="M275 46V112" stroke="#34d399" strokeWidth="2" />
       <circle cx="275" cy="112" r="5" fill="#34d399" />
       <circle cx="275" cy="46" r="14" fill="none" stroke="#34d399" strokeWidth="2" />
       <path d="M275 32V60 M261 46H289" stroke="#34d399" strokeWidth="2" />
       {bellName === "Psi+" || bellName === "Psi-" ? <g><rect x="350" y="25" width="42" height="42" rx="6" fill="#123b43" stroke="#34d399" /><text x="371" y="51" textAnchor="middle" fill="#d1fae5" fontSize="18" fontWeight="700">X</text></g> : null}
+      {bellName === "Phi-" || bellName === "Psi-" ? <g><rect x="420" y="25" width="42" height="42" rx="6" fill="#3b2c19" stroke="#fbbf24" /><text x="441" y="51" textAnchor="middle" fill="#fef3c7" fontSize="18" fontWeight="700">Z</text></g> : null}
       <text x="420" y="43" fill="#94a3b8" fontSize="11">target</text>
       <text x="420" y="109" fill="#94a3b8" fontSize="11">control</text>
       <text x="48" y="151" fill="#64748b" fontSize="10">q0 is the rightmost bit in |q1q0⟩ and controls the CNOT</text>
@@ -276,6 +276,8 @@ export default function EntanglementModule({ onNavigate }) {
             <div style={s.rangeEnds}><span>0° · product state</span><span>45° · Bell state</span></div>
             <button type="button" style={s.secondaryButton} onClick={loadProduct}>Load independent |+⟩ ⊗ |+⟩ product state</button>
           </div>
+          <p style={s.copy}>Worked value: at θ = 30°, the state is (√3/2)|00⟩ + (1/2)|11⟩. The Schmidt probabilities are 0.75 and 0.25, the entropy is approximately 0.8113 bits, and concurrence is √3/2 ≈ 0.8660. At θ = 45°, both Schmidt probabilities become 0.5 and the state reaches one full bit of entanglement entropy.</p>
+          <Eq>{"C(\\theta)=\\sin(2\\theta), \\quad S(30^\\circ)=-0.75\\log_2(0.75)-0.25\\log_2(0.25)\\approx0.8113"}</Eq>
           <p style={s.copy}>The slider controls the Schmidt coefficients directly. Entanglement entropy rises smoothly from zero to one bit, while concurrence rises from zero to one. The global state remains pure throughout.</p>
         </Section>
 
