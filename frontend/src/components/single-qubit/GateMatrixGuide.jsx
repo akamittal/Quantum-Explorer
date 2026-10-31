@@ -236,13 +236,13 @@ export default function GateMatrixGuide() {
           <h4 style={styles.gateName}>Rotation around X (RX)</h4>
           <Equation formula={String.raw`R_X(\theta)=
 \begin{bmatrix}
-\cos(\theta/2)&-i\sin(\theta/2)\
+\cos(\theta/2)&-i\sin(\theta/2)\\
 -i\sin(\theta/2)&\cos(\theta/2)
 \end{bmatrix}`} />
           <Equation formula={String.raw`R_X(\theta)\begin{bmatrix}\alpha\\beta\end{bmatrix}
 =
 \begin{bmatrix}
-\cos(\theta/2)\alpha-i\sin(\theta/2)\beta\
+\cos(\theta/2)\alpha-i\sin(\theta/2)\beta\\
 -i\sin(\theta/2)\alpha+\cos(\theta/2)\beta
 \end{bmatrix}`} />
         </article>
@@ -250,13 +250,13 @@ export default function GateMatrixGuide() {
           <h4 style={styles.gateName}>Rotation around Y (RY)</h4>
           <Equation formula={String.raw`R_Y(\theta)=
 \begin{bmatrix}
-\cos(\theta/2)&-\sin(\theta/2)\
+\cos(\theta/2)&-\sin(\theta/2)\\
 \sin(\theta/2)&\cos(\theta/2)
 \end{bmatrix}`} />
           <Equation formula={String.raw`R_Y(\theta)\begin{bmatrix}\alpha\\beta\end{bmatrix}
 =
 \begin{bmatrix}
-\cos(\theta/2)\alpha-\sin(\theta/2)\beta\
+\cos(\theta/2)\alpha-\sin(\theta/2)\beta\\
 \sin(\theta/2)\alpha+\cos(\theta/2)\beta
 \end{bmatrix}`} />
         </article>
@@ -264,13 +264,13 @@ export default function GateMatrixGuide() {
           <h4 style={styles.gateName}>Rotation around Z (RZ)</h4>
           <Equation formula={String.raw`R_Z(\theta)=
 \begin{bmatrix}
-e^{-i\theta/2}&0\
+e^{-i\theta/2}&0\\
 0&e^{i\theta/2}
 \end{bmatrix}`} />
           <Equation formula={String.raw`R_Z(\theta)\begin{bmatrix}\alpha\\beta\end{bmatrix}
 =
 \begin{bmatrix}
-e^{-i\theta/2}\alpha\
+e^{-i\theta/2}\alpha\\
 e^{i\theta/2}\beta
 \end{bmatrix}`} />
         </article>
