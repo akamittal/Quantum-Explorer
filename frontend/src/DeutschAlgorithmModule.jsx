@@ -3,6 +3,7 @@ import MathRenderer from "./MathRenderer";
 import { executeWithQiskit } from "./qiskitApi";
 import QiskitExecutionPanel from "./components/single-qubit/QiskitExecutionPanel";
 import { generateQiskitPythonCode } from "./qiskitCode";
+import AIAssistant from "./AIAssistant";
 import { DEUTSCH_ORACLES, runDeutschAlgorithm } from "./deutschAlgorithm";
 
 function Equation({ formula }) {
@@ -141,6 +142,17 @@ export default function DeutschAlgorithmModule({ onNavigate }) {
           <QiskitExecutionPanel operations={operations} code={pythonCode} result={qiskitResult} loading={qiskitLoading} error={qiskitError} onRun={runOnQiskit} />
         </section>
       </div>
+      <AIAssistant
+        moduleTitle="Deutsch's Algorithm"
+        lessonContext="Constant versus balanced one-bit Boolean functions, oracle construction, Hadamard preparation, phase kickback, final Hadamard and one-query classification."
+        simulatorContext={{
+          oracle,
+          oracleDescription: oracleInfo.description,
+          classification: result.classification,
+          inputProbabilities: result.inputProbabilities,
+          operations
+        }}
+      />
     </main>
   );
 }
