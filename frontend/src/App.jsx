@@ -113,6 +113,12 @@ export default function App() {
               >
                 {activeModulePage === "3.1" ? "[x]" : "[ ]"} M3.1: Deutsch's Algorithm
               </button>
+              <button
+                onClick={() => { setActiveModulePage("3.2"); setIsSidebarOpen(false); }}
+                style={{ textAlign: "left", background: "transparent", border: "none", color: activeModulePage === "3.2" ? "#10b981" : "#9ca3af", fontFamily: "monospace", cursor: "pointer", fontSize: "0.875rem" }}
+              >
+                {activeModulePage === "3.2" ? "[x]" : "[ ]"} M3.2: Deutsch–Jozsa Algorithm
+              </button>
             </div>
           </div>
         )}
