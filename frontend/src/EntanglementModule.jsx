@@ -53,6 +53,34 @@ function AmplitudeMap({ state }) {
     })}
   </div>;
 }
+function EntanglementLink({ bellName }) {
+  const info = BELL_INFO[bellName] || BELL_INFO["Phi+"];
+  return <div style={s.linkFrame}>
+    <svg viewBox="0 0 720 190" role="img" aria-label={"Two separated qubits connected by one joint entangled state, " + info.symbol} style={{ width: "100%" }}>
+      <defs>
+        <linearGradient id="entanglement-link-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stopColor="#0e7490" />
+          <stop offset="50%" stopColor="#34d399" />
+          <stop offset="100%" stopColor="#0e7490" />
+        </linearGradient>
+        <filter id="entanglement-link-glow"><feGaussianBlur stdDeviation="5" result="blur" /><feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
+      </defs>
+      <path d="M142 86 C250 8 470 8 578 86" fill="none" stroke="url(#entanglement-link-gradient)" strokeWidth="3" filter="url(#entanglement-link-glow)" />
+      <path d="M142 102 C250 180 470 180 578 102" fill="none" stroke="#155e75" strokeWidth="1.5" strokeDasharray="5 7" />
+      <circle cx="110" cy="94" r="42" fill="#0b2533" stroke="#22d3ee" strokeWidth="2" />
+      <circle cx="610" cy="94" r="42" fill="#0b2533" stroke="#22d3ee" strokeWidth="2" />
+      <text x="110" y="101" textAnchor="middle" fill="#cffafe" fontSize="22" fontWeight="700">q0</text>
+      <text x="610" y="101" textAnchor="middle" fill="#cffafe" fontSize="22" fontWeight="700">q1</text>
+      <rect x="273" y="63" width="174" height="58" rx="12" fill="#071525" stroke="#166534" />
+      <text x="360" y="86" textAnchor="middle" fill="#a7f3d0" fontSize="12" fontFamily="monospace">ONE JOINT STATE</text>
+      <text x="360" y="105" textAnchor="middle" fill="#f8fafc" fontSize="16" fontWeight="700">{info.symbol}</text>
+      <text x="110" y="158" textAnchor="middle" fill="#94a3b8" fontSize="11">50/50 locally</text>
+      <text x="610" y="158" textAnchor="middle" fill="#94a3b8" fontSize="11">50/50 locally</text>
+    </svg>
+    <p style={s.smallCopy}>The connecting curve represents shared quantum correlations, not a physical message travelling between the qubits. Neither endpoint can choose its random local result.</p>
+  </div>;
+}
+
 function CircuitDiagram({ bellName }) {
   return <div style={s.circuitFrame}>
     <div style={s.circuitLabel}>BELL-PAIR PREPARATION · {BELL_INFO[bellName].symbol}</div>
@@ -78,7 +106,7 @@ function CircuitDiagram({ bellName }) {
 export default function EntanglementModule({ onNavigate }) {
   const [bellName, setBellName] = useState("Phi+");
   const [operations, setOperations] = useState(cloneOperations(BELL_STATE_PRESETS["Phi+"]));
-  const [customTheta, setCustomTheta] = useState(Math.PI / 8);
+  const [customTheta, setCustomTheta] = useState(Math.PI / 4);
   const [measurementBasis, setMeasurementBasis] = useState("Z");
   const [menuOpen, setMenuOpen] = useState(false);
   const [qiskitLoading, setQiskitLoading] = useState(false);
@@ -191,6 +219,7 @@ export default function EntanglementModule({ onNavigate }) {
             </button>)}
           </div>
           <p style={s.copy}>{bellInfo ? bellInfo.description : "The current state is not one of the four Bell basis states."}</p>
+          <EntanglementLink bellName={bellName} />
           <Eq>{"\\langle\\Phi^+|\\Phi^-\\rangle=\\langle\\Phi^+|\\Psi^+\\rangle=\\cdots=0"}</Eq>
           <p style={s.copy}>Orthogonality means an ideal measurement in the Bell basis can distinguish these four states perfectly. The two local measurement settings below reveal their different correlation patterns without requiring a joint Bell-basis measurement.</p>
         </Section>
@@ -207,7 +236,11 @@ export default function EntanglementModule({ onNavigate }) {
           <p style={s.copy}>Diagonalize either reduced density matrix. Its eigenvalues λ₁ and λ₂ are non-negative and sum to one. The von Neumann entropy of either subsystem is the Shannon entropy of those eigenvalues, measured here in bits.</p>
           <Eq>{"S(\\rho_{q0})=-\\operatorname{Tr}(\\rho_{q0}\\log_2\\rho_{q0})=-\\sum_{i=1}^{2}\\lambda_i\\log_2\\lambda_i"}</Eq>
           <p style={s.copy}>For a pure two-qubit state, this entropy is zero exactly when the state is a product. It reaches one bit when both Schmidt probabilities are one half. The concurrence C = 2|ad − bc| is another pure-state entanglement measure, ranging from zero to one.</p>
-          <Eq>{"C=2|ad-bc|, \\qquad 0\\leq C\\leq1"}</Eq>
+          <Eq>{"C=2|ad-bc|=2\\sqrt{\\det(\\rho_{q0})}, \\qquad 0\\leq C\\leq1"}</Eq>
+          <p style={s.copy}>The Schmidt decomposition writes every pure bipartite state as a sum of paired orthonormal local states. The squared Schmidt coefficients are exactly the eigenvalues of either reduced density matrix. For two qubits, concurrence determines those two eigenvalues:</p>
+          <Eq>{"|\\Psi\\rangle=\\sqrt{\\lambda_+}|u_+\\rangle|v_+\\rangle+\\sqrt{\\lambda_-}|u_-\\rangle|v_-\\rangle"}</Eq>
+          <Eq>{"\\lambda_\\pm=\\frac{1\\pm\\sqrt{1-C^2}}{2}, \\quad \\lambda_+ + \\lambda_-=1"}</Eq>
+          <p style={s.copy}>A product state has Schmidt spectrum (1, 0), entropy 0 and concurrence 0. A Bell state has spectrum (1/2, 1/2), entropy 1 bit, concurrence 1 and local purity 1/2. The two reduced states always have the same non-zero eigenvalues because they are the two sides of one pure bipartite state.</p>
           <p style={s.copy}>The live diagnostics below compute the reduced matrices, their eigenvalues, entropy, purity and concurrence directly from the current complex amplitudes. The calculation does not infer entanglement from measurement correlations alone.</p>
         </Section>
 
@@ -360,6 +393,7 @@ const s = {
   inspectorLabel: { color: "#67e8f9", fontFamily: "monospace", fontSize: ".62rem" },
   localStatus: { display: "flex", justifyContent: "space-between", color: "#cbd5e1", fontSize: ".78rem" },
   resetButton: { border: "1px solid #065f46", background: "rgba(16,185,129,.1)", color: "#a7f3d0", borderRadius: "6px", padding: ".7rem", cursor: "pointer", fontFamily: "monospace", fontSize: ".7rem" },
+  linkFrame: { margin: "1rem 0", padding: ".8rem", background: "#050b16", border: "1px solid #1e3a4a", borderRadius: "8px", overflow: "hidden" },
   circuitFrame: { background: "#050b16", border: "1px solid #1e3a4a", borderRadius: "8px", padding: ".7rem", overflow: "hidden" },
   circuitLabel: { color: "#94a3b8", fontSize: ".62rem", fontFamily: "monospace", marginBottom: ".3rem" },
 };
