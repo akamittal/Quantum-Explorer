@@ -15,6 +15,17 @@ test("all four Bell circuits produce maximally entangled states", () => {
   for (const [name, operations] of Object.entries(BELL_STATE_PRESETS)) {
     const state = run(operations);
     const result = analyzeTwoQubitEntanglement(state);
+    const rootHalf = Math.SQRT1_2;
+    const expectedAmplitudes = {
+      "Phi+": [rootHalf, 0, 0, rootHalf],
+      "Phi-": [rootHalf, 0, 0, -rootHalf],
+      "Psi+": [0, rootHalf, rootHalf, 0],
+      "Psi-": [0, rootHalf, -rootHalf, 0],
+    }[name];
+    state.amplitudes.forEach((amplitude, index) => {
+      closeTo(amplitude.re, expectedAmplitudes[index]);
+      closeTo(amplitude.im, 0);
+    });
     assert.equal(result.isEntangled, true, name);
     assert.equal(result.isMaximallyEntangled, true, name);
     assert.equal(result.isProductState, false, name);
