@@ -124,35 +124,35 @@ export default function QuantumPhaseEstimationModule({ onNavigate }) {
       <section style={s.section}>
         <h2 style={s.heading}>// 3.2.1 THE PROBLEM: A UNITARY'S EIGENPHASE</h2>
         <p style={s.copy}>A unitary matrix U preserves vector lengths and inner products. Its eigenvector |u⟩ is a state that keeps its direction after U acts. Only a complex number, the eigenvalue, changes its phase:</p>
-        <Eq formula={"U|u\\\\rangle=\\\\lambda|u\\\\rangle,\\\\qquad |\\\\lambda|=1,\\\\qquad \\\\lambda=e^{2\\\\pi i\\\\phi}"}/>
+        <Eq formula={"U|u\\rangle=\\lambda|u\\rangle,\\qquad |\\lambda|=1,\\qquad \\lambda=e^{2\\pi i\\phi}"}/>
         <p style={s.copy}>The real number φ is the eigenphase, defined modulo one. QPE estimates φ in the interval [0, 1). The eigenstate is an input resource: this first implementation uses a one-qubit phase gate whose eigenstate |1⟩ has the selected eigenphase.</p>
-        <Eq formula={"P(2\\\\pi\\\\phi)=\\\\begin{bmatrix}1&0\\\\\\\\0&e^{2\\\\pi i\\\\phi}\\\\end{bmatrix},\\\\qquad P(2\\\\pi\\\\phi)|1\\\\rangle=e^{2\\\\pi i\\\\phi}|1\\\\rangle"}/>
+        <Eq formula={"P(2\\pi\\phi)=\\begin{bmatrix}1&0\\0&e^{2\\pi i\\phi}\\end{bmatrix},\\qquad P(2\\pi\\phi)|1\\rangle=e^{2\\pi i\\phi}|1\\rangle"}/>
       </section>
 
       <section style={s.section}>
         <h2 style={s.heading}>// 3.2.2 PHASE KICKBACK: WHY A COUNTING REGISTER LEARNS THE PHASE</h2>
         <p style={s.copy}>Prepare m counting qubits in |0⟩ and the target in its eigenstate |u⟩. Hadamards create an equal superposition of all integers j from 0 to N−1, where N = 2ᵐ:</p>
-        <Eq formula={"|0\\\\rangle^{\\\\otimes m}|u\\\\rangle\\\\xrightarrow{H^{\\\\otimes m}}\\\\frac1{\\\\sqrt N}\\\\sum_{j=0}^{N-1}|j\\\\rangle|u\\\\rangle"}/>
+        <Eq formula={"|0\\rangle^{\\otimes m}|u\\rangle\\xrightarrow{H^{\\otimes m}}\\frac1{\\sqrt N}\\sum_{j=0}^{N-1}|j\\rangle|u\\rangle"}/>
         <p style={s.copy}>The circuit applies controlled powers U, U², U⁴, and so on. If the counting register contains integer j, the target experiences Uʲ. Because |u⟩ is an eigenstate, Uʲ multiplies it by the eigenvalue raised to j:</p>
-        <Eq formula={"U^j|u\\\\rangle=(e^{2\\\\pi i\\\\phi})^j|u\\\\rangle=e^{2\\\\pi i j\\\\phi}|u\\\\rangle"}/>
-        <Eq formula={"\\\\frac1{\\\\sqrt N}\\\\sum_{j=0}^{N-1}e^{2\\\\pi i j\\\\phi}|j\\\\rangle|u\\\\rangle"}/>
+        <Eq formula={"U^j|u\\rangle=(e^{2\\pi i\\phi})^j|u\\rangle=e^{2\\pi i j\\phi}|u\\rangle"}/>
+        <Eq formula={"\\frac1{\\sqrt N}\\sum_{j=0}^{N-1}e^{2\\pi i j\\phi}|j\\rangle|u\\rangle"}/>
         <p style={s.copy}>The target returns to the same eigenstate. The phase has been transferred into the relative phases of the counting register. This is phase kickback. No measurement has happened yet.</p>
       </section>
 
       <section style={s.section}>
         <h2 style={s.heading}>// 3.2.3 THE CONTROLLED-POWER CIRCUIT</h2>
         <p style={s.copy}>Write j in binary. A counting qubit qₖ contributes 2ᵏ to j when it is |1⟩. Therefore its controlled operation must apply U raised to 2ᵏ. For our phase-gate example, that controlled power is exactly one controlled-phase gate:</p>
-        <Eq formula={"U^{2^k}=P(2\\\\pi\\\\phi\\\\,2^k),\\\\qquad CP(2\\\\pi\\\\phi\\\\,2^k)_{q_k,t}"}/>
+        <Eq formula={"U^{2^k}=P(2\\pi\\phi\\,2^k),\\qquad CP(2\\pi\\phi\\,2^k)_{q_k,t}"}/>
         <p style={s.copy}>The least-significant counting wire q0 controls U¹; q1 controls U²; q2 controls U⁴. The target wire is qₘ and begins in |1⟩. This gives a real, executable Qiskit circuit rather than an abstract oracle placeholder.</p>
         <QpeCircuit countingQubits={countingQubits} phase={phase}/>
-        <Eq formula={"\\\\prod_{k=0}^{m-1}e^{2\\\\pi i\\\\phi\\\\,2^k b_k}=e^{2\\\\pi i\\\\phi\\\\sum_k2^kb_k}=e^{2\\\\pi i\\\\phi j}"}/>
+        <Eq formula={"\\prod_{k=0}^{m-1}e^{2\\pi i\\phi\\,2^k b_k}=e^{2\\pi i\\phi\\sum_k2^kb_k}=e^{2\\pi i\\phi j}"}/>
       </section>
 
       <section style={s.section}>
         <h2 style={s.heading}>// 3.2.4 INVERSE QFT: TURN PHASE INTO BITS</h2>
         <p style={s.copy}>After phase kickback, the counting register contains a phase ramp. If φ has an exact m-bit binary representation, φ = a/N, each amplitude has phase 2πaj/N. The inverse QFT maps that phase ramp to the single basis state |a⟩:</p>
-        <Eq formula={"|\\\\Phi_\\\\phi\\\\rangle=\\\\frac1{\\\\sqrt N}\\\\sum_{j=0}^{N-1}e^{2\\\\pi i j\\\\phi}|j\\\\rangle"}/>
-        <Eq formula={"QFT_N^\\\\dagger|\\\\Phi_{a/N}\\\\rangle=|a\\\\rangle,\\\\qquad a\\\\in\\\\{0,\\\\ldots,N-1\\\\}"}/>
+        <Eq formula={"|\\Phi_\\phi\\rangle=\\frac1{\\sqrt N}\\sum_{j=0}^{N-1}e^{2\\pi i j\\phi}|j\\rangle"}/>
+        <Eq formula={"QFT_N^\\dagger|\\Phi_{a/N}\\rangle=|a\\rangle,\\qquad a\\in\\{0,\\ldots,N-1\\}"}/>
         <p style={s.copy}>For example, φ = 5/16 = 0.0101₂. Four counting qubits return the bit string 0101 with probability one in an ideal noiseless circuit. The output integer divided by 16 is the phase estimate.</p>
         <Eq formula={"0.0101_2=0/2+1/4+0/8+1/16=5/16=0.3125"}/>
       </section>
@@ -160,9 +160,9 @@ export default function QuantumPhaseEstimationModule({ onNavigate }) {
       <section style={s.section}>
         <h2 style={s.heading}>// 3.2.5 WHEN THE PHASE DOES NOT FIT THE REGISTER</h2>
         <p style={s.copy}>Most phases do not have exactly m binary digits. Then inverse QFT produces a probability distribution instead of one certain answer. The amplitude for observing integer k is a finite geometric sum:</p>
-        <Eq formula={"A_k=\\\\frac1N\\\\sum_{j=0}^{N-1}e^{2\\\\pi i j(\\\\phi-k/N)}"}/>
-        <Eq formula={"P(k)=|A_k|^2=\\\\frac1{N^2}\\\\left|\\\\frac{1-e^{2\\\\pi iN(\\\\phi-k/N)}}{1-e^{2\\\\pi i(\\\\phi-k/N)}}\\\\right|^2"}/>
-        <Eq formula={"P(k)=\\\\left[\\\\frac{\\\\sin(\\\\pi N(\\\\phi-k/N))}{N\\\\sin(\\\\pi(\\\\phi-k/N))}\\\\right]^2"}/>
+        <Eq formula={"A_k=\\frac1N\\sum_{j=0}^{N-1}e^{2\\pi i j(\\phi-k/N)}"}/>
+        <Eq formula={"P(k)=|A_k|^2=\\frac1{N^2}\\left|\\frac{1-e^{2\\pi iN(\\phi-k/N)}}{1-e^{2\\pi i(\\phi-k/N)}}\\right|^2"}/>
+        <Eq formula={"P(k)=\\left[\\frac{\\sin(\\pi N(\\phi-k/N))}{N\\sin(\\pi(\\phi-k/N))}\\right]^2"}/>
         <p style={s.copy}>The most likely integer is normally the nearest grid point to Nφ. More counting qubits make the grid finer. The output is an estimate, not a promise that every phase is recovered exactly.</p>
       </section>
 
@@ -206,15 +206,15 @@ export default function QuantumPhaseEstimationModule({ onNavigate }) {
       <section style={s.section}>
         <h2 style={s.heading}>// 3.2.7 WHAT IF THE TARGET IS A SUPERPOSITION OF EIGENSTATES?</h2>
         <p style={s.copy}>A unitary has an orthonormal eigenbasis. If the target is prepared as a superposition of eigenstates, QPE becomes a measurement of which eigenphase component is present. The probability of observing an eigenphase is the squared magnitude of its coefficient:</p>
-        <Eq formula={"|\\\\psi\\\\rangle=\\\\sum_r c_r|u_r\\\\rangle,\\\\qquad U|u_r\\\\rangle=e^{2\\\\pi i\\\\phi_r}|u_r\\\\rangle"}/>
-        <Eq formula={"\\\\operatorname{QPE}\\\\left(\\\\frac1{\\\\sqrt N}\\\\sum_j|j\\\\rangle|\\\\psi\\\\rangle\\\\right)=\\\\sum_r c_r|\\\\widetilde{\\\\phi_r}\\\\rangle|u_r\\\\rangle"}/>
+        <Eq formula={"|\\psi\\rangle=\\sum_r c_r|u_r\\rangle,\\qquad U|u_r\\rangle=e^{2\\pi i\\phi_r}|u_r\\rangle"}/>
+        <Eq formula={"\\operatorname{QPE}\\left(\\frac1{\\sqrt N}\\sum_j|j\\rangle|\\psi\\rangle\\right)=\\sum_r c_r|\\widetilde{\\phi_r}\\rangle|u_r\\rangle"}/>
         <p style={s.copy}>In the ideal exact case, the phase register and eigenstate become correlated. Measuring the phase register samples eigenphase φᵣ with probability |cᵣ|². This lesson starts with one known eigenstate so the phase-estimation mechanism can be isolated and inspected.</p>
       </section>
 
       <section style={s.section}>
         <h2 style={s.heading}>// 3.2.8 COST, PRECISION AND APPLICATIONS</h2>
         <p style={s.copy}>An m-qubit counting register resolves phase on a grid of N = 2ᵐ points. The inverse QFT uses m Hadamards, m(m−1)/2 controlled-phase gates and floor(m/2) swaps. QPE additionally needs controlled U powers with exponents 1, 2, 4, …, 2ᵐ⁻¹.</p>
-        <Eq formula={"N=2^m,\\\\qquad \\\\Delta\\\\phi=1/N=2^{-m}"}/>
+        <Eq formula={"N=2^m,\\qquad \\Delta\\phi=1/N=2^{-m}"}/>
         <p style={s.copy}>The cost of implementing U raised to large powers depends on the physical problem. A black-box model may count controlled-U calls; a gate-level model must account for the cost of building those powers. Approximate inverse QFT can reduce small rotations, but it changes the error distribution.</p>
         <ul style={s.list}>
           <li><strong>Quantum chemistry:</strong> estimate molecular energy eigenvalues from controlled time-evolution operators.</li>
