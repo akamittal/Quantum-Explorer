@@ -34,7 +34,7 @@ Below is the verified master engineering catalog of the platform. Items marked w
 
 ### 📊 Module 3: Advanced Transform & Number Theory Systems
 
-- [ ] **3.1 The Quantum Fourier Transform (QFT):** Mapping from spatial computational matrix amplitudes to phase frequency spectrum grids, optimized to run in O(n²) time blocks.
+- [x] **3.1 The Quantum Fourier Transform (QFT):** Exact discrete Fourier transform derivation, roots-of-unity and unitarity proofs, binary phase factorization, controlled-phase gate decomposition, bit-reversal swaps, inverse QFT, interactive complex phase spectrum, and Qiskit verification across 2–4 qubits. Mapping from spatial computational matrix amplitudes to phase frequency spectrum grids, optimized to run in O(n²) time blocks.
 - [ ] **3.2 Quantum Phase Estimation (QPE):** Unitary matrix eigenvalue digital extractor subsystem layout.
 - [ ] **3.3 Shor's Factoring Cryptanalysis Framework:** High-dimensional mathematical spiral engine visually demonstrating period-finding mechanics to audit RSA architecture safety keys.
 
@@ -160,6 +160,8 @@ In the single-qubit module, add one or more gates using the **+ H**, **+ X**, **
 In the multi-qubit module, add gates to the circuit using its gate controls, or load a preset such as **Load Bell state**. Then use the Qiskit execution panel.
 
 In **Module 1.4: Quantum Entanglement Space**, select any of the four Bell states, switch between Z- and X-basis correlation checks, or move the Schmidt-angle slider to create a partially entangled state. The Qiskit panel executes the same preparation circuit and includes the basis-change gates selected for the measurement. The button remains disabled while the circuit is empty or a request is already running.
+
+In **Module 3.1: Quantum Fourier Transform**, change the register size, select a computational-basis or superposition input, and compare forward and inverse transforms. The complex phase wheel displays the amplitude phases, while the Qiskit panel executes the matching Hadamard, controlled-phase and wire-swap circuit.
 
 The Node backend exposes:
 
