@@ -180,3 +180,35 @@ test("AI Quantum Tutor accepts a screenshot and sends it as multimodal input", a
   expect(requestPayload.image.mimeType).toBe("image/png");
   expect(requestPayload.image.data.length).toBeGreaterThan(20);
 });
+
+
+test("Bernstein–Vazirani recovers an editable hidden string and runs the same CNOT circuit in Qiskit", async ({ page }, testInfo) => {
+  const pageErrors = await openWorkspace(page, testInfo);
+  await page.getByRole("button", { name: /MENU INDEX/i }).click();
+  await page.getByRole("button", { name: /M2\.3: Bernstein–Vazirani Algorithm/i }).click();
+  await expect(page.getByRole("heading", { name: "Bernstein–Vazirani algorithm" })).toBeVisible();
+  await expect(page.getByText("101", { exact: true }).first()).toBeVisible();
+  await expect(page.getByText("RECOVERED HIDDEN STRING")).toBeVisible();
+  await expect(page.locator("pre").filter({ hasText: "qc.cx(2, 3)" })).toBeVisible();
+  await page.getByRole("button", { name: "Toggle secret bit s2" }).click();
+  await expect(page.getByText("001", { exact: true }).first()).toBeVisible();
+
+  let requestPayload;
+  await page.route("**/api/qiskit/execute", async (route) => {
+    requestPayload = route.request().postDataJSON();
+    const statevector = Array.from({ length: 16 }, (_, index) => ({
+      index, bitstring: index.toString(2).padStart(4, "0"),
+      re: index === 1 ? Math.SQRT1_2 : index === 9 ? -Math.SQRT1_2 : 0,
+      im: 0, probability: index === 1 || index === 9 ? 0.5 : 0,
+    }));
+    await route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({
+      engine: "qiskit-aer", shots: 1000, stdout: "Circuit:\\nBernstein-Vazirani oracle\\nStatevector:",
+      statevector, counts: { "0001": 1000 },
+    }) });
+  });
+  await page.getByRole("button", { name: /Run Python on Qiskit/i }).click();
+  await expect(page.getByText("Execution result")).toBeVisible();
+  expect(requestPayload.num_qubits).toBe(4);
+  expect(requestPayload.operations.some((operation) => operation.name === "CX" && operation.control === 2 && operation.target === 3)).toBe(true);
+  expect(pageErrors).toEqual([]);
+});
