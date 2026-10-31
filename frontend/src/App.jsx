@@ -9,6 +9,7 @@ const BernsteinVaziraniModule = lazy(() => import("./BernsteinVaziraniModule"));
 const MultiQubitPhaseModule = lazy(() => import("./MultiQubitPhaseModule"));
 const EntanglementModule = lazy(() => import("./EntanglementModule"));
 const QuantumFourierTransformModule = lazy(() => import("./QuantumFourierTransformModule"));
+const QuantumPhaseEstimationModule = lazy(() => import("./QuantumPhaseEstimationModule"));
 const BlochSphereView = lazy(() => import("./BlochSphereView"));
 import IntroHUD from "./IntroHUD";
 import MantraSequence from "./MantraSequence";
@@ -48,6 +49,10 @@ export default function App() {
     }
   };
 
+  if (narrativePhase === 4 && activeModulePage === "qpe") {
+    return <Suspense fallback={<div role="status" style={{ minHeight: "100vh", display: "grid", placeItems: "center", color: "#94a3b8", background: "#030712" }}>Loading Quantum Phase Estimation lesson…</div>}><QuantumPhaseEstimationModule onNavigate={(page) => setActiveModulePage(page)} /></Suspense>;
+  }
+
   if (narrativePhase === 4 && activeModulePage === "qft") {
     return <Suspense fallback={<div role="status" style={{ minHeight: "100vh", display: "grid", placeItems: "center", color: "#94a3b8", background: "#030712" }}>Loading Quantum Fourier Transform studio…</div>}><QuantumFourierTransformModule onNavigate={(page) => setActiveModulePage(page)} /></Suspense>;
   }
@@ -64,7 +69,7 @@ export default function App() {
     return <Suspense fallback={<div role="status" style={{ minHeight: "100vh", display: "grid", placeItems: "center", color: "#94a3b8", background: "#030712" }}>Loading Bernstein–Vazirani lesson…</div>}><BernsteinVaziraniModule onNavigate={(page) => setActiveModulePage(page)} /></Suspense>;
   }
 
-  if (narrativePhase === 4 && activeModulePage === "3.2") {
+  if (narrativePhase === 4 && activeModulePage === "2.2") {
     return <Suspense fallback={<div role="status" style={{ minHeight: "100vh", display: "grid", placeItems: "center", color: "#94a3b8", background: "#030712" }}>Loading Deutsch–Jozsa lesson…</div>}><DeutschJozsaModule onNavigate={(page) => setActiveModulePage(page)} /></Suspense>;
   }
 
@@ -158,10 +163,16 @@ export default function App() {
                 {activeModulePage === "qft" ? "[x]" : "[ ]"} M3.1: Quantum Fourier Transform
               </button>
               <button
-                onClick={() => { setActiveModulePage("3.2"); setIsSidebarOpen(false); }}
-                style={{ textAlign: "left", background: "transparent", border: "none", color: activeModulePage === "3.2" ? "#10b981" : "#9ca3af", fontFamily: "monospace", cursor: "pointer", fontSize: "0.875rem" }}
+                onClick={() => { setActiveModulePage("qpe"); setIsSidebarOpen(false); }}
+                style={{ textAlign: "left", background: "transparent", border: "none", color: activeModulePage === "qpe" ? "#10b981" : "#9ca3af", fontFamily: "monospace", cursor: "pointer", fontSize: "0.875rem" }}
               >
-                {activeModulePage === "3.2" ? "[x]" : "[ ]"} M3.2: Deutsch–Jozsa Algorithm
+                {activeModulePage === "qpe" ? "[x]" : "[ ]"} M3.2: Quantum Phase Estimation
+              </button>
+              <button
+                onClick={() => { setActiveModulePage("2.2"); setIsSidebarOpen(false); }}
+                style={{ textAlign: "left", background: "transparent", border: "none", color: activeModulePage === "2.2" ? "#10b981" : "#9ca3af", fontFamily: "monospace", cursor: "pointer", fontSize: "0.875rem" }}
+              >
+                {activeModulePage === "2.2" ? "[x]" : "[ ]"} M2.2: Deutsch–Jozsa Algorithm
               </button>
             </div>
           </div>
