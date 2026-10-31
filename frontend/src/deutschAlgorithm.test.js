@@ -1,29 +1,28 @@
-import { describe, expect, it } from "vitest";
+import test from "node:test";
+import assert from "node:assert/strict";
 import { buildDeutschOperations, DEUTSCH_ORACLES, runDeutschAlgorithm } from "./deutschAlgorithm.js";
 
-describe("Deutsch algorithm", () => {
-  it("defines all four valid one-bit oracle functions", () => {
-    expect(Object.keys(DEUTSCH_ORACLES)).toEqual(["constant0", "constant1", "identity", "not"]);
+  test("defines all four valid one-bit oracle functions", () => {
+    assert.deepEqual(Object.keys(DEUTSCH_ORACLES), ["constant0", "constant1", "identity", "not"]);
   });
-  it.each(["constant0", "constant1"])("%s is classified as constant", (oracle) => {
+  for (const oracle of ["constant0", "constant1"]) test(`${oracle} is classified as constant`, () => {
     const result = runDeutschAlgorithm(oracle);
-    expect(result.classification).toBe("constant");
-    expect(result.inputProbabilities.zero).toBeCloseTo(1);
-    expect(result.inputProbabilities.one).toBeCloseTo(0);
+    assert.equal(result.classification, "constant");
+    assert.ok(Math.abs(result.inputProbabilities.zero - 1) < 1e-10);
+    assert.ok(Math.abs(result.inputProbabilities.one) < 1e-10);
   });
-  it.each(["identity", "not"])("%s is classified as balanced", (oracle) => {
+  for (const oracle of ["identity", "not"]) test(`${oracle} is classified as balanced`, () => {
     const result = runDeutschAlgorithm(oracle);
-    expect(result.classification).toBe("balanced");
-    expect(result.inputProbabilities.zero).toBeCloseTo(0);
-    expect(result.inputProbabilities.one).toBeCloseTo(1);
+    assert.equal(result.classification, "balanced");
+    assert.ok(Math.abs(result.inputProbabilities.zero) < 1e-10);
+    assert.ok(Math.abs(result.inputProbabilities.one - 1) < 1e-10);
   });
-  it("builds the expected oracle operations for each function", () => {
-    expect(buildDeutschOperations("constant0").filter((op) => op.name === "CNOT")).toHaveLength(0);
-    expect(buildDeutschOperations("constant1").filter((op) => op.name === "X")).toHaveLength(2);
-    expect(buildDeutschOperations("identity").filter((op) => op.name === "CNOT")).toHaveLength(1);
-    expect(buildDeutschOperations("not").filter((op) => op.name === "CNOT")).toHaveLength(1);
+  test("builds the expected oracle operations for each function", () => {
+    assert.equal(buildDeutschOperations("constant0").filter((op) => op.name === "CNOT").length, 0);
+    assert.equal(buildDeutschOperations("constant1").filter((op) => op.name === "X").length, 2);
+    assert.equal(buildDeutschOperations("identity").filter((op) => op.name === "CNOT").length, 1);
+    assert.equal(buildDeutschOperations("not").filter((op) => op.name === "CNOT").length, 1);
   });
-  it("rejects unknown oracle names", () => {
-    expect(() => buildDeutschOperations("unknown")).toThrow(RangeError);
+  test("rejects unknown oracle names", () => {
+    assert.throws(() => buildDeutschOperations("unknown"), RangeError);
   });
-});
