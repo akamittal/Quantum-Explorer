@@ -204,9 +204,9 @@ export default function MultiQubitPhaseModule({ onNavigate }) {
     {menuOpen && <aside style={styles.sidebar}>
       <span style={styles.eyebrow}>CORE MAP REPOSITORY</span>
       <button style={styles.navItem} onClick={() => onNavigate?.("1.1")}>M1.1: Single-Qubit State Space</button>
-      <button style={styles.navItem} onClick={() => onNavigate?.("1.2")}>M2.1: Multi-Qubit Systems</button>
-      <button style={styles.navItem} onClick={() => onNavigate?.("2.1")}>M3.1: Deutsch's Algorithm</button>
-      <button style={styles.navItem} onClick={() => onNavigate?.("2.2")}>M3.2: Deutsch–Jozsa</button>
+      <button style={styles.navItem} onClick={() => onNavigate?.("2.1")}>M2.1: Multi-Qubit Systems</button>
+      <button style={styles.navItem} onClick={() => onNavigate?.("3.1")}>M3.1: Deutsch's Algorithm</button>
+      <button style={styles.navItem} onClick={() => onNavigate?.("3.2")}>M3.2: Deutsch–Jozsa</button>
       <button style={styles.navItem} onClick={() => onNavigate?.("2.3")}>M2.3: Bernstein–Vazirani</button>
       <button style={styles.navItem} onClick={() => setMenuOpen(false)}>M1.3: Matrix & Phase Studio</button>
     </aside>}
