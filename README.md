@@ -24,7 +24,7 @@ Below is the verified master engineering catalog of the platform. Items marked w
 - [x] **1.1 Immersive Quantum Entrance Portal:** Math-driven GPU accelerated particle background, synchronized text alignment cadence, global Sanskrit/IAST Romanization, and user access override tokens.
 - [x] **1.2 The Single Qubit Studio & Bloch Sphere Viewport:** Split-view dashboard workspace hosting formal linear algebra derivations, live complex amplitude telemetry tracking (α, β), and a real-time responsive 3D vector arrow visualization engine.
 - [x] **1.3 Multi-Qubit Matrix Operators & Phase Dynamics:** Full two-qubit 4×4 matrix derivations, tensor-lifted single-qubit gates, controlled-operator matrices, unitary norm proof, interactive complex-amplitude phase maps, relative-phase interference presets, editable gate sequences, and Qiskit verification.
-- [ ] **1.4 Quantum Entanglement Space:** Non-local connection modeling, visual verification pipelines for all 4 fundamental **Bell States**, and Entanglement Entropy numerical readouts.
+- [x] **1.4 Quantum Entanglement Space:** Full derivations of separability, Bell-state preparation, partial trace, reduced density matrices, Schmidt decomposition, von Neumann entropy and concurrence; interactive verification of all four Bell states, Z/X-basis parity correlations, continuous Schmidt-angle entanglement, live complex-amplitude and density-matrix diagnostics, and Qiskit execution.
 
 ### 🧮 Module 2: Algebraic & Oracle-Based Algorithms
 
