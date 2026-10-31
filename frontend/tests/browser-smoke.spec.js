@@ -321,7 +321,7 @@ test("Quantum Phase Estimation extracts an eigenphase and verifies the controlle
   await expect(page.getByText("Execution result")).toBeVisible();
   expect(requestPayload.num_qubits).toBe(5);
   expect(requestPayload.operations[0]).toMatchObject({ name: "X", qubit: 4 });
-  expect(requestPayload.operations.filter((operation) => operation.name === "H" && operation.qubit < 4)).toHaveLength(4);
+  expect(requestPayload.operations.slice(1, 5)).toEqual([0, 1, 2, 3].map((qubit) => ({ name: "H", qubit })));
   const controlledPowers = requestPayload.operations.filter((operation) => operation.name === "CP" && operation.target === 4);
   expect(controlledPowers).toHaveLength(4);
   controlledPowers.forEach((operation, qubit) => {
