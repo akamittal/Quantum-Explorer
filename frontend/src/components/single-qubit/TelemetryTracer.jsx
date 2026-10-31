@@ -30,11 +30,11 @@ export default function TelemetryTracer({
         </p>
         <div style={styles.mathOutputArea}>
           <MathRenderer
-            formula="\(\lvert\Psi\rangle = \cos(\theta/2)\lvert0\rangle + e^{i\phi}\sin(\theta/2)\lvert1\rangle\)"
+            formula={String.raw`\lvert\Psi\rangle = \cos(\theta/2)\lvert0\rangle + e^{i\phi}\sin(\theta/2)\lvert1\rangle`}
             displayMode={true}
           />
           <MathRenderer
-            formula={`= \\cos(${theta}^\\circ/2)\\lvert0\\rangle + e^{i\\cdot ${phi}^\\circ}\\sin(${theta}^\\circ/2)\\lvert1\\rangle`}
+            formula={`= \\cos(${theta}^\\circ/2)\\lvert0\\rangle + e^{i\\,(${phi}\\pi/180)}\\sin(${theta}^\\circ/2)\\lvert1\\rangle`}
             displayMode={true}
           />
           <MathRenderer

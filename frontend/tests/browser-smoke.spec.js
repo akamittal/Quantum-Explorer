@@ -11,9 +11,7 @@ async function openWorkspace(page) {
 
 test("intro can be bypassed and the single-qubit workspace loads", async ({ page }) => {
   const pageErrors = await openWorkspace(page);
-  await expect(
-    page.getByRole("heading", { name: /FROM KET NOTATION TO COLUMN VECTORS/i })
-  ).toBeVisible();
+  await expect(page.getByRole("heading", { name: /FROM KET NOTATION TO COLUMN VECTORS/i })).toBeVisible();
   await expect(page.getByRole("button", { name: "Hadamard", exact: true })).toBeVisible();
   await expect(page.getByText(/Loading Bloch sphere/i)).toHaveCount(0, { timeout: 15000 });
   expect(pageErrors).toEqual([]);
@@ -22,7 +20,7 @@ test("intro can be bypassed and the single-qubit workspace loads", async ({ page
 test("Hadamard updates the displayed state and expected probabilities", async ({ page }) => {
   await openWorkspace(page);
   await page.getByRole("button", { name: "Hadamard", exact: true }).click();
-  await expect(page.getByText(/POLAR ANGLE/i)).toBeVisible();
+  await expect(page.getByText("POLAR ANGLE (θ - VERTICAL TILT)", { exact: true })).toBeVisible();
   await expect(page.getByText(/50\.0%/).first()).toBeVisible();
   await expect(page.getByText(/100\.0%/)).toHaveCount(0);
 });
@@ -30,7 +28,7 @@ test("Hadamard updates the displayed state and expected probabilities", async ({
 test("Pauli-X flips the measured basis state and reset returns to |0>", async ({ page }) => {
   await openWorkspace(page);
   await page.getByRole("button", { name: "Pauli-X", exact: true }).click();
-  await expect(page.getByText(/POLAR ANGLE/i)).toBeVisible();
+  await expect(page.getByText("POLAR ANGLE (θ - VERTICAL TILT)", { exact: true })).toBeVisible();
   await page.getByRole("button", { name: "Reset to |0⟩", exact: true }).click();
   await expect(page.getByText(/100\.0%/).first()).toBeVisible();
 });
@@ -73,15 +71,10 @@ test("AI Quantum Tutor opens, receives workspace context, and displays its answe
   let requestPayload;
   await page.route("**/api/ai/chat", async (route) => {
     requestPayload = route.request().postDataJSON();
-    await route.fulfill({
-      status: 200,
-      contentType: "application/json",
-      body: JSON.stringify({ reply: "A qubit is a two-level quantum system.", model: "gemini-test" })
-    });
+    await route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({ reply: "A qubit is a two-level quantum system.", model: "gemini-test" }) });
   });
-
   await page.getByRole("button", { name: "Open AI Quantum Tutor" }).click();
-  await expect(page.getByRole("complementary", { name: "AI Quantum Tutor" } )).toBeVisible();
+  await expect(page.getByRole("complementary", { name: "AI Quantum Tutor" })).toBeVisible();
   await expect(page.getByRole("complementary", { name: "AI Quantum Tutor" })).toHaveCSS("z-index", "2147483001");
   await page.getByPlaceholder("Ask your quantum question…").fill("What is a qubit?");
   await page.getByRole("button", { name: /SEND QUESTION/i }).click();
