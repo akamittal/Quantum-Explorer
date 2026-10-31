@@ -139,7 +139,7 @@ export default function MultiQubitPhaseModule({ onNavigate }) {
   const qiskitOperations = useMemo(() => operations.map((op) => {
     if (["CNOT", "CX"].includes(op.name)) return { name: "CX", control: op.control, target: op.target };
     if (["CZ", "SWAP"].includes(op.name)) return { name: op.name, first: op.first, second: op.second };
-    return { name: op.name, target: op.target, theta: op.theta };
+    return { name: op.name, qubit: op.target, theta: op.theta };
   }), [operations]);
   const pythonCode = useMemo(() => generateQiskitPythonCode({
     numQubits: 2, operations: qiskitOperations, shots: 1000,
