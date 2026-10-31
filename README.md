@@ -157,7 +157,9 @@ If the Node backend is running on a port other than 3000, configure the Vite pro
 
 In the single-qubit module, add one or more gates using the **+ H**, **+ X**, **+ Y**, **+ Z**, **+ S**, or **+ T** controls in the **Compose a Circuit** section. Then click **Run on Qiskit · 1,000 shots**. The separate single-gate controls update the local demonstration state; they do not add gates to the Qiskit circuit queue.
 
-In the multi-qubit module, add gates to the circuit using its gate controls, or load a preset such as **Load Bell state**. Then use the Qiskit execution panel. The button remains disabled while the circuit is empty or a request is already running.
+In the multi-qubit module, add gates to the circuit using its gate controls, or load a preset such as **Load Bell state**. Then use the Qiskit execution panel.
+
+In **Module 1.4: Quantum Entanglement Space**, select any of the four Bell states, switch between Z- and X-basis correlation checks, or move the Schmidt-angle slider to create a partially entangled state. The Qiskit panel executes the same preparation circuit and includes the basis-change gates selected for the measurement. The button remains disabled while the circuit is empty or a request is already running.
 
 The Node backend exposes:
 
@@ -203,7 +205,7 @@ The cross-check compares representative single-qubit circuits and allows physica
 
 ## 🤖 AI Quantum Tutor
 
-The AI Quantum Tutor is available from the single-qubit, multi-qubit, and Deutsch algorithm workspaces through the **ASK AI TUTOR** control. It sends the current module and relevant simulator snapshot with the learner's question, so explanations can refer to the selected oracle, gate sequence, amplitudes, probabilities, Bloch coordinates, and other available state.
+The AI Quantum Tutor is available from the single-qubit, multi-qubit, matrix/phase, entanglement, and algorithm workspaces through the **ASK AI TUTOR** control. It sends the current module and relevant simulator snapshot with the learner's question, so explanations can refer to the selected oracle, gate sequence, amplitudes, probabilities, Bloch coordinates, and other available state.
 
 ### Configure the AI provider
 
