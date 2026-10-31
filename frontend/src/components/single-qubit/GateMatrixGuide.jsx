@@ -19,13 +19,13 @@ const gateLessons = [
     matrix: String.raw`H=\frac{1}{\sqrt2}\begin{bmatrix}1&1\\1&-1\\end{bmatrix}`,
     action: String.raw`H\lvert0\rangle =
 \frac{1}{\sqrt2}\begin{bmatrix}1&1\\1&-1\\end{bmatrix}
-\begin{bmatrix}1\0\end{bmatrix}
-=\frac{1}{\sqrt2}\begin{bmatrix}1\1\end{bmatrix}
+\begin{bmatrix}1\\0\end{bmatrix}
+=\frac{1}{\sqrt2}\begin{bmatrix}1\\1\end{bmatrix}
 =\frac{\lvert0\rangle+\lvert1\rangle}{\sqrt2}
 =\lvert+\rangle`,
     second: String.raw`H\lvert1\rangle =
 \frac{1}{\sqrt2}\begin{bmatrix}1&1\\1&-1\\end{bmatrix}
-\begin{bmatrix}0\1\end{bmatrix}
+\begin{bmatrix}0\\1\end{bmatrix}
 =\frac{1}{\sqrt2}\begin{bmatrix}1\-1\end{bmatrix}
 =\frac{\lvert0\rangle-\lvert1\rangle}{\sqrt2}
 =\lvert-\rangle`,
@@ -36,12 +36,12 @@ const gateLessons = [
     matrix: String.raw`X=\begin{bmatrix}0&1\\1&0\\end{bmatrix}`,
     action: String.raw`X\lvert0\rangle =
 \begin{bmatrix}0&1\\1&0\\end{bmatrix}
-\begin{bmatrix}1\0\end{bmatrix}
-=\begin{bmatrix}0\1\end{bmatrix}=\lvert1\rangle`,
+\begin{bmatrix}1\\0\end{bmatrix}
+=\begin{bmatrix}0\\1\end{bmatrix}=\lvert1\rangle`,
     second: String.raw`X\lvert1\rangle =
 \begin{bmatrix}0&1\\1&0\\end{bmatrix}
-\begin{bmatrix}0\1\end{bmatrix}
-=\begin{bmatrix}1\0\end{bmatrix}=\lvert0\rangle`,
+\begin{bmatrix}0\\1\end{bmatrix}
+=\begin{bmatrix}1\\0\end{bmatrix}=\lvert0\rangle`,
   },
   {
     name: "Pauli-Y gate (Y)",
@@ -49,12 +49,12 @@ const gateLessons = [
     matrix: String.raw`Y=\begin{bmatrix}0&-i\\i&0\\end{bmatrix}`,
     action: String.raw`Y\lvert0\rangle =
 \begin{bmatrix}0&-i\\i&0\\end{bmatrix}
-\begin{bmatrix}1\0\end{bmatrix}
+\begin{bmatrix}1\\0\end{bmatrix}
 =\begin{bmatrix}0\i\end{bmatrix}=i\lvert1\rangle`,
     second: String.raw`Y\lvert1\rangle =
 \begin{bmatrix}0&-i\\i&0\\end{bmatrix}
-\begin{bmatrix}0\1\end{bmatrix}
-=\begin{bmatrix}-i\0\end{bmatrix}=-i\lvert0\rangle`,
+\begin{bmatrix}0\\1\end{bmatrix}
+=\begin{bmatrix}-i\\0\end{bmatrix}=-i\lvert0\rangle`,
   },
   {
     name: "Pauli-Z gate (Z)",
@@ -105,12 +105,12 @@ export default function GateMatrixGuide() {
         <div style={styles.twoColumns}>
           <div style={styles.stateCard}>
             <strong style={styles.stateName}>Zero state</strong>
-            <Equation formula={String.raw`\lvert0\rangle=\begin{bmatrix}1\0\end{bmatrix}`} />
+            <Equation formula={String.raw`\lvert0\rangle=\begin{bmatrix}1\\0\end{bmatrix}`} />
             <span style={styles.copy}>100% amplitude for |0⟩, zero for |1⟩.</span>
           </div>
           <div style={styles.stateCard}>
             <strong style={styles.stateName}>One state</strong>
-            <Equation formula={String.raw`\lvert1\rangle=\begin{bmatrix}0\1\end{bmatrix}`} />
+            <Equation formula={String.raw`\lvert1\rangle=\begin{bmatrix}0\\1\end{bmatrix}`} />
             <span style={styles.copy}>Zero amplitude for |0⟩, 100% for |1⟩.</span>
           </div>
         </div>
@@ -133,7 +133,7 @@ export default function GateMatrixGuide() {
         <Equation formula={String.raw`\begin{bmatrix}a&b\c&d\\end{bmatrix}
 \begin{bmatrix}\alpha\\beta\end{bmatrix}
 =
-\begin{bmatrix}a\alpha+b\beta\c\alpha+d\beta\end{bmatrix}`} />
+\begin{bmatrix}a\alpha+b\beta\\c\alpha+d\beta\end{bmatrix}`} />
         <p style={styles.note}>
           The order matters: the gate matrix goes on the left, and the state
           column goes on the right. The output is another state column.
