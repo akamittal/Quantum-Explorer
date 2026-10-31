@@ -401,6 +401,7 @@ const styles = {
   stateName: { color: "#e5e7eb", fontSize: "0.9rem" },
   equation: { overflowX: "auto", maxWidth: "100%", color: "#e5e7eb", padding: "0.25rem 0" },
   gateCard: { display: "flex", flexDirection: "column", gap: "0.65rem", background: "#0b0f19", border: "1px solid rgba(255,255,255,0.07)", padding: "1rem", borderRadius: "4px" },
+  rotationDiagram: { width: "100%", maxWidth: "420px", alignSelf: "center", background: "#030712", border: "1px solid rgba(6,182,212,0.16)", borderRadius: "4px", padding: "0.5rem" },
   gateName: { color: "#e5e7eb", fontSize: "1rem", margin: 0 },
   label: { color: "#06b6d4", fontFamily: "monospace", fontSize: "0.68rem", letterSpacing: "0.08em" },
 };
