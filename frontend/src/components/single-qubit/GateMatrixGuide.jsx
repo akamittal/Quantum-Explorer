@@ -174,7 +174,7 @@ export default function GateMatrixGuide() {
             The first output entry comes from the first row of H; the second
             comes from its second row.
           </p>
-          <Equation formula={"H\\lvert\\psi\\rangle=\\frac{1}{\\sqrt{2}}\\begin{bmatrix}1&1\\\\\1&-1\\end{bmatrix}\\begin{bmatrix}\\alpha\\\\\\beta\\\end{bmatrix}"} />
+          <Equation formula={"H\\lvert\\psi\\rangle=\\frac{1}{\\sqrt{2}}\\begin{bmatrix}1&1\\\\1&-1\\end{bmatrix}\\begin{bmatrix}\\alpha\\\\\\beta\\end{bmatrix}"} />
           <Equation formula={"=\\frac{1}{\\sqrt{2}}\\begin{bmatrix}1\\cdot\\alpha+1\\cdot\\beta\\\\1\\cdot\\alpha+(-1)\\cdot\\beta\\end{bmatrix}"} />
           <Equation formula={"=\\begin{bmatrix}(\\alpha+\\beta)/\\sqrt{2}\\\\(\\alpha-\\beta)/\\sqrt{2}\\end{bmatrix}=\\frac{\\alpha+\\beta}{\\sqrt{2}}\\lvert0\\rangle+\\frac{\\alpha-\\beta}{\\sqrt{2}}\\lvert1\\rangle"} />
           <p style={styles.note}>
@@ -221,8 +221,8 @@ export default function GateMatrixGuide() {
             sign of the second. This is the difference between a bit flip and
             a phase flip.
           </p>
-          <Equation formula={"X\\lvert\\psi\\rangle=\\begin{bmatrix}0&1\\\\\1&0\\end{bmatrix}\\begin{bmatrix}\\alpha\\\\\\beta\\end{bmatrix}=\\begin{bmatrix}0\\alpha+1\\beta\\\\1\\alpha+0\\beta\\end{bmatrix}=\\begin{bmatrix}\\beta\\\\\\alpha\\\end{bmatrix}"} />
-          <Equation formula={"Z\\lvert\\psi\\rangle=\\begin{bmatrix}1&0\\\\\0&-1\\end{bmatrix}\\begin{bmatrix}\\alpha\\\\\\beta\\end{bmatrix}=\\begin{bmatrix}1\\alpha+0\\beta\\\\0\\alpha-1\\beta\\end{bmatrix}=\\begin{bmatrix}\\alpha\\\\-\\beta\\\end{bmatrix}"} />
+          <Equation formula={"X\\lvert\\psi\\rangle=\\begin{bmatrix}0&1\\\\1&0\\end{bmatrix}\\begin{bmatrix}\\alpha\\\\\\beta\\end{bmatrix}=\\begin{bmatrix}0\\alpha+1\\beta\\\\1\\alpha+0\\beta\\end{bmatrix}=\\begin{bmatrix}\\beta\\\\\\alpha\\end{bmatrix}"} />
+          <Equation formula={"Z\\lvert\\psi\\rangle=\\begin{bmatrix}1&0\\\\0&-1\\end{bmatrix}\\begin{bmatrix}\\alpha\\\\\\beta\\end{bmatrix}=\\begin{bmatrix}1\\alpha+0\\beta\\\\0\\alpha-1\\beta\\end{bmatrix}=\\begin{bmatrix}\\alpha\\\\-\\beta\\end{bmatrix}"} />
         </article>
       </div>
 
