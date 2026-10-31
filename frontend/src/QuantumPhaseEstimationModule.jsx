@@ -126,7 +126,7 @@ export default function QuantumPhaseEstimationModule({ onNavigate }) {
         <p style={s.copy}>A unitary matrix U preserves vector lengths and inner products. Its eigenvector |u⟩ is a state that keeps its direction after U acts. Only a complex number, the eigenvalue, changes its phase:</p>
         <Eq formula={"U|u\\rangle=\\lambda|u\\rangle,\\qquad |\\lambda|=1,\\qquad \\lambda=e^{2\\pi i\\phi}"}/>
         <p style={s.copy}>The real number φ is the eigenphase, defined modulo one. QPE estimates φ in the interval [0, 1). The eigenstate is an input resource: this first implementation uses a one-qubit phase gate whose eigenstate |1⟩ has the selected eigenphase.</p>
-        <Eq formula={"P(2\\pi\\phi)=\\begin{bmatrix}1&0\\0&e^{2\\pi i\\phi}\\end{bmatrix},\\qquad P(2\\pi\\phi)|1\\rangle=e^{2\\pi i\\phi}|1\\rangle"}/>
+        <Eq formula={"P(2\\pi\\phi)=\\begin{bmatrix}1&0\\\\0&e^{2\\pi i\\phi}\\end{bmatrix},\\qquad P(2\\pi\\phi)|1\\rangle=e^{2\\pi i\\phi}|1\\rangle"}/>
       </section>
 
       <section style={s.section}>
