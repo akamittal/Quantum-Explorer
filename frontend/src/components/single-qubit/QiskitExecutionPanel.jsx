@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function QiskitExecutionPanel({ operations, code, result, loading, error, onRun }) {
+export default function QiskitExecutionPanel({ operations = [], code, result, loading, error, onRun, shots = 1000 }) {
   const canRun = operations.length > 0 && !loading;
   return (
     <section style={styles.section}>
@@ -12,7 +12,7 @@ export default function QiskitExecutionPanel({ operations, code, result, loading
         This Python program is generated from the current playground circuit. Every gate, wire index, parameter, and execution setting updates with your design. Run sends the same structured circuit to the Python Qiskit + Aer service.
       </p>
       <button type="button" style={styles.button} disabled={!canRun} onClick={onRun}>
-        {loading ? "Running Python on Qiskit…" : "Run Python on Qiskit · 1,000 shots"}
+        {loading ? "Running Python on Qiskit…" : `Run Python on Qiskit · ${shots.toLocaleString()} shots`}
       </button>
       <div style={styles.codeFrame}><div style={styles.codeHeader}><strong>circuit.py</strong><span>Generated live from this circuit</span></div><pre style={styles.code}>{code}</pre></div>
       {!operations.length && <p style={styles.hint}>Add one or more gates in the circuit composer to populate the Python program and enable execution.</p>}
