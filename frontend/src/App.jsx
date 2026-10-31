@@ -7,6 +7,7 @@ import DeutschAlgorithmModule from "./DeutschAlgorithmModule";
 const DeutschJozsaModule = lazy(() => import("./DeutschJozsaModule"));
 const BernsteinVaziraniModule = lazy(() => import("./BernsteinVaziraniModule"));
 const MultiQubitPhaseModule = lazy(() => import("./MultiQubitPhaseModule"));
+const EntanglementModule = lazy(() => import("./EntanglementModule"));
 const BlochSphereView = lazy(() => import("./BlochSphereView"));
 import IntroHUD from "./IntroHUD";
 import MantraSequence from "./MantraSequence";
@@ -45,6 +46,10 @@ export default function App() {
         .catch((err) => console.warn("Audio held:", err));
     }
   };
+
+  if (narrativePhase === 4 && activeModulePage === "1.4") {
+    return <Suspense fallback={<div role="status" style={{ minHeight: "100vh", display: "grid", placeItems: "center", color: "#94a3b8", background: "#030712" }}>Loading entanglement laboratory…</div>}><EntanglementModule onNavigate={(page) => setActiveModulePage(page)} /></Suspense>;
+  }
 
   if (narrativePhase === 4 && activeModulePage === "1.3") {
     return <Suspense fallback={<div role="status" style={{ minHeight: "100vh", display: "grid", placeItems: "center", color: "#94a3b8", background: "#030712" }}>Loading matrix and phase studio…</div>}><MultiQubitPhaseModule onNavigate={(page) => setActiveModulePage(page)} /></Suspense>;
@@ -122,6 +127,12 @@ export default function App() {
                 style={{ textAlign: "left", background: "transparent", border: "none", color: activeModulePage === "1.3" ? "#10b981" : "#9ca3af", fontFamily: "monospace", cursor: "pointer", fontSize: "0.875rem" }}
               >
                 {activeModulePage === "1.3" ? "[x]" : "[ ]"} M1.3: Matrix Operators & Phase
+              </button>
+              <button
+                onClick={() => { setActiveModulePage("1.4"); setIsSidebarOpen(false); }}
+                style={{ textAlign: "left", background: "transparent", border: "none", color: activeModulePage === "1.4" ? "#10b981" : "#9ca3af", fontFamily: "monospace", cursor: "pointer", fontSize: "0.875rem" }}
+              >
+                {activeModulePage === "1.4" ? "[x]" : "[ ]"} M1.4: Quantum Entanglement Space
               </button>
               <button
                 onClick={() => { setActiveModulePage("2.3"); setIsSidebarOpen(false); }}
