@@ -62,7 +62,7 @@ test("QPE circuit prepares the target eigenstate, applies controlled powers, the
     close(operation.theta, 2 * Math.PI * 0.25 * 2 ** qubit);
   });
   assert.equal(operations.filter((operation) => operation.name === "SWAP").length, 1);
-  assert.deepEqual(operations.slice(-2).map((operation) => operation.name), ["H", "CP"]);
+  assert.deepEqual(operations.slice(-2).map((operation) => operation.name), ["CP", "H"]);
 });
 
 test("QPE statevector agrees with diagnostics for an exactly representable phase", () => {
