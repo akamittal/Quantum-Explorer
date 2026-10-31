@@ -3,6 +3,7 @@ import MathRenderer from "./MathRenderer";
 import { executeWithQiskit } from "./qiskitApi";
 import QiskitExecutionPanel from "./components/single-qubit/QiskitExecutionPanel";
 import { generateQiskitPythonCode } from "./qiskitCode";
+import AIAssistant from "./AIAssistant";
 import { applyCNOT, applyCZ, applyGateToRegister, applySWAP, createZeroRegister, getQubitProbabilities, getRegisterProbabilities, runMultiQubitCircuit, sampleRegisterMeasurements } from "./multiQubitCircuit";
 
 const initial = () => createZeroRegister(2);
