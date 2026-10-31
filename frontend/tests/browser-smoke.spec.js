@@ -78,7 +78,7 @@ test("measurement shots display observed counts that sum to requested shots", as
 test("Deutsch algorithm classifies all four oracle functions in the new module", async ({ page }, testInfo) => {
   const pageErrors = await openWorkspace(page, testInfo);
   await page.getByRole("button", { name: /MENU INDEX/i }).click();
-  await page.getByRole("button", { name: /M3\.1: Deutsch's Algorithm/i }).click();
+  await page.getByRole("button", { name: /M2\.1: Deutsch's Algorithm/i }).click();
   await expect(page.getByRole("heading", { name: "Deutsch's algorithm" })).toBeVisible();
 
   await page.getByRole("button", { name: /MENU INDEX/i }).click();
