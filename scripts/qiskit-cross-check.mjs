@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { runSingleQubitCircuit } from "../frontend/src/quantumCircuit.js";
 import { basisState, buildQftOperations, qftState } from "../frontend/src/quantumFourierTransform.js";
+import { buildQpeOperations, qpeState } from "../frontend/src/quantumPhaseEstimation.js";
 
 const baseUrl = process.env.QISKIT_SERVICE_URL || "http://127.0.0.1:8000";
 const cases = [
@@ -85,3 +86,37 @@ for (const numQubits of [2, 3, 4]) {
 }
 
 console.log("Qiskit/JavaScript cross-check passed for QFT circuits with 2, 3, and 4 qubits.");
+
+
+// Verify phase kickback and inverse-QFT eigenphase extraction against Qiskit.
+for (const [countingQubits, phase] of [[2, 1 / 4], [3, 3 / 8], [4, 5 / 16], [4, 0.3]]) {
+  const operations = buildQpeOperations(countingQubits, phase);
+  const response = await fetch(`${baseUrl}/execute`, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      num_qubits: countingQubits + 1,
+      shots: 256,
+      operations,
+    }),
+  });
+  const responseText = await response.text();
+  assert.equal(response.status, 200, responseText);
+  const qiskit = JSON.parse(responseText);
+  const countingState = qpeState(countingQubits, phase);
+  const expected = [
+    ...Array.from({ length: countingState.length }, () => ({ re: 0, im: 0 })),
+    ...countingState,
+  ];
+  const actual = qiskit.statevector.map(({ re, im }) => ({ re, im }));
+  const overlap = expected.reduce((sum, value, index) => ({
+    re: sum.re + value.re * actual[index].re + value.im * actual[index].im,
+    im: sum.im + value.re * actual[index].im - value.im * actual[index].re,
+  }), { re: 0, im: 0 });
+  assert.ok(Math.abs(magnitude(overlap) - 1) < 1e-9, `QPE statevector mismatch for m=${countingQubits}, phase=${phase}`);
+  expected.forEach((value, index) => {
+    assert.ok(Math.abs(value.re ** 2 + value.im ** 2 - qiskit.statevector[index].probability) < 1e-10);
+  });
+}
+
+console.log("Qiskit/JavaScript cross-check passed for exact and non-exact QPE phases with 2, 3, and 4 counting qubits.");
