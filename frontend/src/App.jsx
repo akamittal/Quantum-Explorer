@@ -4,6 +4,7 @@ import QuantumWorkspaceLayout from "./QuantumWorkspaceLayout";
 import SingleQubitModule from "./SingleQubitModule";
 import MultiQubitModule from "./MultiQubitModule";
 import DeutschAlgorithmModule from "./DeutschAlgorithmModule";
+const DeutschJozsaModule = lazy(() => import("./DeutschJozsaModule"));
 const BlochSphereView = lazy(() => import("./BlochSphereView"));
 import IntroHUD from "./IntroHUD";
 import MantraSequence from "./MantraSequence";
@@ -42,6 +43,10 @@ export default function App() {
         .catch((err) => console.warn("Audio held:", err));
     }
   };
+
+  if (narrativePhase === 4 && activeModulePage === "3.2") {
+    return <Suspense fallback={<div role="status" style={{ minHeight: "100vh", display: "grid", placeItems: "center", color: "#94a3b8", background: "#030712" }}>Loading Deutsch–Jozsa lesson…</div>}><DeutschJozsaModule onNavigate={(page) => setActiveModulePage(page)} /></Suspense>;
+  }
 
   if (narrativePhase === 4 && activeModulePage === "3.1") {
     return <DeutschAlgorithmModule onNavigate={(page) => setActiveModulePage(page)} />;
@@ -107,6 +112,12 @@ export default function App() {
                 style={{ textAlign: "left", background: "transparent", border: "none", color: activeModulePage === "3.1" ? "#10b981" : "#9ca3af", fontFamily: "monospace", cursor: "pointer", fontSize: "0.875rem" }}
               >
                 {activeModulePage === "3.1" ? "[x]" : "[ ]"} M3.1: Deutsch's Algorithm
+              </button>
+              <button
+                onClick={() => { setActiveModulePage("3.2"); setIsSidebarOpen(false); }}
+                style={{ textAlign: "left", background: "transparent", border: "none", color: activeModulePage === "3.2" ? "#10b981" : "#9ca3af", fontFamily: "monospace", cursor: "pointer", fontSize: "0.875rem" }}
+              >
+                {activeModulePage === "3.2" ? "[x]" : "[ ]"} M3.2: Deutsch–Jozsa Algorithm
               </button>
             </div>
           </div>

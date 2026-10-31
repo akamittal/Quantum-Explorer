@@ -32,6 +32,16 @@ export function generateQiskitPythonCode({ numQubits = 1, operations = [], shots
       } else lines.push("qc." + (name === "I" || name === "ID" ? "id" : name.toLowerCase()) + "(" + qubit + ")");
       return;
     }
+    if (name === "MCX") {
+      const controls = operation.controls;
+      const target = operation.target;
+      if (!Array.isArray(controls) || controls.length < 1 || controls.some((value) => !Number.isInteger(value) || value < 0 || value >= numQubits) ||
+          new Set(controls).size !== controls.length || !Number.isInteger(target) || target < 0 || target >= numQubits || controls.includes(target)) {
+        throw new RangeError("Operation " + index + ": invalid MCX controls/target.");
+      }
+      lines.push("qc.mcx([" + controls.join(", ") + "], " + target + ")");
+      return;
+    }
     if (name === "CX" || name === "CNOT") {
       const control = operation.control, target = operation.target;
       if (!Number.isInteger(control) || !Number.isInteger(target) || control === target || control < 0 || target < 0 || control >= numQubits || target >= numQubits) throw new RangeError("Operation " + index + ": invalid CX control/target.");

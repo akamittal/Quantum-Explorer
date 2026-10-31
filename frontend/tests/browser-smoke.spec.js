@@ -95,6 +95,52 @@ test("Deutsch algorithm classifies all four oracle functions in the new module",
   expect(pageErrors).toEqual([]);
 });
 
+test("Deutsch-Jozsa builds a truth-table oracle, explains the promise, and runs through Qiskit", async ({ page }, testInfo) => {
+  const pageErrors = await openWorkspace(page, testInfo);
+  await page.getByRole("button", { name: /MENU INDEX/i }).click();
+  await page.getByRole("button", { name: /M3\.1: Deutsch's Algorithm/i }).click();
+  await expect(page.getByRole("heading", { name: "Deutsch's algorithm" })).toBeVisible();
+  await page.getByRole("button", { name: /MENU INDEX/i }).click();
+  await page.getByRole("button", { name: /M3\.2: Deutsch–Jozsa Algorithm/i }).click();
+
+  await expect(page.getByRole("heading", { name: "Deutsch–Jozsa algorithm" })).toBeVisible();
+  await expect(page.getByText("BALANCED PROMISE SATISFIED")).toBeVisible();
+  await expect(page.locator("pre").filter({ hasText: "qc.mcx([0, 1, 2], 3)" })).toBeVisible();
+
+  await page.getByRole("button", { name: "Toggle f(000)" }).click();
+  await expect(page.getByText("PROMISE VIOLATED")).toBeVisible();
+  await page.getByRole("button", { name: /Three-bit parity/i }).click();
+  await expect(page.getByText("BALANCED PROMISE SATISFIED")).toBeVisible();
+
+  let requestPayload;
+  await page.route("**/api/qiskit/execute", async (route) => {
+    requestPayload = route.request().postDataJSON();
+    const statevector = Array.from({ length: 16 }, (_, index) => ({
+      index,
+      bitstring: index.toString(2).padStart(4, "0"),
+      re: index === 7 ? Math.SQRT1_2 : index === 15 ? -Math.SQRT1_2 : 0,
+      im: 0,
+      probability: index === 7 || index === 15 ? 0.5 : 0,
+    }));
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({
+        engine: "qiskit-aer",
+        shots: 1000,
+        stdout: "Circuit:\nDeutsch-Jozsa oracle\nStatevector:",
+        statevector,
+        counts: { "0111": 500, "1111": 500 },
+      }),
+    });
+  });
+  await page.getByRole("button", { name: /Run Python on Qiskit/i }).click();
+  await expect(page.getByText("Execution result")).toBeVisible();
+  expect(requestPayload.num_qubits).toBe(4);
+  expect(requestPayload.operations.some((operation) => operation.name === "MCX" && operation.controls.length === 3)).toBe(true);
+  expect(pageErrors).toEqual([]);
+});
+
 test("AI Quantum Tutor opens, receives workspace context, and displays its answer", async ({ page }, testInfo) => {
   const pageErrors = await openWorkspace(page, testInfo);
   let requestPayload;

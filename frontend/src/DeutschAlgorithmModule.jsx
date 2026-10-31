@@ -59,6 +59,7 @@ export default function DeutschAlgorithmModule({ onNavigate }) {
         <button type="button" style={styles.navItem} onClick={() => { setMenuOpen(false); onNavigate?.("1.1"); }}>M1.1: Single Qubit State Space</button>
         <button type="button" style={styles.navItem} onClick={() => { setMenuOpen(false); onNavigate?.("2.1"); }}>M2.1: Multi-Qubit Systems</button>
         <button type="button" style={{ ...styles.navItem, color: "#10b981" }} onClick={() => setMenuOpen(false)}>[x] M3.1: Deutsch Algorithm</button>
+        <button type="button" style={styles.navItem} onClick={() => { setMenuOpen(false); onNavigate?.("3.2"); }}>M3.2: Deutsch–Jozsa Algorithm</button>
       </aside>}
       <div style={styles.content}>
         <section style={styles.hero}>
@@ -211,7 +212,7 @@ export default function DeutschAlgorithmModule({ onNavigate }) {
               <option value={100}>100</option><option value={1000}>1,000</option><option value={10000}>10,000</option>
             </select>
           </label>
-          <QiskitExecutionPanel operations={operations} code={pythonCode} result={qiskitResult} loading={qiskitLoading} error={qiskitError} onRun={runOnQiskit} />
+          <QiskitExecutionPanel operations={operations} code={pythonCode} result={qiskitResult} loading={qiskitLoading} error={qiskitError} onRun={runOnQiskit} shots={shots} />
         </section>
       </div>
       <AIAssistant
