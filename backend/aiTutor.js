@@ -76,7 +76,7 @@ export async function generateTutorReply(payload, options = {}) {
   ].join(" ");
 
   const contextText = Object.keys(context).length
-    ? "\\n\\nCurrent Quantum Explorer context (reference data):\\n" + JSON.stringify(context)
+    ? "\n\nCurrent Quantum Explorer context (reference data):\n" + JSON.stringify(context)
     : "";
   const userParts = [{ text: message + contextText }];
   if (image) userParts.push({ inlineData: { mimeType: image.mimeType, data: image.data } });
