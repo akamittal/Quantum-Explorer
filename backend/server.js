@@ -5,6 +5,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { executeWithQiskit } from './qiskitClient.js';
+import { generateTutorReply } from './aiTutor.js';
 
 dotenv.config();
 const app = express();
@@ -33,6 +34,18 @@ app.get('/api/qiskit/health', async (req, res) => {
     res.status(response.ok ? 200 : 502).json(data);
   } catch {
     res.status(503).json({ status: 'unavailable', engine: 'Qiskit + Aer' });
+  }
+});
+
+app.post('/api/ai/chat', async (req, res) => {
+  try {
+    const result = await generateTutorReply(req.body);
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(error.status || 502).json({
+      error: 'AI tutor request failed',
+      message: error.message || 'The AI tutor could not complete this request.'
+    });
   }
 });
 
