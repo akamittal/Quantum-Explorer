@@ -10,8 +10,8 @@ function MessageContent({ text }) {
   const parts = useMemo(() => {
     const pattern = /(\\\[[\s\S]*?\\\]|\\\([\s\S]*?\\\)|\$\$[\s\S]*?\$\$)/g;
     return String(text).split(pattern).filter(Boolean).map((part) => {
-      if (part.startsWith("\\\\[")) return { math: part.slice(2, -2), display: true };
-      if (part.startsWith("\\\\(")) return { math: part.slice(2, -2), display: false };
+      if (part.startsWith("\\[")) return { math: part.slice(2, -2), display: true };
+      if (part.startsWith("\\(")) return { math: part.slice(2, -2), display: false };
       if (part.startsWith("$$")) return { math: part.slice(2, -2), display: true };
       return { text: part };
     });
