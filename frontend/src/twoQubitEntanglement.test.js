@@ -29,16 +29,16 @@ test("all four Bell circuits produce maximally entangled states", () => {
     assert.equal(result.isEntangled, true, name);
     assert.equal(result.isMaximallyEntangled, true, name);
     assert.equal(result.isProductState, false, name);
-    closeTo(result.entropy, 1);
-    closeTo(result.q0.entropy, 1);
-    closeTo(result.q1.entropy, 1);
-    closeTo(result.q0.purity, 0.5);
-    closeTo(result.q1.purity, 0.5);
-    closeTo(result.concurrence, 1);
-    closeTo(result.schmidtProbabilities[0], 0.5);
-    closeTo(result.schmidtProbabilities[1], 0.5);
-    closeTo(result.q0.matrix[0][0].re, 0.5);
-    closeTo(result.q0.matrix[1][1].re, 0.5);
+    closeTo(result.entropy, 1, 1e-7);
+    closeTo(result.q0.entropy, 1, 1e-7);
+    closeTo(result.q1.entropy, 1, 1e-7);
+    closeTo(result.q0.purity, 0.5, 1e-7);
+    closeTo(result.q1.purity, 0.5, 1e-7);
+    closeTo(result.concurrence, 1, 1e-7);
+    closeTo(result.schmidtProbabilities[0], 0.5, 1e-7);
+    closeTo(result.schmidtProbabilities[1], 0.5, 1e-7);
+    closeTo(result.q0.matrix[0][0].re, 0.5, 1e-7);
+    closeTo(result.q0.matrix[1][1].re, 0.5, 1e-7);
     closeTo(result.q0.matrix[0][1].re, 0);
     closeTo(result.q0.matrix[0][1].im, 0);
   }
@@ -92,8 +92,8 @@ test("complex relative phase does not change Bell entanglement", () => {
     ],
   };
   const result = analyzeTwoQubitEntanglement(state);
-  closeTo(result.entropy, 1);
-  closeTo(result.concurrence, 1);
+  closeTo(result.entropy, 1, 1e-7);
+  closeTo(result.concurrence, 1, 1e-7);
 });
 
 test("both reduced density matrices are Hermitian and share the Schmidt spectrum", () => {
