@@ -192,7 +192,20 @@ export default function MultiQubitModule({ onNavigate }) {
       <QiskitExecutionPanel operations={circuitOperations} code={pythonCode} result={qiskitResult} loading={qiskitLoading} error={qiskitError} onRun={handleRunOnQiskit} />
       <p style={s.copy}>This program is regenerated from the current circuit above. Load the Bell preset, add gates, change their order, or reset the register and the Python source will follow. The Run button executes the matching circuit in the Python Qiskit + Aer service.</p>
     </Lesson>
-  </div><MultiQubitInspector state={state} mode={view} onModeChange={setView} /></div></div>;
+  </div><MultiQubitInspector state={state} mode={view} onModeChange={setView} /></div>
+    <AIAssistant
+      moduleTitle="Multi-Qubit Systems"
+      lessonContext="Two-qubit and multi-qubit statevectors, tensor products, controlled gates, product states, entanglement, Bell states, GHZ states and measurement."
+      simulatorContext={{
+        numQubits: state.numQubits,
+        amplitudes: state.amplitudes,
+        gateHistory: history,
+        circuitOperations,
+        jointProbabilities: probabilities,
+        localQubitProbabilities: [getQubitProbabilities(state, 0), getQubitProbabilities(state, 1)]
+      }}
+    />
+  </div>;
 }
 
 function MultiQubitInspector({ state, mode, onModeChange }) {
