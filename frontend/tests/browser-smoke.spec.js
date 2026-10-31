@@ -77,7 +77,8 @@ test("AI Quantum Tutor opens, receives workspace context, and displays its answe
   });
 
   await page.getByRole("button", { name: "Open AI Quantum Tutor" }).click();
-  await expect(page.getByRole("complementary", { name: "AI Quantum Tutor" })).toBeVisible();\n  await expect(page.getByRole("complementary", { name: "AI Quantum Tutor" })).toHaveCSS("z-index", "2147483001");
+  await expect(page.getByRole("complementary", { name: "AI Quantum Tutor" } )).toBeVisible();
+  await expect(page.getByRole("complementary", { name: "AI Quantum Tutor" })).toHaveCSS("z-index", "2147483001");
   await page.getByPlaceholder("Ask your quantum question…").fill("What is a qubit?");
   await page.getByRole("button", { name: /SEND QUESTION/i }).click();
   await expect(page.getByText("A qubit is a two-level quantum system.")).toBeVisible();
