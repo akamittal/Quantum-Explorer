@@ -116,12 +116,12 @@ function AmplitudeInspector({ state }) {
 
 function matrixForGate(name) {
   const matrices = {
-    H: String.raw`\\frac{1}{\\sqrt2}\\begin{bmatrix}1&1\\\\1&-1\\end{bmatrix}`,
-    X: String.raw`\\begin{bmatrix}0&1\\\\1&0\\end{bmatrix}`,
-    Y: String.raw`\\begin{bmatrix}0&-i\\\\i&0\\end{bmatrix}`,
-    Z: String.raw`\\begin{bmatrix}1&0\\\\0&-1\\end{bmatrix}`,
-    S: String.raw`\\begin{bmatrix}1&0\\\\0&i\\end{bmatrix}`,
-    T: String.raw`\\begin{bmatrix}1&0\\\\0&e^{i\\pi/4}\\end{bmatrix}`,
+    H: String.raw`\frac{1}{\sqrt2}\begin{bmatrix}1&1\\1&-1\end{bmatrix}`,
+    X: String.raw`\begin{bmatrix}0&1\\1&0\end{bmatrix}`,
+    Y: String.raw`\begin{bmatrix}0&-i\\i&0\end{bmatrix}`,
+    Z: String.raw`\begin{bmatrix}1&0\\0&-1\end{bmatrix}`,
+    S: String.raw`\begin{bmatrix}1&0\\0&i\end{bmatrix}`,
+    T: String.raw`\begin{bmatrix}1&0\\0&e^{i\pi/4}\end{bmatrix}`,
   };
   return matrices[name];
 }
@@ -235,42 +235,42 @@ export default function MultiQubitPhaseModule({ onNavigate }) {
 
         <Lesson number="1.3.1" title="THE REGISTER IS A VECTOR, NOT A COLLECTION OF SEPARATE PROBABILITIES">
           <p style={styles.copy}>For two qubits, use the basis order |q1q0⟩ = |00⟩, |01⟩, |10⟩, |11⟩. The rightmost bit is q0, the least-significant bit. The state is one four-entry complex column vector:</p>
-          <Equation>{String.raw`|\\psi\\rangle=a|00\\rangle+b|01\\rangle+c|10\\rangle+d|11\\rangle=\\begin{bmatrix}a\\\\b\\\\c\\\\d\\end{bmatrix},\\quad |a|^2+|b|^2+|c|^2+|d|^2=1`}</Equation>
+          <Equation>{String.raw`|\psi\rangle=a|00\rangle+b|01\rangle+c|10\rangle+d|11\rangle=\begin{bmatrix}a\\b\\c\\d\end{bmatrix},\quad |a|^2+|b|^2+|c|^2+|d|^2=1`}</Equation>
           <p style={styles.copy}>The four squared magnitudes are the probabilities for the four joint outcomes. But the vector also stores phase, which the probability list alone cannot show. That missing information is why the same measurement probabilities can lead to different results after a later gate.</p>
         </Lesson>
 
         <Lesson number="1.3.2" title="LIFT A ONE-QUBIT GATE INTO THE FOUR-DIMENSIONAL REGISTER">
           <p style={styles.copy}>If a gate U acts on q1 while q0 is untouched, the full operator is U ⊗ I. If it acts on q0, the full operator is I ⊗ U. The tensor product creates a 4 × 4 matrix, so the gate acts on the complete register vector.</p>
-          <Equation>{String.raw`H\\otimes I=\\frac{1}{\\sqrt2}\\begin{bmatrix}1&0&1&0\\\\0&1&0&1\\\\1&0&-1&0\\\\0&1&0&-1\\end{bmatrix},\\quad I\\otimes H=\\frac{1}{\\sqrt2}\\begin{bmatrix}1&1&0&0\\\\1&-1&0&0\\\\0&0&1&1\\\\0&0&1&-1\\end{bmatrix}`}</Equation>
+          <Equation>{String.raw`H\otimes I=\frac{1}{\sqrt2}\begin{bmatrix}1&0&1&0\\0&1&0&1\\1&0&-1&0\\0&1&0&-1\end{bmatrix},\quad I\otimes H=\frac{1}{\sqrt2}\begin{bmatrix}1&1&0&0\\1&-1&0&0\\0&0&1&1\\0&0&1&-1\end{bmatrix}`}</Equation>
           <p style={styles.copy}>Example: apply H to q0 from |00⟩. The vector is multiplied by I ⊗ H. Only the two entries whose q1 bit is zero receive amplitude, producing an equal superposition of |00⟩ and |01⟩.</p>
-          <Equation>{String.raw`(I\\otimes H)\\begin{bmatrix}1\\\\0\\\\0\\\\0\\end{bmatrix}=\\frac{1}{\\sqrt2}\\begin{bmatrix}1\\\\1\\\\0\\\\0\\end{bmatrix}=\\frac{|00\\rangle+|01\\rangle}{\\sqrt2}`}</Equation>
+          <Equation>{String.raw`(I\otimes H)\begin{bmatrix}1\\0\\0\\0\end{bmatrix}=\frac{1}{\sqrt2}\begin{bmatrix}1\\1\\0\\0\end{bmatrix}=\frac{|00\rangle+|01\rangle}{\sqrt2}`}</Equation>
         </Lesson>
 
         <Lesson number="1.3.3" title="THE CONTROLLED OPERATORS ARE FOUR-BY-FOUR MATRICES TOO">
           <p style={styles.copy}>CNOT is a permutation matrix: it moves amplitudes between basis slots according to the control rule. With q0 as control and q1 as target, |00⟩ and |10⟩ stay fixed while |01⟩ and |11⟩ exchange places.</p>
-          <Equation>{String.raw`CNOT_{q0\\to q1}=\\begin{bmatrix}1&0&0&0\\\\0&0&0&1\\\\0&0&1&0\\\\0&1&0&0\\end{bmatrix}`}</Equation>
+          <Equation>{String.raw`CNOT_{q0\to q1}=\begin{bmatrix}1&0&0&0\\0&0&0&1\\0&0&1&0\\0&1&0&0\end{bmatrix}`}</Equation>
           <p style={styles.copy}>CZ is diagonal. It leaves three basis amplitudes unchanged and multiplies the |11⟩ amplitude by −1. SWAP exchanges the q0 and q1 labels. These matrices are unitary, so they preserve total probability.</p>
-          <Equation>{String.raw`CZ=\\operatorname{diag}(1,1,1,-1),\\quad SWAP=\\begin{bmatrix}1&0&0&0\\\\0&0&1&0\\\\0&1&0&0\\\\0&0&0&1\\end{bmatrix}`}</Equation>
+          <Equation>{String.raw`CZ=\operatorname{diag}(1,1,1,-1),\quad SWAP=\begin{bmatrix}1&0&0&0\\0&0&1&0\\0&1&0&0\\0&0&0&1\end{bmatrix}`}</Equation>
         </Lesson>
 
         <Lesson number="1.3.4" title="WHY A UNITARY MATRIX PRESERVES TOTAL PROBABILITY">
           <p style={styles.copy}>A valid closed-system quantum gate U satisfies U†U = I. The dagger means transpose and complex conjugate. If the input vector is |ψ⟩ and the output is U|ψ⟩, its squared norm is unchanged:</p>
-          <Equation>{String.raw`\\langle\\psi'|\\psi'\\rangle=\\langle\\psi|U^\\dagger U|\\psi\\rangle=\\langle\\psi|I|\\psi\\rangle=1`}</Equation>
+          <Equation>{String.raw`\langle\psi'|\psi'\rangle=\langle\psi|U^\dagger U|\psi\rangle=\langle\psi|I|\psi\rangle=1`}</Equation>
           <p style={styles.copy}>This is not an extra probability correction performed after the gate. It follows directly from the matrix being unitary. A matrix that fails U†U = I cannot represent an ideal deterministic gate on a closed register.</p>
         </Lesson>
 
         <Lesson number="1.3.5" title="PHASE IS THE DIRECTION OF A COMPLEX AMPLITUDE">
           <p style={styles.copy}>An amplitude a = x + iy is a point in the complex plane. Its length is |a| = √(x² + y²), and its angle is φ = atan2(y,x). The probability of its basis outcome is |a|². Changing only the angle leaves that probability unchanged.</p>
-          <Equation>{String.raw`a=re^{i\\phi}=r(\\cos\\phi+i\\sin\\phi),\\quad P=|a|^2=r^2`}</Equation>
+          <Equation>{String.raw`a=re^{i\phi}=r(\cos\phi+i\sin\phi),\quad P=|a|^2=r^2`}</Equation>
           <p style={styles.copy}>The phase of an entire state can be shifted by the same angle without changing any physical prediction. Relative phase between basis amplitudes is different: a later gate can combine amplitudes, making that phase observable through interference.</p>
         </Lesson>
 
         <Lesson number="1.3.6" title="S AND T GATES ROTATE PHASE WITHOUT CHANGING MAGNITUDE">
           <p style={styles.copy}>The S gate adds π/2 to the phase of the |1⟩ component. The T gate adds π/4. They do not change either component's magnitude, so applying one immediately before computational-basis measurement does not change the probabilities. They do change the state and can change the result of a later Hadamard.</p>
-          <Equation>{String.raw`S=\\begin{bmatrix}1&0\\\\0&i\\end{bmatrix},\\quad T=\\begin{bmatrix}1&0\\\\0&e^{i\\pi/4}\\end{bmatrix}`}</Equation>
+          <Equation>{String.raw`S=\begin{bmatrix}1&0\\0&i\end{bmatrix},\quad T=\begin{bmatrix}1&0\\0&e^{i\pi/4}\end{bmatrix}`}</Equation>
           <p style={styles.copy}>For a concrete example, start with |+⟩ = (|0⟩ + |1⟩)/√2. T changes it to (|0⟩ + e^(iπ/4)|1⟩)/√2. Both outcomes still have probability 1/2. Apply H next and the interference converts the phase difference into unequal probabilities:</p>
-          <Equation>{String.raw`H T |+\\rangle=\\frac{(1+e^{i\\pi/4})|0\\rangle+(1-e^{i\\pi/4})|1\\rangle}{2}`}</Equation>
-          <Equation>{String.raw`P(0)=\\frac{1+\\cos(\\pi/4)}{2}\\approx0.8536,\\quad P(1)=\\frac{1-\\cos(\\pi/4)}{2}\\approx0.1464`}</Equation>
+          <Equation>{String.raw`H T |+\rangle=\frac{(1+e^{i\pi/4})|0\rangle+(1-e^{i\pi/4})|1\rangle}{2}`}</Equation>
+          <Equation>{String.raw`P(0)=\frac{1+\cos(\pi/4)}{2}\approx0.8536,\quad P(1)=\frac{1-\cos(\pi/4)}{2}\approx0.1464`}</Equation>
           <p style={styles.copy}>The phase was not directly visible in the first measurement basis. The final H mixed the two amplitudes, so their relative phase affected constructive and destructive interference.</p>
         </Lesson>
 
