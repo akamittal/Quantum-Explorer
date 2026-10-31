@@ -56,13 +56,18 @@ def build_circuit(payload: ExecuteRequest) -> QuantumCircuit:
                     method(operation.theta, operation.qubit)
                 else:
                     method(operation.qubit)
-            elif name in {"CX", "CNOT"}:
+            elif name in {"CX", "CNOT", "CP"}:
                 control, target = operation.control, operation.target
                 if control is None or target is None or control == target:
-                    raise ValueError("CX requires distinct control and target qubits")
+                    raise ValueError(f"{name} requires distinct control and target qubits")
                 if not (0 <= control < payload.num_qubits and 0 <= target < payload.num_qubits):
-                    raise ValueError("CX qubit indices are out of range")
-                circuit.cx(control, target)
+                    raise ValueError(f"{name} qubit indices are out of range")
+                if name == "CP":
+                    if operation.theta is None or not math.isfinite(operation.theta):
+                        raise ValueError("CP requires a finite phase angle in radians")
+                    circuit.cp(operation.theta, control, target)
+                else:
+                    circuit.cx(control, target)
             elif name == "MCX":
                 controls, target = operation.controls, operation.target
                 if controls is None or len(controls) < 1:
