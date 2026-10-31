@@ -5,86 +5,86 @@ const gateLessons = [
   {
     name: "Identity gate (I)",
     purpose: "Leaves the qubit unchanged.",
-    matrix: String.raw`I = \begin{bmatrix}1&0\\0&1\end{bmatrix}`,
+    matrix: String.raw`I = \begin{bmatrix}1&0\0&1\end{bmatrix}`,
     action: String.raw`I\lvert\psi\rangle =
-\begin{bmatrix}1&0\\0&1\end{bmatrix}
-\begin{bmatrix}\alpha\\\beta\end{bmatrix}
+\begin{bmatrix}1&0\0&1\end{bmatrix}
+\begin{bmatrix}\alpha\\beta\end{bmatrix}
 =
-\begin{bmatrix}\alpha\\\beta\end{bmatrix}
+\begin{bmatrix}\alpha\\beta\end{bmatrix}
 =\lvert\psi\rangle`,
   },
   {
     name: "Hadamard gate (H)",
     purpose: "Creates an equal superposition from either basis state (with a relative sign for |1⟩).",
-    matrix: String.raw`H=\frac{1}{\sqrt2}\begin{bmatrix}1&1\\1&-1\end{bmatrix}`,
+    matrix: String.raw`H=\frac{1}{\sqrt2}\begin{bmatrix}1&1\1&-1\end{bmatrix}`,
     action: String.raw`H\lvert0\rangle =
-\frac{1}{\sqrt2}\begin{bmatrix}1&1\\1&-1\end{bmatrix}
-\begin{bmatrix}1\\0\end{bmatrix}
-=\frac{1}{\sqrt2}\begin{bmatrix}1\\1\end{bmatrix}
+\frac{1}{\sqrt2}\begin{bmatrix}1&1\1&-1\end{bmatrix}
+\begin{bmatrix}1\0\end{bmatrix}
+=\frac{1}{\sqrt2}\begin{bmatrix}1\1\end{bmatrix}
 =\frac{\lvert0\rangle+\lvert1\rangle}{\sqrt2}
 =\lvert+\rangle`,
     second: String.raw`H\lvert1\rangle =
-\frac{1}{\sqrt2}\begin{bmatrix}1&1\\1&-1\end{bmatrix}
-\begin{bmatrix}0\\1\end{bmatrix}
-=\frac{1}{\sqrt2}\begin{bmatrix}1\\-1\end{bmatrix}
+\frac{1}{\sqrt2}\begin{bmatrix}1&1\1&-1\end{bmatrix}
+\begin{bmatrix}0\1\end{bmatrix}
+=\frac{1}{\sqrt2}\begin{bmatrix}1\-1\end{bmatrix}
 =\frac{\lvert0\rangle-\lvert1\rangle}{\sqrt2}
 =\lvert-\rangle`,
   },
   {
     name: "Pauli-X gate (X)",
     purpose: "Flips |0⟩ to |1⟩ and |1⟩ to |0⟩. It is the quantum NOT gate.",
-    matrix: String.raw`X=\begin{bmatrix}0&1\\1&0\end{bmatrix}`,
+    matrix: String.raw`X=\begin{bmatrix}0&1\1&0\end{bmatrix}`,
     action: String.raw`X\lvert0\rangle =
-\begin{bmatrix}0&1\\1&0\end{bmatrix}
-\begin{bmatrix}1\\0\end{bmatrix}
-=\begin{bmatrix}0\\1\end{bmatrix}=\lvert1\rangle`,
+\begin{bmatrix}0&1\1&0\end{bmatrix}
+\begin{bmatrix}1\0\end{bmatrix}
+=\begin{bmatrix}0\1\end{bmatrix}=\lvert1\rangle`,
     second: String.raw`X\lvert1\rangle =
-\begin{bmatrix}0&1\\1&0\end{bmatrix}
-\begin{bmatrix}0\\1\end{bmatrix}
-=\begin{bmatrix}1\\0\end{bmatrix}=\lvert0\rangle`,
+\begin{bmatrix}0&1\1&0\end{bmatrix}
+\begin{bmatrix}0\1\end{bmatrix}
+=\begin{bmatrix}1\0\end{bmatrix}=\lvert0\rangle`,
   },
   {
     name: "Pauli-Y gate (Y)",
     purpose: "Flips the basis state and adds a phase factor. The imaginary number i is part of the result.",
-    matrix: String.raw`Y=\begin{bmatrix}0&-i\\i&0\end{bmatrix}`,
+    matrix: String.raw`Y=\begin{bmatrix}0&-i\i&0\end{bmatrix}`,
     action: String.raw`Y\lvert0\rangle =
-\begin{bmatrix}0&-i\\i&0\end{bmatrix}
-\begin{bmatrix}1\\0\end{bmatrix}
-=\begin{bmatrix}0\\i\end{bmatrix}=i\lvert1\rangle`,
+\begin{bmatrix}0&-i\i&0\end{bmatrix}
+\begin{bmatrix}1\0\end{bmatrix}
+=\begin{bmatrix}0\i\end{bmatrix}=i\lvert1\rangle`,
     second: String.raw`Y\lvert1\rangle =
-\begin{bmatrix}0&-i\\i&0\end{bmatrix}
-\begin{bmatrix}0\\1\end{bmatrix}
-=\begin{bmatrix}-i\\0\end{bmatrix}=-i\lvert0\rangle`,
+\begin{bmatrix}0&-i\i&0\end{bmatrix}
+\begin{bmatrix}0\1\end{bmatrix}
+=\begin{bmatrix}-i\0\end{bmatrix}=-i\lvert0\rangle`,
   },
   {
     name: "Pauli-Z gate (Z)",
     purpose: "Keeps |0⟩ unchanged and flips the sign of the |1⟩ amplitude. This is a phase flip, not a bit flip.",
-    matrix: String.raw`Z=\begin{bmatrix}1&0\\0&-1\end{bmatrix}`,
+    matrix: String.raw`Z=\begin{bmatrix}1&0\0&-1\end{bmatrix}`,
     action: String.raw`Z\lvert\psi\rangle =
-\begin{bmatrix}1&0\\0&-1\end{bmatrix}
-\begin{bmatrix}\alpha\\\beta\end{bmatrix}
-=\begin{bmatrix}\alpha\\-\beta\end{bmatrix}
+\begin{bmatrix}1&0\0&-1\end{bmatrix}
+\begin{bmatrix}\alpha\\beta\end{bmatrix}
+=\begin{bmatrix}\alpha\-\beta\end{bmatrix}
 =\alpha\lvert0\rangle-\beta\lvert1\rangle`,
   },
   {
     name: "S gate",
     purpose: "Adds a 90° (π/2) phase to the |1⟩ component and leaves |0⟩ unchanged.",
-    matrix: String.raw`S=\begin{bmatrix}1&0\\0&i\end{bmatrix}`,
+    matrix: String.raw`S=\begin{bmatrix}1&0\0&i\end{bmatrix}`,
     action: String.raw`S\lvert\psi\rangle =
-\begin{bmatrix}1&0\\0&i\end{bmatrix}
-\begin{bmatrix}\alpha\\\beta\end{bmatrix}
-=\begin{bmatrix}\alpha\\i\beta\end{bmatrix}
+\begin{bmatrix}1&0\0&i\end{bmatrix}
+\begin{bmatrix}\alpha\\beta\end{bmatrix}
+=\begin{bmatrix}\alpha\i\beta\end{bmatrix}
 =\alpha\lvert0\rangle+i\beta\lvert1\rangle`,
   },
   {
     name: "T gate",
     purpose: "Adds a 45° (π/4) phase to the |1⟩ component.",
-    matrix: String.raw`T=\begin{bmatrix}1&0\\0&e^{i\pi/4}\end{bmatrix}
-=\begin{bmatrix}1&0\\0&\frac{1+i}{\sqrt2}\end{bmatrix}`,
+    matrix: String.raw`T=\begin{bmatrix}1&0\0&e^{i\pi/4}\end{bmatrix}
+=\begin{bmatrix}1&0\0&\frac{1+i}{\sqrt2}\end{bmatrix}`,
     action: String.raw`T\lvert\psi\rangle =
-\begin{bmatrix}1&0\\0&e^{i\pi/4}\end{bmatrix}
-\begin{bmatrix}\alpha\\\beta\end{bmatrix}
-=\begin{bmatrix}\alpha\\e^{i\pi/4}\beta\end{bmatrix}`,
+\begin{bmatrix}1&0\0&e^{i\pi/4}\end{bmatrix}
+\begin{bmatrix}\alpha\\beta\end{bmatrix}
+=\begin{bmatrix}\alpha\e^{i\pi/4}\beta\end{bmatrix}`,
   },
 ];
 
@@ -105,12 +105,12 @@ export default function GateMatrixGuide() {
         <div style={styles.twoColumns}>
           <div style={styles.stateCard}>
             <strong style={styles.stateName}>Zero state</strong>
-            <Equation formula={String.raw`\lvert0\rangle=\begin{bmatrix}1\\0\end{bmatrix}`} />
+            <Equation formula={String.raw`\lvert0\rangle=\begin{bmatrix}1\0\end{bmatrix}`} />
             <span style={styles.copy}>100% amplitude for |0⟩, zero for |1⟩.</span>
           </div>
           <div style={styles.stateCard}>
             <strong style={styles.stateName}>One state</strong>
-            <Equation formula={String.raw`\lvert1\rangle=\begin{bmatrix}0\\1\end{bmatrix}`} />
+            <Equation formula={String.raw`\lvert1\rangle=\begin{bmatrix}0\1\end{bmatrix}`} />
             <span style={styles.copy}>Zero amplitude for |0⟩, 100% for |1⟩.</span>
           </div>
         </div>
@@ -119,7 +119,7 @@ export default function GateMatrixGuide() {
           The weights α and β can be complex numbers and are called amplitudes.
         </p>
         <Equation formula={String.raw`\lvert\psi\rangle=\alpha\lvert0\rangle+\beta\lvert1\rangle
-=\begin{bmatrix}\alpha\\\beta\end{bmatrix},\qquad
+=\begin{bmatrix}\alpha\\beta\end{bmatrix},\qquad
 |\alpha|^2+|\beta|^2=1`} />
       </div>
 
@@ -130,10 +130,10 @@ export default function GateMatrixGuide() {
           state column to get the new top amplitude, then its second row to get
           the new bottom amplitude. In compact form:
         </p>
-        <Equation formula={String.raw`\begin{bmatrix}a&b\\c&d\end{bmatrix}
-\begin{bmatrix}\alpha\\\beta\end{bmatrix}
+        <Equation formula={String.raw`\begin{bmatrix}a&b\c&d\end{bmatrix}
+\begin{bmatrix}\alpha\\beta\end{bmatrix}
 =
-\begin{bmatrix}a\alpha+b\beta\\c\alpha+d\beta\end{bmatrix}`} />
+\begin{bmatrix}a\alpha+b\beta\c\alpha+d\beta\end{bmatrix}`} />
         <p style={styles.note}>
           The order matters: the gate matrix goes on the left, and the state
           column goes on the right. The output is another state column.
@@ -161,7 +161,73 @@ export default function GateMatrixGuide() {
       </div>
 
       <div style={styles.section}>
-        <h3 style={styles.heading}>// 3.3 ROTATION GATES</h3>
+        <h3 style={styles.heading}>// 3.3 SEE EVERY MULTIPLICATION STEP</h3>
+        <p style={styles.copy}>
+          A matrix does not act by magic. Each output entry is one row of the
+          matrix multiplied by the input column. We keep the two rows separate
+          so you can see exactly where every amplitude comes from.
+        </p>
+        <article style={styles.gateCard}>
+          <h4 style={styles.gateName}>Worked example A: Hadamard on any qubit</h4>
+          <p style={styles.copy}>
+            Start with |ψ⟩ = α|0⟩ + β|1⟩. The column vector is [α, β]ᵀ.
+            The first output entry comes from the first row of H; the second
+            comes from its second row.
+          </p>
+          <Equation formula={"H\\lvert\\psi\\rangle=\\frac{1}{\\sqrt{2}}\\begin{bmatrix}1&1\\\\1&-1\\end{bmatrix}\\begin{bmatrix}\\alpha\\\\\\beta\\end{bmatrix}"} />
+          <Equation formula={"=\\frac{1}{\\sqrt{2}}\\begin{bmatrix}1\\cdot\\alpha+1\\cdot\\beta\\\\1\\cdot\\alpha+(-1)\\cdot\\beta\\end{bmatrix}"} />
+          <Equation formula={"=\\begin{bmatrix}(\\alpha+\\beta)/\\sqrt{2}\\\\(\\alpha-\\beta)/\\sqrt{2}\\end{bmatrix}=\\frac{\\alpha+\\beta}{\\sqrt{2}}\\lvert0\\rangle+\\frac{\\alpha-\\beta}{\\sqrt{2}}\\lvert1\\rangle"} />
+          <p style={styles.note}>
+            The new zero amplitude is (α + β)/√2. The new one amplitude is
+            (α − β)/√2. Both old amplitudes contribute to both new amplitudes.
+            Their plus or minus signs can make them reinforce or cancel.
+          </p>
+        </article>
+        <article style={styles.gateCard}>
+          <h4 style={styles.gateName}>Worked example B: why H followed by H restores the input</h4>
+          <p style={styles.copy}>
+            Apply H a second time to the two amplitudes we just found. The
+            second H receives the output of the first H, not the original α and β.
+          </p>
+          <Equation formula={"H^2\\lvert\\psi\\rangle=H\\begin{bmatrix}(\\alpha+\\beta)/\\sqrt{2}\\\\(\\alpha-\\beta)/\\sqrt{2}\\end{bmatrix}"} />
+          <Equation formula={"=\\frac{1}{\\sqrt{2}}\\begin{bmatrix}(\\alpha+\\beta)/\\sqrt{2}+(\\alpha-\\beta)/\\sqrt{2}\\\\(\\alpha+\\beta)/\\sqrt{2}-(\\alpha-\\beta)/\\sqrt{2}\\end{bmatrix}"} />
+          <Equation formula={"=\\frac{1}{2}\\begin{bmatrix}\\alpha+\\beta+\\alpha-\\beta\\\\\\alpha+\\beta-\\alpha+\\beta\\end{bmatrix}=\\frac{1}{2}\\begin{bmatrix}2\\alpha\\\\2\\beta\\end{bmatrix}=\\begin{bmatrix}\\alpha\\\\\\beta\\end{bmatrix}"} />
+          <p style={styles.note}>
+            The β terms cancel in the top entry, and the α terms cancel in
+            the bottom entry. Therefore H² = I: two Hadamard gates return every
+            input qubit to its starting state.
+          </p>
+        </article>
+        <article style={styles.gateCard}>
+          <h4 style={styles.gateName}>Worked example C: a phase change becomes measurable after H</h4>
+          <p style={styles.copy}>
+            Compare |+⟩ and |−⟩. They have the same 50/50 measurement
+            probabilities in the computational basis, but their relative
+            signs differ. A later gate can reveal that difference.
+          </p>
+          <Equation formula={"Z\\lvert+\\rangle=Z\\frac{\\lvert0\\rangle+\\lvert1\\rangle}{\\sqrt{2}}=\\frac{\\lvert0\\rangle-\\lvert1\\rangle}{\\sqrt{2}}=\\lvert-\\rangle"} />
+          <Equation formula={"H\\lvert+\\rangle=H\\frac{1}{\\sqrt{2}}\\begin{bmatrix}1\\\\1\\end{bmatrix}=\\begin{bmatrix}1\\\\0\\end{bmatrix}=\\lvert0\\rangle"} />
+          <Equation formula={"H\\lvert-\\rangle=H\\frac{1}{\\sqrt{2}}\\begin{bmatrix}1\\\\-1\\end{bmatrix}=\\begin{bmatrix}0\\\\1\\end{bmatrix}=\\lvert1\\rangle"} />
+          <p style={styles.note}>
+            Before the final H, |+⟩ and |−⟩ each give 0 or 1 with 50% chance.
+            After H, they give different certain outcomes. The relative sign
+            changes how amplitudes combine in the next gate. This is interference.
+          </p>
+        </article>
+        <article style={styles.gateCard}>
+          <h4 style={styles.gateName}>Worked example D: X and Z on a general state</h4>
+          <p style={styles.copy}>
+            X exchanges the two amplitudes. Z keeps the first and changes the
+            sign of the second. This is the difference between a bit flip and
+            a phase flip.
+          </p>
+          <Equation formula={"X\\lvert\\psi\\rangle=\\begin{bmatrix}0&1\\\\1&0\\end{bmatrix}\\begin{bmatrix}\\alpha\\\\\\beta\\end{bmatrix}=\\begin{bmatrix}0\\alpha+1\\beta\\\\1\\alpha+0\\beta\\end{bmatrix}=\\begin{bmatrix}\\beta\\\\\\alpha\\end{bmatrix}"} />
+          <Equation formula={"Z\\lvert\\psi\\rangle=\\begin{bmatrix}1&0\\\\0&-1\\end{bmatrix}\\begin{bmatrix}\\alpha\\\\\\beta\\end{bmatrix}=\\begin{bmatrix}1\\alpha+0\\beta\\\\0\\alpha-1\\beta\\end{bmatrix}=\\begin{bmatrix}\\alpha\\\\-\\beta\\end{bmatrix}"} />
+        </article>
+      </div>
+
+      <div style={styles.section}>
+        <h3 style={styles.heading}>// 3.4 ROTATION GATES</h3>
         <p style={styles.copy}>
           Rotation gates turn the state around one of the Bloch-sphere axes.
           Their angle θ is measured in radians in these matrix formulas.
@@ -170,13 +236,13 @@ export default function GateMatrixGuide() {
           <h4 style={styles.gateName}>Rotation around X (RX)</h4>
           <Equation formula={String.raw`R_X(\theta)=
 \begin{bmatrix}
-\cos(\theta/2)&-i\sin(\theta/2)\\
+\cos(\theta/2)&-i\sin(\theta/2)\
 -i\sin(\theta/2)&\cos(\theta/2)
 \end{bmatrix}`} />
-          <Equation formula={String.raw`R_X(\theta)\begin{bmatrix}\alpha\\\beta\end{bmatrix}
+          <Equation formula={String.raw`R_X(\theta)\begin{bmatrix}\alpha\\beta\end{bmatrix}
 =
 \begin{bmatrix}
-\cos(\theta/2)\alpha-i\sin(\theta/2)\beta\\
+\cos(\theta/2)\alpha-i\sin(\theta/2)\beta\
 -i\sin(\theta/2)\alpha+\cos(\theta/2)\beta
 \end{bmatrix}`} />
         </article>
@@ -184,13 +250,13 @@ export default function GateMatrixGuide() {
           <h4 style={styles.gateName}>Rotation around Y (RY)</h4>
           <Equation formula={String.raw`R_Y(\theta)=
 \begin{bmatrix}
-\cos(\theta/2)&-\sin(\theta/2)\\
+\cos(\theta/2)&-\sin(\theta/2)\
 \sin(\theta/2)&\cos(\theta/2)
 \end{bmatrix}`} />
-          <Equation formula={String.raw`R_Y(\theta)\begin{bmatrix}\alpha\\\beta\end{bmatrix}
+          <Equation formula={String.raw`R_Y(\theta)\begin{bmatrix}\alpha\\beta\end{bmatrix}
 =
 \begin{bmatrix}
-\cos(\theta/2)\alpha-\sin(\theta/2)\beta\\
+\cos(\theta/2)\alpha-\sin(\theta/2)\beta\
 \sin(\theta/2)\alpha+\cos(\theta/2)\beta
 \end{bmatrix}`} />
         </article>
@@ -198,13 +264,13 @@ export default function GateMatrixGuide() {
           <h4 style={styles.gateName}>Rotation around Z (RZ)</h4>
           <Equation formula={String.raw`R_Z(\theta)=
 \begin{bmatrix}
-e^{-i\theta/2}&0\\
+e^{-i\theta/2}&0\
 0&e^{i\theta/2}
 \end{bmatrix}`} />
-          <Equation formula={String.raw`R_Z(\theta)\begin{bmatrix}\alpha\\\beta\end{bmatrix}
+          <Equation formula={String.raw`R_Z(\theta)\begin{bmatrix}\alpha\\beta\end{bmatrix}
 =
 \begin{bmatrix}
-e^{-i\theta/2}\alpha\\
+e^{-i\theta/2}\alpha\
 e^{i\theta/2}\beta
 \end{bmatrix}`} />
         </article>
@@ -215,7 +281,7 @@ e^{i\theta/2}\beta
       </div>
 
       <div style={styles.section}>
-        <h3 style={styles.heading}>// 3.4 FROM AMPLITUDES TO MEASUREMENT</h3>
+        <h3 style={styles.heading}>// 3.5 FROM AMPLITUDES TO MEASUREMENT</h3>
         <p style={styles.copy}>
           A gate changes amplitudes, not by directly choosing a measurement
           result. The probability of measuring 0 is the squared magnitude of α;
