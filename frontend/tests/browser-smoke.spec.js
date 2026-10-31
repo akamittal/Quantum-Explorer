@@ -101,7 +101,7 @@ test("Deutsch-Jozsa builds a truth-table oracle, explains the promise, and runs 
   await page.getByRole("button", { name: /M3\.1: Deutsch's Algorithm/i }).click();
   await expect(page.getByRole("heading", { name: "Deutsch's algorithm" })).toBeVisible();
   await page.getByRole("button", { name: /MENU INDEX/i }).click();
-  await page.getByRole("button", { name: /M3\.2: Deutsch–Jozsa Algorithm/i }).click();
+  await page.getByRole("button", { name: /M2\.2: Deutsch–Jozsa Algorithm/i }).click();
 
   await expect(page.getByRole("heading", { name: "Deutsch–Jozsa algorithm" })).toBeVisible();
   await expect(page.getByText("BALANCED PROMISE SATISFIED")).toBeVisible();
@@ -288,7 +288,7 @@ test("Quantum Fourier Transform explores phase ramps, inverse recovery, and exec
 test("Quantum Phase Estimation extracts an eigenphase and verifies the controlled-power circuit in Qiskit", async ({ page }, testInfo) => {
   const pageErrors = await openWorkspace(page, testInfo);
   await page.getByRole("button", { name: /MENU INDEX/i }).click();
-  await page.getByRole("button", { name: /M3\\.2: Quantum Phase Estimation/i }).click();
+  await page.getByRole("button", { name: /M3\.2: Quantum Phase Estimation/i }).click();
   await expect(page.getByRole("heading", { name: "Quantum Phase Estimation" })).toBeVisible();
   await expect(page.getByText("PHASE-KICKBACK AMPLITUDES")).toBeVisible();
   await expect(page.getByText("0101", { exact: true }).first()).toBeVisible();
