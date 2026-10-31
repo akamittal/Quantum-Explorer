@@ -141,6 +141,50 @@ test("Deutsch-Jozsa builds a truth-table oracle, explains the promise, and runs 
   expect(pageErrors).toEqual([]);
 });
 
+
+test("multi-qubit matrix and phase studio visualizes relative phase and verifies its circuit in Qiskit", async ({ page }, testInfo) => {
+  const pageErrors = await openWorkspace(page, testInfo);
+  await page.getByRole("button", { name: /MENU INDEX/i }).click();
+  await page.getByRole("button", { name: /M1\.3: Matrix Operators & Phase/i }).click();
+  await expect(page.getByRole("heading", { name: /How matrices transform a quantum register/i })).toBeVisible();
+
+  await page.getByRole("button", { name: "Phase without probability change" }).click();
+  await expect(page.getByRole("img", { name: /01 amplitude phase 45\.0 degrees/i })).toBeVisible();
+  await expect(page.getByText("50.0%", { exact: true })).toHaveCount(2);
+
+  await page.getByRole("button", { name: "Phase interference" }).click();
+  await expect(page.getByText("85.4%", { exact: true })).toBeVisible();
+  await expect(page.getByText("14.6%", { exact: true })).toBeVisible();
+
+  let requestPayload;
+  await page.route("**/api/qiskit/execute", async (route) => {
+    requestPayload = route.request().postDataJSON();
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({
+        engine: "qiskit-aer",
+        shots: 1000,
+        stdout: "Circuit:\\nH(0) -> T(0) -> H(0)\\nStatevector:",
+        statevector: [
+          { index: 0, bitstring: "00", re: 0.9238795, im: 0, probability: 0.8535534 },
+          { index: 1, bitstring: "01", re: 0.1464466, im: -0.3535534, probability: 0.1464466 },
+          { index: 2, bitstring: "10", re: 0, im: 0, probability: 0 },
+          { index: 3, bitstring: "11", re: 0, im: 0, probability: 0 },
+        ],
+        probabilities: { "00": 0.8535534, "01": 0.1464466, "10": 0, "11": 0 },
+        counts: { "00": 854, "01": 146 },
+      }),
+    });
+  });
+  await page.getByRole("button", { name: /Run Python on Qiskit/i }).click();
+  await expect(page.getByText("Execution result")).toBeVisible();
+  expect(requestPayload.num_qubits).toBe(2);
+  expect(requestPayload.operations.map((operation) => operation.name)).toEqual(["H", "T", "H"]);
+  expect(requestPayload.operations.every((operation) => operation.qubit === 0)).toBe(true);
+  expect(pageErrors).toEqual([]);
+});
+
 test("AI Quantum Tutor opens, receives workspace context, and displays its answer", async ({ page }, testInfo) => {
   const pageErrors = await openWorkspace(page, testInfo);
   let requestPayload;
