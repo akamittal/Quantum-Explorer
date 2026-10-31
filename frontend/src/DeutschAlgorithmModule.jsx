@@ -9,7 +9,7 @@ function Equation({ formula }) {
   return <div style={styles.equation}><MathRenderer formula={formula} displayMode /></div>;
 }
 
-export default function DeutschAlgorithmModule() {
+export default function DeutschAlgorithmModule({ onNavigate }) {
   const [oracle, setOracle] = useState("identity");
   const [shots, setShots] = useState(1000);
   const [qiskitLoading, setQiskitLoading] = useState(false);
@@ -47,6 +47,7 @@ export default function DeutschAlgorithmModule() {
   return (
     <main style={styles.workspace}>
       <header style={styles.header}>
+        <button type="button" onClick={() => onNavigate?.("1.1")} style={styles.indexButton}>← MODULE INDEX</button>
         <span style={styles.eyebrow}>QUANTUM ALGORITHMS // MODULE 3.1</span>
         <span style={styles.headerTag}>DEUTSCH'S ALGORITHM</span>
       </header>
@@ -149,6 +150,7 @@ const styles = {
   header: { minHeight: "3.5rem", padding: "0 1.5rem", display: "flex", alignItems: "center", justifyContent: "space-between", gap: "1rem", background: "#0b0f19", borderBottom: "1px solid rgba(6,182,212,.15)", position: "sticky", top: 0, zIndex: 80 },
   eyebrow: { color: "#6b7280", fontFamily: "monospace", fontSize: ".68rem", letterSpacing: ".1em" },
   headerTag: { color: "#10b981", fontFamily: "monospace", fontSize: ".72rem" },
+  indexButton: { background: "transparent", border: "1px solid #334155", color: "#9ca3af", padding: ".4rem .65rem", fontFamily: "monospace", fontSize: ".68rem", cursor: "pointer" },
   content: { width: "min(100% - 2rem, 980px)", margin: "0 auto", padding: "2rem 0 5rem", display: "flex", flexDirection: "column", gap: "1.5rem" },
   hero: { padding: "2rem 0 1rem", borderBottom: "1px solid rgba(6,182,212,.16)" },
   title: { margin: ".6rem 0", fontSize: "clamp(2rem, 5vw, 3.2rem)", color: "#f8fafc", letterSpacing: "-.04em" },
