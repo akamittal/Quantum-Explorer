@@ -30,7 +30,7 @@ Below is the verified master engineering catalog of the platform. Items marked w
 
 - [x] **2.1 Deutsch's Algorithm:** 1-bit balance vs. constant classification, black-box mathematical oracle matrix injection, and step-by-step global phase-kickback visual flowcharts.
 - [x] **2.2 Deutsch–Jozsa Algorithm (three-input oracle):** Editable constant/balanced truth tables, reversible multi-controlled-X oracle synthesis, full Hadamard/phase-kickback derivation, exact output probabilities, and Qiskit execution.
-- [ ] **2.3 Bernstein-Vazirani Algorithm:** Hidden parity string bitstring extraction in exactly 1 quantum pass vs. n classical passes.
+- [x] **2.3 Bernstein–Vazirani Algorithm (three-bit hidden string):** Editable secret bits, reversible CNOT parity oracle, complete phase-kickback and Hadamard cancellation derivation, exact statevector recovery for all eight secrets, and Qiskit execution.
 
 ### 📊 Module 3: Advanced Transform & Number Theory Systems
 
