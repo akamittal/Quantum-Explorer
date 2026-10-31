@@ -149,6 +149,7 @@ export default function SingleQubitModule({
       <TelemetryTracer theta={theta} phi={phi} x={x} y={y} z={z} alpha={alpha} beta={beta} probZero={probZero} probOne={probOne} />
       <QiskitExecutionPanel
         operations={queuedGates}
+        code={pythonCode}
         result={qiskitResult}
         loading={qiskitLoading}
         error={qiskitError}
