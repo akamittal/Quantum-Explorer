@@ -11,41 +11,49 @@ const bits = (value, width) => value.toString(2).padStart(width, "0");
 const percent = (value) => (value * 100).toFixed(2) + "%";
 
 function QpeCircuit({ countingQubits, phase }) {
-  const target = countingQubits, width = 780;
-  const y = (q) => 64 + (countingQubits - q) * 62;
+  const operations = buildQpeOperations(countingQubits, phase);
+  const width = Math.max(760, 150 + operations.length * 46);
+  const y = (q) => 48 + q * 58;
   return <div style={s.circuitWrap}>
-    <svg viewBox={"0 0 " + width + " " + (130 + countingQubits * 62)} role="img" aria-label="QPE circuit: target eigenstate, counting Hadamards, controlled powers and inverse QFT" style={{ width: "100%", minWidth: 650 }}>
-      <text x="16" y="22" fill="#67e8f9" fontSize="11">COUNTING REGISTER · q0 IS LEAST SIGNIFICANT</text>
-      {Array.from({ length: countingQubits }, (_, q) => <g key={q}>
-        <text x="18" y={y(q)+5} fill="#94a3b8" fontSize="12">q{q}</text>
-        <line x1="64" y1={y(q)} x2="735" y2={y(q)} stroke="#475569"/>
-        <rect x="85" y={y(q)-16} width="32" height="32" rx="5" fill="#123b43" stroke="#34d399"/>
-        <text x="101" y={y(q)+5} fill="#d1fae5" fontSize="13" textAnchor="middle">H</text>
+    <svg viewBox={"0 0 " + width + " " + (105 + countingQubits * 58)} role="img" aria-label="Complete QPE circuit with target preparation, Hadamards, controlled phase powers, inverse QFT rotations and swaps" style={{ width: "100%", minWidth: 680 }}>
+      <text x="14" y="18" fill="#67e8f9" fontSize="10">COUNTING REGISTER · q0 LEAST SIGNIFICANT · TARGET q{countingQubits}</text>
+      {Array.from({ length: countingQubits + 1 }, (_, q) => <g key={q}>
+        <text x="16" y={y(q) + 4} fill="#94a3b8" fontSize="11">{q === countingQubits ? "target" : "q" + q}</text>
+        <line x1="72" y1={y(q)} x2={width - 22} y2={y(q)} stroke="#475569" />
       </g>)}
-      <text x="18" y={y(target)+5} fill="#94a3b8" fontSize="12">target</text>
-      <line x1="64" y1={y(target)} x2="735" y2={y(target)} stroke="#475569"/>
-      <rect x="85" y={y(target)-16} width="32" height="32" rx="5" fill="#382b13" stroke="#fbbf24"/>
-      <text x="101" y={y(target)+5} fill="#fde68a" fontSize="13" textAnchor="middle">X</text>
-      {Array.from({ length: countingQubits }, (_, q) => {
-        const x = 190 + q * 75, angle = 2 * Math.PI * phase * 2 ** q;
-        return <g key={q}>
-          <line x1={x} y1={y(q)} x2={x} y2={y(target)} stroke="#22d3ee" strokeWidth="1.5"/>
-          <circle cx={x} cy={y(q)} r="5" fill="#22d3ee"/>
-          <circle cx={x} cy={y(target)} r="14" fill="#102333" stroke="#22d3ee"/>
-          <text x={x} y={y(target)+4} fill="#cffafe" fontSize="11" textAnchor="middle">U</text>
-          <text x={x+7} y={(y(q)+y(target))/2} fill="#67e8f9" fontSize="9">{(angle/Math.PI).toFixed(2)}π</text>
-        </g>;
+      {operations.map((op, index) => {
+        const x = 110 + index * 46;
+        if (op.name === "H" || op.name === "X") {
+          const cy = y(op.qubit), color = op.name === "H" ? "#34d399" : "#fbbf24";
+          return <g key={index}>
+            <rect x={x-15} y={cy-15} width="30" height="30" rx="4" fill={op.name === "H" ? "#123b43" : "#382b13"} stroke={color}/>
+            <text x={x} y={cy+4} fill={op.name === "H" ? "#d1fae5" : "#fde68a"} textAnchor="middle" fontSize="12">{op.name}</text>
+          </g>;
+        }
+        if (op.name === "CP") {
+          const top = Math.min(y(op.control), y(op.target)), bottom = Math.max(y(op.control), y(op.target));
+          return <g key={index}>
+            <line x1={x} y1={top} x2={x} y2={bottom} stroke="#22d3ee"/>
+            <circle cx={x} cy={y(op.control)} r="4.5" fill="#22d3ee"/>
+            <circle cx={x} cy={y(op.target)} r="11" fill="#102333" stroke="#22d3ee"/>
+            <text x={x} y={y(op.target)+4} fill="#cffafe" textAnchor="middle" fontSize="10">P</text>
+            <text x={x} y={top-9} fill="#67e8f9" textAnchor="middle" fontSize="8">{(op.theta/Math.PI).toFixed(2)}π</text>
+          </g>;
+        }
+        if (op.name === "SWAP") {
+          const top = Math.min(y(op.first),y(op.second)), bottom = Math.max(y(op.first),y(op.second));
+          return <g key={index}>
+            <line x1={x} y1={top} x2={x} y2={bottom} stroke="#fbbf24"/>
+            {[op.first,op.second].map((q)=><g key={q}>
+              <circle cx={x} cy={y(q)} r="9" fill="#382b13" stroke="#fbbf24"/>
+              <path d={"M"+(x-4)+" "+(y(q)-4)+"l8 8m0 -8l-8 8"} stroke="#fde68a"/>
+            </g>)}
+          </g>;
+        }
+        return null;
       })}
-      <rect x="510" y={y(countingQubits-1)-24} width="178" height={countingQubits*62-16} rx="6" fill="rgba(16,185,129,.06)" stroke="#10b981" strokeDasharray="4 4"/>
-      <text x="599" y={y(countingQubits-1)-8} fill="#6ee7b7" fontSize="11" textAnchor="middle">INVERSE QFT</text>
-      {Array.from({ length: countingQubits }, (_, q) => <g key={q}>
-        <rect x="535" y={y(q)-13} width="38" height="26" rx="4" fill="#123b43" stroke="#34d399"/>
-        <text x="554" y={y(q)+4} fill="#d1fae5" fontSize="11" textAnchor="middle">H</text>
-      </g>)}
-      <text x="600" y={y(target)+5} fill="#94a3b8" fontSize="10" textAnchor="middle">eigenstate unchanged</text>
-      <text x="735" y={y(0)+4} fill="#a5f3fc" fontSize="10" textAnchor="end">measure</text>
     </svg>
-    <p style={s.note}>Schematic: the generated Qiskit program expands the exact controlled rotations and final wire swaps of the inverse QFT.</p>
+    <p style={s.note}>Every gate is drawn in execution order. Controlled-phase labels show their angle in multiples of π; the final SWAP gates correct the inverse-QFT bit order.</p>
   </div>;
 }
 
