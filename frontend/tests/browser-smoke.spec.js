@@ -63,3 +63,26 @@ test("Deutsch algorithm classifies all four oracle functions in the new module",
   await expect(page.locator("section").filter({ hasText: "SIMULATOR'S CLASSIFICATION" }).getByText("BALANCED", { exact: true })).toBeVisible();
   expect(pageErrors).toEqual([]);
 });
+
+test("AI Quantum Tutor opens, receives workspace context, and displays its answer", async ({ page }) => {
+  const pageErrors = await openWorkspace(page);
+  let requestPayload;
+  await page.route("**/api/ai/chat", async (route) => {
+    requestPayload = route.request().postDataJSON();
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({ reply: "A qubit is a two-level quantum system.", model: "gemini-test" })
+    });
+  });
+
+  await page.getByRole("button", { name: "Open AI Quantum Tutor" }).click();
+  await expect(page.getByLabel("AI Quantum Tutor")).toBeVisible();
+  await page.getByPlaceholder("Ask your quantum question…").fill("What is a qubit?");
+  await page.getByRole("button", { name: /SEND QUESTION/i }).click();
+  await expect(page.getByText("A qubit is a two-level quantum system.")).toBeVisible();
+  expect(requestPayload.message).toBe("What is a qubit?");
+  expect(requestPayload.context.module).toBe("Single-Qubit Studio");
+  expect(requestPayload.context.simulator.blochVector).toBeTruthy();
+  expect(pageErrors).toEqual([]);
+});
