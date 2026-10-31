@@ -30,6 +30,17 @@ test("generates multi-qubit controlled, phase, swap, and rotation operations in 
   assert.match(code, /QuantumCircuit\(NUM_QUBITS\)/);
 });
 
+test("generates multi-controlled X gates with their complete control list", () => {
+  const code = generateQiskitPythonCode({
+    numQubits: 4,
+    operations: [{ name: "MCX", controls: [0, 1, 2], target: 3 }],
+  });
+  assert.match(code, /qc\.mcx\(\[0, 1, 2\], 3\)/);
+  assert.throws(() => generateQiskitPythonCode({
+    numQubits: 3, operations: [{ name: "MCX", controls: [0, 2], target: 2 }],
+  }), /invalid MCX/);
+});
+
 test("rejects invalid circuit dimensions, shots, and qubit indices", () => {
   assert.throws(() => generateQiskitPythonCode({ numQubits: 9 }), /1 to 8/);
   assert.throws(() => generateQiskitPythonCode({ shots: 0 }), /1 to 100,000/);
